@@ -14,3 +14,7 @@ export { default as Concessionary } from "./Concessionary";
 export { default as BrandSlide } from "./BrandSlide";
 export { default as EachBrand } from "./EachBrand";
 export { default as BreadCrumb } from "./BreadCrumb";
+export { default as Header } from "./Header";
+export { default as Footer } from "./Footer";
+export {default as CkEditor} from "./Ckeditor";
+export {default as Slogan} from "./Slogan";

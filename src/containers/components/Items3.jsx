@@ -16,7 +16,7 @@ const Items3 = () => {
             <icons.heartthin className="text-[24px]"></icons.heartthin>
           </div>
           <div
-            className="absolute quick_seen_btn btn_black_gradient top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] font-bold hidden group-hover:block "
+            className="absolute quick_seen_btn btn_black_gradient top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] font-bold hidden group-hover:block w-auto whitespace-nowrap "
             onMouseOver={(e) => {
               e.target.classList.add("is_hover");
             }}
@@ -35,11 +35,13 @@ const Items3 = () => {
             Trải Nghiệm Combo 11 Mặt Nạ HOT Nhất Mặt Nạ AHC + Goodal + Dermatory
             Dưỡng Da Sáng & Săn Mịn
           </div>
-          <div className="price flex items-center justify-center">
+          <div className="price text-center">
             <div className="cur_price  font-bold">291.000đ</div>
-            <div className="prev_price ml-[10px] opacity-50 ">717.000đ</div>
-            <div>
-              <TagSale />
+            <div className="flex items-center justify-center">
+              <div className="prev_price ml-[10px] opacity-50 ">717.000đ</div>
+              <div>
+                <TagSale />
+              </div>
             </div>
           </div>
           <div className="rate flex items-center justify-center my-[6px]">
@@ -59,6 +61,7 @@ const Items3 = () => {
               </span>
             </div>
           </div>
+          <div className="w-fit px-3 py-2 rounded-[99px] font-bold border border-solid mx-auto mt-2 cursor-pointer">Thêm</div>
         </div>
       </Items3Styled>
     </>

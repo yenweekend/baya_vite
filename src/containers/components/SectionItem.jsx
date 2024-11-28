@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Item, NextButton, PrevButton, DiscoveryAllBtn } from ".";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import SliderCustom from "./SliderCustom";
 const SectionItem = ({ title, data }) => {
+  
   return (
     <div className=" pt-[30px] pb-[10px] ">
       <div className="wrap_container top_sale">
@@ -10,17 +14,12 @@ const SectionItem = ({ title, data }) => {
           </span>
         </div>
         <div className=" pt-[20px]">
-          <div className="relative">
-            <div className="overflow-x-scroll no-scrollbar ">
-              <Item width={260} />
-            </div>
-            <NextButton />
-            <PrevButton />
-          </div>
+          <SliderCustom data={data}/>
         </div>
         <DiscoveryAllBtn />
       </div>
     </div>
+    
   );
 };
 

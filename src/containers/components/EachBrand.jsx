@@ -4,19 +4,19 @@ import { Link } from "react-router-dom";
 const EachBrand = ({ data }) => {
   return (
     <>
-      <EachBrandStyled>
+      <EachBrandStyled >
         <div className="flex_16 px-[15px] font-bold text-[24px]">
-          {data?.section_title}
+          {data[0]}
         </div>
         <div className="flex_83 px-[15px] flex flex-wrap gap-y-[20px]">
-          {data?.brand_name?.map((item) => (
-            <div className="flex_25 px-[10px] " key={item?.name}>
+          {data[1]?.map((item) => (
+            <div className="flex_25 px-[10px] " key={item?.name} >
               <Link
-                to={item.link}
+                to={`/brand/${item.slug}`}
                 state={{
                   type: "brand",
                 }}
-                className=" text-[16px] text-[#000] font-medium no-underline"
+                className=" text-[16px] text-[#000] font-medium no-underline brand_link"
               >
                 {item.name}
               </Link>
@@ -33,5 +33,6 @@ const EachBrandStyled = styled.div`
   padding-left: 8px;
   padding-top: 40px;
   padding-bottom: 40px;
+ 
 `;
 export default EachBrand;

@@ -45,7 +45,7 @@ const BrandSlide = () => {
   };
   return (
     <div>
-      <div className="wrap_container">
+      <div className="pt-5">
         <div className="relative " ref={container_ref}>
           <div
             className=" flex items-center  gap-[20px] overflow-auto brands_slide no-scrollbar py-[4px]"

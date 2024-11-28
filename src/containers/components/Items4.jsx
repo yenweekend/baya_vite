@@ -2,15 +2,18 @@ import React, { useRef } from "react";
 import styled from "styled-components";
 import TagSale from "./TagSale";
 import icons from "../../utils/icons";
-const Items4 = () => {
+import { Link } from "react-router-dom";
+const Items4 = ({product}) => {
   return (
     <>
       <Items4Styled className={`item group flex_25 px-[5px]`}>
         <div className="item_thumb w-full rounded-t-lg overflow-hidden relative cursor-pointer">
+          <Link to={`/product/${product.slug}`} className="h-full w-full inline-block ">
           <img
-            src="https://image.hsv-tech.io/600x600/bbx/common/74685e3a-71a1-4779-8896-ec20c117fc40.webp"
+            src={product?.Images[0].img_url}
             className="w-full h-full object-cover"
           ></img>
+          </Link>
           <div className="absolute w-10 h-10 rounded-[50%] bg-[#000] top-[10px] left-[10px] "></div>
           <div className="absolute top-[10px] right-[10px] cursor-pointer">
             <icons.heartthin className="text-[24px]"></icons.heartthin>
@@ -32,8 +35,7 @@ const Items4 = () => {
             <span>ahc</span>
           </div>
           <div className="items_desc text-center">
-            Trải Nghiệm Combo 11 Mặt Nạ HOT Nhất Mặt Nạ AHC + Goodal + Dermatory
-            Dưỡng Da Sáng & Săn Mịn
+            {product?.name}
           </div>
           <div className="price flex items-center justify-center">
             <div className="cur_price  font-bold">291.000đ</div>

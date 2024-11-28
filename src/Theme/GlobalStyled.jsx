@@ -85,7 +85,6 @@ const GlobalStyle = createGlobalStyle`
     --font-size-xxxxl: 51px;
     --font-size-normal: 22px;
     --font-familyz:"Quicksand", sans-serif;
-
     --font-title: SVNMont, sans-serif;
 }
 `;

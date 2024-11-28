@@ -61,7 +61,7 @@ const menuDropDowns = [
         },
       ],
     },
-    link: "/",
+    link: "/brands",
   },
   {
     title: "Khuyễn mãi hot",
@@ -103,7 +103,6 @@ const menuDropDowns = [
     title: "sản phẩm cao cấp",
     dropdown: false,
     type: 1,
-    link: "",
     link: "/",
   },
   {
@@ -431,6 +430,68 @@ const menuDropDowns = [
     ],
     image:
       "https://image.hsv-tech.io/400x0/bbx/common/eb9a1f2d-d6ba-488b-98ce-57ea6eaf7438.webp",
+    link: "/",
+  },
+  {
+    title: "mã giảm",
+    dropdown: false,
+    type: 1,
+    link: "/",
+  },
+  {
+    title: "sản phẩm mới",
+    dropdown: false,
+    type: 1,
+    link: "/",
+  },
+  {
+    title: "Đặt hàng Oline & nhận tại cửa hàng",
+    dropdown: false,
+    type: 1,
+    link: "/",
+  },
+];
+const menuDropDowns2 = [
+  {
+    title: "thương hiệu",
+    dropdown: true,
+    type: "brand",
+    link: "/brands",
+  },
+  {
+    title: "Khuyễn mãi hot",
+    dropdown: true,
+    type: "collection",
+    link: "/",
+  },
+  {
+    title: "sản phẩm cao cấp",
+    dropdown: false,
+    type: 1,
+    link: "/",
+  },
+  {
+    title: "trang điểm",
+    dropdown: true,
+    type: 2,
+    link: "/categories/trang-diem",
+  },
+  {
+    title: "chăm sóc da",
+    dropdown: true,
+    type: 2,
+    link: "/",
+  },
+  {
+    title: "chăm sóc cá nhân",
+    dropdown: true,
+    type: 2,
+    link: "/",
+  },
+  {
+    title: "chăm sóc cơ thể",
+    dropdown: true,
+    type: 2,
     link: "/",
   },
   {

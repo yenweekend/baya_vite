@@ -118,13 +118,11 @@ const FilterStyled = styled.div`
     transform: translate(-50%, -50%) rotate(-45deg);
     width: 10px;
     height: 6px;
-    border-left: 2px solid #fff;
-    border-bottom: 2px solid #fff;
+    border-left: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+    transition: all .2s linear ;
   }
-  .input_checkbox:checked + .input_filter {
-    background-color: #c23f5b;
-    border-color: #c23f5b;
-  }
+
   .is_wearoff {
     animation: wearoff 0.3s forwards linear;
   }
