@@ -4,7 +4,7 @@ const Footer = () => {
   const input_are_ref = useRef();
 
   return (
-    <footer className="wrap_container">
+    <footer className="wrap-container mt-[30px]">
       <div className="middle_footer mb-[56px]">
         <div className="new_sections flex items-center justify-between  ">
           <div className="middle_footer_left ">

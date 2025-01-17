@@ -1,4 +1,4 @@
-const menuDropDowns = [
+const navigationList = [
   {
     title: "thương hiệu",
     dropdown: true,
@@ -115,7 +115,7 @@ const menuDropDowns = [
           link: "/collections/trang-diem-mat",
           title: "Trang điểm mặt",
         },
-        cate_type: [
+        sub_category: [
           {
             link: "/collections/phan-nuoc-cushion",
             title: "Cushion",
@@ -151,7 +151,7 @@ const menuDropDowns = [
           link: "/collections/trang-diem-moi",
           title: "trang điểm môi",
         },
-        cate_type: [
+        sub_category: [
           {
             link: "/collections/son-thoi",
             title: "Son Thỏi",
@@ -175,7 +175,7 @@ const menuDropDowns = [
           link: "/collections/make-up-eye",
           title: "Trang Điểm Mắt",
         },
-        cate_type: [
+        sub_category: [
           {
             link: "/collections/phan-mat",
             title: "Phấn Mắt",
@@ -199,7 +199,7 @@ const menuDropDowns = [
           link: "/collections/phu-kien-trang-diem",
           title: "Phụ kiện trang điểm",
         },
-        cate_type: [
+        sub_category: [
           {
             link: "/collections/co-trang-diem",
             title: "Cọ trang điểm",
@@ -225,11 +225,9 @@ const menuDropDowns = [
     type: 2,
     content: [
       {
-        category: {
-          link: "/collections/duong-da-mat",
-          title: "Dưỡng Da",
-        },
-        cate_type: [
+        link: "/collections/duong-da-mat",
+        title: "Dưỡng Da",
+        sub_category: [
           {
             link: "/collections/kem-duong-da-mat-va-mat",
             title: "Kem Dưỡng Da",
@@ -257,7 +255,7 @@ const menuDropDowns = [
           link: "/collections/lam-sach-da",
           title: "Làm Sạch",
         },
-        cate_type: [
+        sub_category: [
           {
             link: "/collections/sua-rua-mat",
             title: "Sữa Rửa Mặt",
@@ -278,7 +276,7 @@ const menuDropDowns = [
           title: "Mặt Nạ",
         },
 
-        cate_type: [
+        sub_category: [
           {
             link: "/collections/mat-na-giay",
             title: "Mặt Nạ Giấy",
@@ -305,7 +303,7 @@ const menuDropDowns = [
           title: "Phụ Kiện Chăm Sóc Da Mặt",
         },
 
-        cate_type: [
+        sub_category: [
           {
             link: "/collections/phu-kien-cham-soc-da",
             title: "Phụ kiện làm sạch",
@@ -331,14 +329,14 @@ const menuDropDowns = [
           link: "/collections/nuoc-hoa",
           title: "nước hoa",
         },
-        cate_type: [],
+        sub_category: [],
       },
       {
         category: {
           link: "/collections/cham-soc-suc-khoe",
           title: "chăm sóc sức khỏe",
         },
-        cate_type: [
+        sub_category: [
           {
             link: "/collections/khau-trang",
             title: "khẩu trang y tế",
@@ -355,7 +353,7 @@ const menuDropDowns = [
           title: "Chăm sóc răng miệng",
         },
 
-        cate_type: [],
+        sub_category: [],
       },
     ],
     image:
@@ -372,7 +370,7 @@ const menuDropDowns = [
           link: "/collections/cham-soc-co-the",
           title: "Chăm sóc toàn thân",
         },
-        cate_type: [
+        sub_category: [
           {
             link: "/collections/sua-gel-tam",
             title: "Sữa tắm",
@@ -404,7 +402,7 @@ const menuDropDowns = [
           link: "/collections/cham-soc-toc",
           title: "Chăm sóc tóc",
         },
-        cate_type: [
+        sub_category: [
           {
             link: "/collections/dau-goi-dau",
             title: "Dầu gội",
@@ -451,66 +449,4 @@ const menuDropDowns = [
     link: "/",
   },
 ];
-const menuDropDowns2 = [
-  {
-    title: "thương hiệu",
-    dropdown: true,
-    type: "brand",
-    link: "/brands",
-  },
-  {
-    title: "Khuyễn mãi hot",
-    dropdown: true,
-    type: "collection",
-    link: "/",
-  },
-  {
-    title: "sản phẩm cao cấp",
-    dropdown: false,
-    type: 1,
-    link: "/",
-  },
-  {
-    title: "trang điểm",
-    dropdown: true,
-    type: 2,
-    link: "/categories/trang-diem",
-  },
-  {
-    title: "chăm sóc da",
-    dropdown: true,
-    type: 2,
-    link: "/",
-  },
-  {
-    title: "chăm sóc cá nhân",
-    dropdown: true,
-    type: 2,
-    link: "/",
-  },
-  {
-    title: "chăm sóc cơ thể",
-    dropdown: true,
-    type: 2,
-    link: "/",
-  },
-  {
-    title: "mã giảm",
-    dropdown: false,
-    type: 1,
-    link: "/",
-  },
-  {
-    title: "sản phẩm mới",
-    dropdown: false,
-    type: 1,
-    link: "/",
-  },
-  {
-    title: "Đặt hàng Oline & nhận tại cửa hàng",
-    dropdown: false,
-    type: 1,
-    link: "/",
-  },
-];
-export default menuDropDowns;
+export default navigationList;

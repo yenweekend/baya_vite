@@ -1,17 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import icons from "../../../utils/icons";
-import { CCarousel, CCarouselItem, CImage } from "@coreui/react";
-import "@coreui/coreui/dist/css/coreui.min.css";
 import styled from "styled-components";
-import {
-  Item,
-  NextButton,
-  PrevButton,
-  DiscoveryAllBtn,
-  SectionItem,
-  Concessionary,
-  BrandSlide,
-} from "../../components";
+import { Concessionary, BrandSlide, LoadMoreBtn } from "../../components";
 import {
   category_outstanding,
   poster_notifications,
@@ -19,91 +9,156 @@ import {
   top_keyword,
 } from "../../../utils/scrape_data";
 
-import SliderCustom from "../../components/SliderCustom";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {getAllProduct} from "../../../api/product.api";
-
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
+import { ProductItem } from "../../components";
+import { Carousel as CarouselAntd } from "antd";
 const Home = () => {
-  const settings = {
-    dots: true,
-    fade: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    waitForAnimate: false
-  };
-  const {isLoading, error, data} = useQuery({
-    queryKey:['productData'],
-    queryFn : getAllProduct
-  })
-  if (isLoading) {
-    return <span>Loading...</span>
-  }
-
-  if (error) {
-    return <span>Error: {error.message}</span>
-  }
   return (
     <>
       <HomeStyled>
-        <div className={`wrap_container mt-[150px]`}>
-          <div className="slider_container ">
-            <div className="flex ">
-              <div className="main_slider px-2 w-[calc((100%/3)*2)] flex-shrink-0">
-                <div className=" w-full rounded-lg overflow-hidden relative">
-                  <CCarousel
-                    controls
-                    transition="crossfade"
-                    className="relative"
-                  >
-                    <CCarouselItem>
-                      <CImage
-                        className="d-block w-100"
-                        src={`https://image.hsv-tech.io/1920x0/bbx/common/b4ca5c51-74af-49ad-8f30-aa864ead0533.webp`}
-                        alt="slide 1"
-                      />
-                    </CCarouselItem>
-                    <CCarouselItem>
-                      <CImage
-                        className="d-block w-100"
-                        src={`https://image.hsv-tech.io/1920x0/bbx/common/cb91cb07-7449-4a2b-87a6-8c9f39372840.webp`}
-                        alt="slide 2"
-                      />
-                    </CCarouselItem>
-                    <CCarouselItem>
-                      <CImage
-                        className="d-block w-100"
-                        src={`https://image.hsv-tech.io/1920x0/bbx/common/76eb16f9-8c61-4031-959b-be134d1b2b07.webp`}
-                        alt="slide 3"
-                      />
-                    </CCarouselItem>
-                  </CCarousel>
-                </div>
-              </div>
-              <div className="left_poster px-2 flex flex-col justify-between ">
-                <div className="w-full  rounded-lg overflow-hidden">
-                  <img
-                    src="https://image.hsv-tech.io/1920x0/bbx/common/ec4a06da-581b-4501-b9ee-2572cebce60c.webp"
-                    className="w-full h-full object-cover"
-                  ></img>
-                </div>
-                <div className="w-full  rounded-lg overflow-hidden">
-                  <img
-                    src="https://image.hsv-tech.io/1920x0/bbx/common/895b1237-c58b-48f5-87af-b55a0473302f.webp"
-                    className="w-full h-full object-cover"
-                  ></img>
-                </div>
+        <div>
+          <div>
+            <div className="flex w-full ">
+              <div className=" px-2 flex-shrink-0 w-full">
+                <CarouselAntd arrows infinite={false} effect="fade">
+                  <div>
+                    <img
+                      src={`https://image.hsv-tech.io/1920x0/bbx/common/b4ca5c51-74af-49ad-8f30-aa864ead0533.webp`}
+                      alt=""
+                    />
+                  </div>
+                  <div>
+                    <img
+                      src={`https://image.hsv-tech.io/1920x0/bbx/common/76eb16f9-8c61-4031-959b-be134d1b2b07.webp`}
+                      alt=""
+                    />
+                  </div>
+                  <div>
+                    <img
+                      src={`https://image.hsv-tech.io/1920x0/bbx/common/cb91cb07-7449-4a2b-87a6-8c9f39372840.webp`}
+                      alt=""
+                    />
+                  </div>
+                </CarouselAntd>
               </div>
             </div>
           </div>
+          <section className=" home-collection ">
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full group"
+            >
+              <CarouselContent>
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <CarouselItem
+                    key={index}
+                    className=" lg:basis-1/4 xl:basis-1/5 basis-1/4"
+                  >
+                    <div className="p-1">
+                      <Card className={"rounded-none"}>
+                        <CardContent className="flex aspect-square items-center justify-center p-0">
+                          <ProductItem />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </section>
         </div>
-        <SectionItem title={"top sản phẩm bán chạy"} data={data.data.data}/>
-        <div className="wrap_container">
-        <BrandSlide  />
+        <section className="home-collection ">
+          <div className="flex justify-between">
+            <a className="text-[--shop-color-title] text-[24px] font-medium">
+              Sản phẩm nổi bật
+            </a>
+            <div className=""></div>
+          </div>
+          <div className="flex items-center">
+            <div className="basis-1/5">
+              <img
+                src="https://theme.hstatic.net/200000796751/1001266995/14/home_coll_1_banner.jpg?v=82"
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="basis-4/5 pl-[14px] grid grid-cols-5 grid-rows-2">
+              {Array.from({ length: 10 }).map((_, index) => (
+                <div
+                  className=" flex-shrink-0 flex-grow-0 px-[6px]"
+                  key={index}
+                >
+                  <ProductItem />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        <section className="home-collection">
+          <div className="flex items-center ">
+            <div className="basis-7/10 bg-[#fff] pt-[20px] pr-[20px]">
+              <a className="text-[--shop-color-title] text-[24px] font-medium">
+                Chút xinh cho nhà tắm
+              </a>
+              <div className="grid grid-cols-3 grid-rows-3 gap-x-3 gap-y-2">
+                {Array.from({ length: 9 }).map((_, index) => (
+                  <div
+                    className="flex items-start border-b pb-[6px] border-solid border-b-[#eae4e8] "
+                    key={index}
+                  >
+                    <div className="w-[100px] h-[100px] overflow-hidden flex-none">
+                      <img
+                        src="https://product.hstatic.net/200000796751/product/ring_shower_curtain_baya_2002323_copy_c9bd1926a5714f3b871324f3f8a7b55e_small.jpg"
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-auto ">
+                      <div className="flex items-center w-full">
+                        <a
+                          href="/"
+                          className="flex-auto w-0 text-[14px] line-clamp-2"
+                        >
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Quisquam aut ipsam dicta. Vero provident
+                          deserunt voluptatem tempore, sequi commodi cumque.
+                        </a>
+                      </div>
+                      <div className="">
+                        <span className="text-[12px] text-[--shop-color-title]">
+                          20,300đ
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="basis-3/10">
+              <img
+                src="https://theme.hstatic.net/200000796751/1001266995/14/home_collection_3_banner.jpg?v=82"
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </section>
+        <div className="">
+          <BrandSlide />
         </div>
         <div className="pt-[30px] pb-[10px] ">
-          <div className="wrap_container wrap_content rounded-[21px] pt-[33px] pb-[42px]  w-full bg-[rgb(175,227,239)] ">
+          <div className=" wrap_content rounded-[21px] pt-[33px] pb-[42px]  w-full bg-[rgb(175,227,239)] ">
             <div className="countdown px-[35px] flex items-center justify-between w-full">
               <div className="countdown_left flash_img ">
                 <img
@@ -139,12 +194,36 @@ const Home = () => {
               </div>
             </div>
             <div className=" pt-[20px] mx-[30px]">
-              <SliderCustom/>
+              <Carousel
+                opts={{
+                  align: "start",
+                }}
+                className="w-full group"
+              >
+                <CarouselContent>
+                  {Array.from({ length: 10 }).map((_, index) => (
+                    <CarouselItem
+                      key={index}
+                      className=" lg:basis-1/4 xl:basis-1/5 basis-1/4"
+                    >
+                      <div className="p-1">
+                        <Card className={"rounded-none"}>
+                          <CardContent className="flex aspect-square items-center justify-center p-0">
+                            <ProductItem />
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
             </div>
           </div>
         </div>
         <Concessionary />
-        <div className="pt-[30px] pb-[10px] category wrap_container">
+        <div className="pt-[30px] pb-[10px] category ">
           <div className="text-center mt-[13px] mb-5">
             <span className="uppercase text-[rgba(0,0,0,.85)] text-[26px] font-bold leading-[36px] ">
               Danh mục nổi bật
@@ -153,7 +232,7 @@ const Home = () => {
           <div className="">
             <div className="">
               <div className="flex flex-wrap  ml-[-15px]  justify-center gap-y-[15px]">
-                {category_outstanding?.map((item,idx) => (
+                {category_outstanding?.map((item, idx) => (
                   <div
                     className="category_item_slide flex flex-col ml-[15px] w-[calc((100%/8)-15px)] group hover:translate-y-[-6px] cursor-pointer  transition duration-300 ease-linear"
                     key={idx}
@@ -175,14 +254,14 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div className="wrap_container my-[30px]">
+        <div className=" my-[30px]">
           <div className="flex ml-[-20px] items-center">
             <div className="w-[calc((100%/3)-20px)] ml-[20px] rounded-[6px] overflow-hidden shrink-0 cursor-pointer hover:translate-y-[-4px] transition duration-300 ease-linear">
               <img src="https://image.hsv-tech.io/1920x914/bbx/common/7a847e8d-7555-4911-9226-874ad7d5b122.webp"></img>
             </div>
           </div>
         </div>
-        <div className="wrap_container">
+        <div className="">
           <div className="">
             <div className="text-center my-[13px] ">
               <span className="uppercase text-[rgba(0,0,0,.85)] text-[26px] font-bold leading-[36px] ">
@@ -200,16 +279,38 @@ const Home = () => {
                 làm đẹp
               </span>
             </div>
-            <SliderCustom/>
-            <DiscoveryAllBtn />
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full group"
+            >
+              <CarouselContent>
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <CarouselItem
+                    key={index}
+                    className=" lg:basis-1/4 xl:basis-1/5 basis-1/4"
+                  >
+                    <div className="p-1">
+                      <Card className={"rounded-none"}>
+                        <CardContent className="flex aspect-square items-center justify-center p-0">
+                          <ProductItem />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
           </div>
         </div>
-        <SectionItem title={"gợi ý chăm da mùa hè"} />
-        <div className="wrap_container">
+        <div className="">
           <div className="">
             <div className="text-center my-[13px] ">
               <span className="uppercase text-[rgba(0,0,0,.85)] text-[26px] font-bold leading-[36px] ">
-                xu hướng làm đẹp
+                tìm kiếm nhiều nhất
               </span>
             </div>
             <div className="flex items-center justify-center gap-[10px] flex-wrap">
@@ -238,7 +339,40 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <SectionItem title={"các mẫu bạn đã xem"} />
+        <div className="">
+          <div className="">
+            <div className="text-center my-[13px] ">
+              <span className="uppercase text-[rgba(0,0,0,.85)] text-[26px] font-bold leading-[36px] ">
+                Các sản phẩm đã xem
+              </span>
+            </div>
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full group"
+            >
+              <CarouselContent>
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <CarouselItem
+                    key={index}
+                    className=" lg:basis-1/4 xl:basis-1/5 basis-1/4"
+                  >
+                    <div className="p-1">
+                      <Card className={"rounded-none"}>
+                        <CardContent className="flex aspect-square items-center justify-center p-0">
+                          <ProductItem />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
+        </div>
       </HomeStyled>
     </>
   );

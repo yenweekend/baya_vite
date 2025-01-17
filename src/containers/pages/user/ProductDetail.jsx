@@ -2,12 +2,15 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { product_images_slide } from "../../../utils/scrape_data";
 import icons from "../../../utils/icons";
-import { Concessionary, Item3, SectionItem } from "../../components";
+import { Concessionary } from "../../components";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { Rate } from "antd";
+import { LoadMoreBtn } from "../../components";
 import { useQuery } from "@tanstack/react-query";
-import { getProductDetail } from "../../../api/product.api";
+import { getProductDetail } from "../../../apis/product.api";
+import { Button } from "../../components";
+const sl =
+  "son-thoi-hieu-ung-li-min-dear-dahlia-lip-paradise-effortless-matte-lipstick-32g";
 const ProductDetail = () => {
   const params = useParams();
   const container_ref = useRef();
@@ -17,7 +20,7 @@ const ProductDetail = () => {
   const desc_ref = useRef();
   const image_ref = useRef([]);
   const [image, setImages] = useState([]);
-  const [selectProduct, setSelectProduct] = useState(null);
+  const [attributeAvailable, setAttrbuteAvailable] = useState([]);
   const [slug, setSlug] = useState(params.slug);
   const [show, setShow] = useState(false);
   const [thumbIndex, setThumbIndex] = useState(0);
@@ -69,71 +72,85 @@ const ProductDetail = () => {
       ...prev,
       [attributeName]: value,
     }));
-  },[])
-  
+  }, []);
   useEffect(() => {
-    setSlug(params.slug)
-  },[params]);
-  useEffect(() => {
-    if(image_ref && image_ref.current.length > 0)
-    {
+    if (image_ref && image_ref.current.length > 0) {
       scroll_ref.current.scrollTop = image_ref.current[thumbIndex].offsetTop;
-
     }
-  },[thumbIndex,image_ref]);
+  }, [thumbIndex, image_ref]);
 
-  const {isLoading, error, data} = useQuery({
-    queryKey: ['productDetailData', slug],
-    queryFn :()  =>  getProductDetail(slug),
+  useEffect(() => {
+    setSlug(params.slug);
+  }, [params]);
+
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["productDetailData", slug],
+    queryFn: () => getProductDetail(slug),
     enabled: !!slug,
-  })
+  });
   useEffect(() => {
     if (data) {
       const images = [...data.data.data.productDetail["Images"]];
-      const variantImages = data.data.data["productDetail"]["ProductVariants"].map((variant) => {
-        return { img_url: variant.thumbnail, id : variant.id };
+      const variantImages = data.data.data["productDetail"][
+        "ProductVariants"
+      ].map((variant) => {
+        return { img_url: variant.thumbnail, id: variant.id };
       });
       setImages([...images, ...variantImages]);
     }
   }, [data]);
   useEffect(() => {
-    if(data && Object.keys(selectedAttributes).length > 0)
-    {
-      const selectedVariant = data.data.data["variants"].find((variant) =>
-        Object.entries(selectedAttributes).filter(([key, value]) =>
-          variant.attributes[key] === value
-        )
-      );
-      if(selectedVariant.length > 0 )
-      {
-        return 1;
+    if (data) {
+      if (
+        Object.keys(selectedAttributes).length ===
+        data.data.data["attributes"].length
+      ) {
+        const variantMatches = data.data.data["variants"].filter((variant) =>
+          Object.entries(selectedAttributes).every(
+            ([key, value]) => variant.attributes[key] === value
+          )
+        );
+        // one variant matches
+        setProductVariant(variantMatches[0]);
+      } else {
+        if (data && Object.keys(selectedAttributes).length > 0) {
+          const variantMatches = data.data.data["variants"].filter((variant) =>
+            Object.entries(selectedAttributes).every(
+              ([key, value]) => variant.attributes[key] === value
+            )
+          );
+          setAttrbuteAvailable(variantMatches);
+          // if(variantMatches.length === 1)
+          // {
+          //   setProductVariant(variantMatches[0]);
+          // }
+        }
       }
-      setProductVariant(selectedVariant);
     }
-  },[selectedAttributes, data]);
+  }, [selectedAttributes, data]);
   useEffect(() => {
-    if(productVariant && image){
-      let thumbIndex ;
+    if (productVariant && image) {
+      let thumbIndex;
       thumbIndex = image.findIndex((item) => item?.id === productVariant.id);
-      setThumbIndex(thumbIndex)
+      setThumbIndex(thumbIndex);
     }
-  },[productVariant, image]);
+  }, [productVariant, image]);
+
   if (isLoading) {
-    return <span>Loading...</span>
+    return "Loading";
   }
   if (error) {
-    return <span>Error: {error.message}</span>
+    return <span>Error: {error.message}</span>;
   }
- 
 
   return (
-    <ProductsStyled className="mt-[148px] wrap_container pt-[30px]">
-      <div className="flex ">
-        <div className="flex_50 px-2 flex">
+    <ProductsStyled className="mt-[30px]">
+      <div className="flex gap-[12px]">
+        <div className="basis-1/2 bg-[#fff] p-[15px] flex">
           <div className="w-[100px] px-[5px] relative">
             <div>
               <div
-                className=" flex items-center justify-center cursor-pointer mb-[12px]"
+                className=" flex items-center justify-center cursor-pointer mb-[12px] hidden"
                 ref={prev_ref}
                 onClick={handlePrevSlide}
               >
@@ -160,7 +177,8 @@ const ProductDetail = () => {
                             prev_ref.current.classList.add("block");
                           }
                           setThumbIndex(i);
-                          scroll_ref.current.scrollTop = e.currentTarget.offsetTop;
+                          scroll_ref.current.scrollTop =
+                            e.currentTarget.offsetTop;
                         }}
                       >
                         <img
@@ -191,7 +209,7 @@ const ProductDetail = () => {
                     transition: "all .3s linear",
                   }}
                 >
-                  {image?.map((item,index) => (
+                  {image?.map((item, index) => (
                     <div key={index} className="relative shrink-0 w-full">
                       <img
                         onMouseEnter={() => setShowMagnifiter(true)}
@@ -225,141 +243,167 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
-        <div className="flex_50 px-2 ">
-          <div className="bread_crumb">Trang chủ & sản phẩm</div>
+        <div className="basis-1/2 bg-[#fff]  p-[15px]">
           <div className="product_info">
             <div className="">
-              <Link to={`/brand/${data.data.data["productDetail"]?.Brand?.slug}`} className="brand_name uppercase no-underline">{data.data.data["productDetail"]?.Brand?.name}</Link>
+              <Link
+                to={`/brand/${data.data.data["productDetail"]?.Brand?.slug}`}
+                className="brand_name uppercase no-underline"
+              >
+                {data.data.data["productDetail"]?.Brand?.name}
+              </Link>
             </div>
-            <div className="info_title w-[90%] leading-[130%] text-[20px] font-bold ">
+            <div className="info_title leading-[130%] text-[20px] font-bold my-[5px]">
               {data.data.data["productDetail"]?.name}
             </div>
-            <div className="flex items-center">
-              <div className="flex ">
-                <Rate disabled defaultValue={2}/>
-                <span className="ml-2">(3)</span>
+            <div className="flex flex-wrap items-center product-origin mb-[15px]">
+              <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
+                xuất sứ:
+                <b className="text-[--shop-color-main]"> Hàn Quốc</b>
               </div>
-              <div className="devide bg-[rgba(0,0,0,.08)] w-[0.8px] mx-[15px] h-[10px]"></div>
+              <div className="devide bg-[rgba(0,0,0,.06)] w-[0.8px] mx-[15px] h-[10px]"></div>
+              <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
+                Mã sản phẩm:
+                <b className="text-[--shop-color-main]"> 2022604763</b>
+              </div>
+              <div className="devide bg-[rgba(0,0,0,.06)] w-[0.8px] mx-[15px] h-[10px]"></div>
 
-              <div className="flex items-center gap-[8px]">
-                <div className="flex items-center justify-center w-5 h-5">
-                  <icons.heart_fill className="text-red-500 "></icons.heart_fill>
-                </div>
-                <span>1</span>
-              </div>
-              <div className="devide bg-[rgba(0,0,0,.06)] w-[0.8px] mx-[15px] h-[10px]"></div>
-              <div>
-                <span className="font-bold ">xuất sứ: </span>
-                <span>Hàn Quốc</span>
-              </div>
-              <div className="devide bg-[rgba(0,0,0,.06)] w-[0.8px] mx-[15px] h-[10px]"></div>
-              <div>
-                <span className="font-bold ">sku: </span>
-                <span>{selectProduct?.sku}</span>
+              <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
+                Tình trạng:
+                <b className="text-[--shop-color-main]"> Còn hàng</b>
               </div>
             </div>
-            <div className="text-[20px] font-bold">{selectProduct?.retail_price}đ</div>
-            <div className="payment_method_item_wrapper flex items-center justify-between my-[10px]">
-              <div>
-                <b className="text-[16px] font-semibold mr-[3px]">Từ</b>
-                <span className="text-[20px] font-bold text-[rgb(82,182,168)]">
-                  30.305đ
-                </span>
-              </div>
-              <div className="flex items-center gap-[6px]">
-                <span>với</span>
-                <div>
-                  <img
-                    src="https://image.hsv-tech.io/400x0/bbx/common/0e2ff2ff-bcd3-489b-a302-908acfb09c9a.webp"
-                    className="max-w-full h-[14px]"
-                  ></img>
-                </div>
-                <div>
-                  <icons.question className="text-[rgb(119,119,119)]"></icons.question>
-                </div>
-                <div className="ml-[20px]">
-                  <img
-                    src="https://image.hsv-tech.io/400x0/bbx/common/2ab38d94-de0a-41f6-be9e-5cc51de489b5.webp"
-                    className="max-w-full h-[20px]"
-                  ></img>
-                </div>
-              </div>
-            </div>
-            <div className="payment_method_item_wrapper flex items-center justify-between ">
-              <div>
-                <b className="text-[16px] font-semibold mr-[3px]">Từ</b>
-                <span className="text-[20px] font-bold text-[rgb(0,69,202)]">
-                  106.333đ
-                </span>
-              </div>
-              <div className="flex items-center gap-[6px]">
-                <span>với</span>
-                <div>
-                  <img
-                    src="https://image.hsv-tech.io/400x0/bbx/common/3a4054ce-a218-4fbb-bfab-944b6c226ff7.webp"
-                    className="max-w-full h-[14px]"
-                  ></img>
-                </div>
-                <div>
-                  <icons.question className="text-[rgb(119,119,119)]"></icons.question>
-                </div>
-                <div className="ml-[20px] price_off">Giảm 70K</div>
-              </div>
+            <div className="h-[60px] w-full bg-[#fafafa]  flex items-center p-8">
+              <span className="text-[--shop-color-text] mr-[100px] font-bold">
+                Giá:{" "}
+              </span>
+              <strong className="text-[#ff0000] text-[32px]">20.000đ</strong>
             </div>
             <div className="variants mt-3">
-              {
-                data.data.data["attributes"].map((attrs) => (
-                  attrs.attributeSlug  === "mau" ? <>
-                    <div className="attr_name mb-2">
-                      <span className=" text-[14px] font-bold mr-2" >{attrs.attributeName }: </span>
-                      <span className="text-[14px]">M109 MONICA - đỏ mận</span>
-                    </div>
-                    <div className="flex items-center flex-wrap gap-2 mt-2 ">
-                      {
-                        attrs["values"].map((attr) => (<div className="" key={attr.value} onClick={() => {
-                          handleAttributeChange(attrs.attributeName, attr.value)
-                        }}>
-                          <div className={`w-[30px] h-[30px] rounded-full cursor-pointer border border-transparent transition-all ease-linear duration-75  ${Object.values(selectedAttributes).some((item) => item === attr.value) ? "translate-y-[-2px] selected-color " : ""}`} style={{backgroundColor: `${attr.value}`}}>
+              {data.data.data["attributes"].map((attrs) =>
+                attrs.attributeSlug === "mau" ? (
+                  <>
+                    <div className="mb-[15px]">
+                      <div className="mb-2" key={attrs.attributeSlug}>
+                        <span className=" text-[14px] font-bold mr-2">
+                          {attrs.attributeName}:{" "}
+                        </span>
+                        <span className="text-[14px]">
+                          M109 MONICA - đỏ mận
+                        </span>
+                      </div>
+                      <div className="flex items-center flex-wrap gap-2 mt-2 ">
+                        {attrs["values"].map((attr_value) => (
+                          <div
+                            className={`${
+                              Object.keys(selectedAttributes).length === 0
+                                ? ""
+                                : Object.keys(selectedAttributes).length ===
+                                    1 &&
+                                  Object.keys(selectedAttributes)[0] ===
+                                    attrs.attributeName
+                                ? ""
+                                : attributeAvailable.some((item) =>
+                                    Object.values(item.attributes).includes(
+                                      attr_value.value
+                                    )
+                                  )
+                                ? ""
+                                : "opacity-25 cursor-not-allowed"
+                            }`}
+                            key={attr_value.value}
+                            onClick={(e) => {
+                              handleAttributeChange(
+                                attrs.attributeName,
+                                attr_value.value
+                              );
+                            }}
+                          >
+                            <div
+                              className={`w-[30px] h-[30px] rounded-full cursor-pointer border border-transparent transition-all ease-linear duration-75  ${
+                                Object.values(selectedAttributes).some(
+                                  (item) => item === attr_value.value
+                                )
+                                  ? "translate-y-[-2px] selected-color "
+                                  : ""
+                              }`}
+                              style={{
+                                backgroundColor: `${attr_value.value}  `,
+                              }}
+                            ></div>
                           </div>
-                        </div>))
-                      }
+                        ))}
+                      </div>
                     </div>
-                    </> : <>                     
-                        <div className="attr_name mb-2" >
-                          <span className=" text-[14px] font-bold mr-2" >{attrs.attributeName }: </span>
-                        </div>
-                    <div className="variants flex  gap-3">                  
-                      {                       
-                        attrs["values"].map((attr_value,index) => (
+                  </>
+                ) : (
+                  <>
+                    <div className="mb-[15px]">
+                      <div className=" mb-2" key={attrs.attributeSlug}>
+                        <span className=" text-[14px] font-bold mr-2">
+                          {attrs.attributeName}:{" "}
+                        </span>
+                      </div>
+                      <div className="variants flex  gap-3">
+                        {attrs["values"].map((attr_value) => (
                           <>
-                          <div className=" flex gap-2 items-center justify-normal">                      
+                            <div
+                              className={`flex gap-2 items-center justify-normal ${
+                                Object.values(selectedAttributes).some(
+                                  (item) => item === attr_value.value
+                                )
+                                  ? "selected "
+                                  : "border border-solid border-black"
+                              } transition-all ease-linear duration-100  px-4 py-2 cursor-pointer relative overflow-hidden ${
+                                Object.keys(selectedAttributes).length === 0
+                                  ? ""
+                                  : Object.keys(selectedAttributes).length ===
+                                      1 &&
+                                    Object.keys(selectedAttributes)[0] ===
+                                      attrs.attributeName
+                                  ? ""
+                                  : attributeAvailable.some((item) =>
+                                      Object.values(item.attributes).includes(
+                                        attr_value.value
+                                      )
+                                    )
+                                  ? ""
+                                  : "opacity-25 cursor-not-allowed"
+                              }`}
+                              key={attr_value.value}
+                              onClick={(e) => {
+                                handleAttributeChange(
+                                  attrs.attributeName,
+                                  attr_value.value
+                                );
+                              }}
+                            >
                               <>
-                              <div className={`${Object.values(selectedAttributes).some((item) => item === attr_value.value )  ? 'selected ' :"border border-solid border-black" } transition-all ease-linear duration-100  px-4 py-2 cursor-pointer relative overflow-hidden` }  
-                            onClick={() => handleAttributeChange(attrs.attributeName, attr_value.value)}
-                            key={attr_value}
-                      >
-                        {attr_value.value}
-                          {
-                           Object.values(selectedAttributes).some((item) => item === attr_value.value )  ? <div className="absolute w-6 h-6 rounded-[50%] bg-[#E4003A] bottom-[-6px] right-[-6px]">
-                            <icons.check color="white" className="absolute top-[2px] left-[2px] text-[18px] font-bold" ></icons.check>
-                          </div> : ""
-                          }
-                        </div>
+                                {attr_value.value}
+                                {Object.values(selectedAttributes).some(
+                                  (item) => item === attr_value.value
+                                ) ? (
+                                  <div className="absolute w-6 h-6 rounded-[50%] bg-[#E4003A] bottom-[-6px] right-[-6px]">
+                                    <icons.check
+                                      color="white"
+                                      className="absolute top-[2px] left-[2px] text-[18px] font-bold"
+                                    ></icons.check>
+                                  </div>
+                                ) : (
+                                  ""
+                                )}
                               </>
-                            
-                        </div>                                
-                        </>
-                        ))                
-                      }
-                      
+                            </div>
+                          </>
+                        ))}
+                      </div>
                     </div>
-                    </>
-                ))
-              }
-             
+                  </>
+                )
+              )}
             </div>
-        
-            
+            <LoadMoreBtn />
+
             <div className="product_extra ">
               <div className="leading-[22px] font-semibold ">
                 Các sản phẩm được tặng kèm
@@ -418,7 +462,6 @@ const ProductDetail = () => {
                     </div>
                   </div>
                 </label>
-           
               </div>
             </div>
             <div className="promotion_message">
@@ -492,58 +535,60 @@ const ProductDetail = () => {
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-[10px] mt-[30px] flex-wrap">
-              <div className="flex items-center border-[1.5px] border-solid border-[rgb(239,239,239)]  rounded-full ">
-                <div className="minus flex items-center justify-center  w-10 h-[50px] cursor-pointe">
+            <div className="flex items-center mt-[15px]">
+              <span className="text-[--shop-color-text] font-bold text-[14px] mr-[100px]">
+                Số lượng
+              </span>
+              <div className="flex items-center  w-[120px]  ">
+                <div className=" flex items-center justify-center  border border-solid border-[#f3f4f4] w-10 h-10 cursor-pointe">
                   <icons.minus></icons.minus>
                 </div>
-                <div className="quantity_text text-center">1</div>
-                <div className="plus flex items-center justify-center w-10 h-[50px] cursor-pointer">
+                <div className="border border-solid border-[#f3f4f4] w-10 h-10 flex items-center justify-center text-[14px] font-bold">
+                  1
+                </div>
+                <div className=" flex items-center justify-center border border-solid border-[#f3f4f4] w-10 h-10 cursor-pointer">
                   <icons.plus></icons.plus>
                 </div>
               </div>
-              <div className="flex items-center btn_black py-[14px] px-[23px] rounded-full gap-3 cursor-pointer flex-auto justify-center">
+            </div>
+            <div className="flex items-center gap-[10px] mt-[30px] flex-wrap">
+              <div className="flex items-center  py-[10px] px-[25px]  gap-3 cursor-pointer flex-auto justify-center bg-[#ff0000] text-[#fff]">
                 <div>
                   <icons.cart className="text-[20px]"></icons.cart>
                 </div>
                 <span className="text-[16px]">Thêm vào giỏ hàng</span>
               </div>
-              <div className="gradient_header  py-[14px] px-[23px] rounded-full">
-                Mua ngay
-              </div>
-              <div className="flex items-center justify-center w-[50px] h-[50px] border border-solid border-[#000] rounded-[50%] cursor-pointer">
-                <icons.heartthin className="text-[24px]"></icons.heartthin>
-              </div>
+              <Button>Mua ngay</Button>
             </div>
             <div className="flex items-center flex-wrap gap-y-[10px] mt-[30px]">
-              <div className="px-[5px] flex_50 flex items-center gap-2">
+              <div className="px-[5px] basis-1/2 flex items-center gap-2">
                 <div>
-                  <icons.emptyStar className="text-[20px]"></icons.emptyStar>
+                  <icons.emptyStar className="text-[20px] text-[--shop-color-main]"></icons.emptyStar>
                 </div>
                 <div>
                   Cam kết <strong>hàng chính hãng</strong>
                 </div>
               </div>
-              <div className="px-[5px] flex_50 flex items-center gap-2">
+              <div className="px-[5px] basis-1/2 flex items-center gap-2">
                 <div>
-                  <icons.real className="text-[20px]"></icons.real>
+                  <icons.real className="text-[20px] text-[--shop-color-main]"></icons.real>
                 </div>
                 <div>
                   Cam kết <strong>hàng chính hãng</strong>
                 </div>
               </div>
-              <div className="px-[5px] flex_50 flex items-center gap-2">
+              <div className="px-[5px] basis-1/2 flex items-center gap-2">
                 <div>
-                  <icons.delivertruck className="text-[20px]"></icons.delivertruck>
+                  <icons.delivertruck className="text-[20px] text-[--shop-color-main]"></icons.delivertruck>
                 </div>
                 <div>
                   <strong>Miễn phí giao</strong>
                   hàng 24h
                 </div>
               </div>
-              <div className="px-[5px] flex_50 flex items-center gap-2">
+              <div className="px-[5px] basis-1/2 flex items-center gap-2">
                 <div>
-                  <icons.swap className="text-[20px]"></icons.swap>
+                  <icons.swap className="text-[20px] text-[--shop-color-main]"></icons.swap>
                 </div>
                 <div>
                   Đổi/trả hàng trong <strong>7 ngày</strong>
@@ -553,7 +598,6 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
-      <Concessionary />
       <div className="devide bg-[rgba(0,0,0,.08)]  mx-auto h-[0.8px] max-w-[1366px]"></div>
       <div className="mt-[50px]"></div>
       <div className="mt-[200px]">
@@ -563,8 +607,8 @@ const ProductDetail = () => {
           </div>
           <div className="">
             <div className={show ? "h-auto" : " h-[200px] overflow-hidden"}>
-              <div className="w-full h-full relative overflow-hidden" >
-                  <div className="w-full h-full" ref={desc_ref}></div>
+              <div className="w-full h-full relative overflow-hidden">
+                <div className="w-full h-full" ref={desc_ref}></div>
                 {/* <div className="p-[10px] combo">
                   <p className="font-bold ">**Combo gồm:</p>
                   <p className="combo_detail">
@@ -692,12 +736,9 @@ const ProductDetail = () => {
           <div className="font-bold text-[20px]">Sản phẩm liên quan</div>
           <div className="font-medium text-[18px] cursor-pointer underline"></div>
         </div>
-        <div className="flex_66 px-[15px]">
-          <Item3 />
-        </div>
+        <div className="flex_66 px-[15px]"></div>
       </div>
       <div className="devide bg-[rgba(0,0,0,.08)]  mx-auto h-[0.8px] max-w-[1366px] my-5 "></div>
-      <SectionItem title={"Các mẫu bạn đã xem"} />
     </ProductsStyled>
   );
 };
@@ -732,8 +773,6 @@ const ProductsStyled = styled.div`
     margin: 20px 0px;
   }
 
-
-
   .price_off {
     background-color: rgb(0, 69, 202);
     color: rgb(255, 255, 255);
@@ -749,13 +788,13 @@ const ProductsStyled = styled.div`
     margin: 5px 0px;
     font-weight: 700;
   }
-  .selected{
-    border: 1px solid #E4003A;
+  .selected {
+    border: 1px solid #e4003a;
     transform: translateY(-3px);
-    transition: all .3s linear;
-    color: #E4003A;
+    transition: all 0.3s linear;
+    color: #e4003a;
   }
-  .selected-color{
+  .selected-color {
     box-shadow: 0 0 0 3px #fff, 0 0 0 4px red;
   }
 `;

@@ -3,13 +3,15 @@ import styled from "styled-components";
 const TagSale = () => {
   return (
     <TagSaleStyled className="sale_tag ">
-      -59%
+      <span className="text-[#fff] text-[12px]">-59%</span>
       <div className="triangle"></div>
     </TagSaleStyled>
   );
 };
 const TagSaleStyled = styled.div`
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 19px;
   width: auto;
   background-color: rgb(199, 49, 48);

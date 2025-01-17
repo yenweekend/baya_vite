@@ -13,9 +13,16 @@ import {
   Register,
   Identify,
   Login,
-  ChangePassword
+  ChangePassword,
 } from "./containers/pages/user";
-import {AdminProduct, ProductCreate,ProductSale,ProductSaleCreate,Variants,DiscountEdit} from "./containers/pages/admin/index";
+import {
+  AdminProduct,
+  ProductCreate,
+  ProductSale,
+  ProductSaleCreate,
+  Variants,
+  DiscountEdit,
+} from "./containers/pages/admin/index";
 import UserMaster from "./containers/layouts/user/Master";
 import AdminMaster from "./containers/layouts/admin/Master";
 import paths from "./utils/paths";
@@ -28,7 +35,10 @@ function App() {
         <Route element={<Register />} path="/register"></Route>
         <Route element={<Login />} path="/login"></Route>
         <Route element={<Identify />} path="/login/identify"></Route>
-        <Route element={<ChangePassword />} path="/auth/resetpassword/:token"></Route>
+        <Route
+          element={<ChangePassword />}
+          path="/auth/resetpassword/:token"
+        ></Route>
         <Route element={<UserMaster />} path={paths.MASTER}>
           <Route element={<Home />} path={paths.HOME}></Route>
           <Route element={<BrandDetail />} path={paths.BRAND_DETAIL}></Route>
@@ -42,20 +52,25 @@ function App() {
           <Route element={<Ckeditor />} path={"/ckeditor"}></Route>
           <Route element={<Home />} path="/*"></Route>
         </Route>
-        <Route element={<AdminMaster/>} path={adminPaths.HOME}>
-          <Route element={<AdminProduct/>} path={adminPaths.PRODUCTS}>
-          </Route>
-          <Route element={<ProductCreate/>} path={adminPaths.CREATEPRODUCTS}>
-          </Route>
-          <Route element={<ProductSale/>} path={adminPaths.SALEPRODUCT}>
-          </Route>
-          <Route element={<ProductSaleCreate/>} path={adminPaths.SALEPRODUCTCREATE}>
-          </Route>
-          <Route element={<Variants/>} path={adminPaths.VARIANT}>
-          </Route>
-          <Route element={<DiscountEdit/>} path={adminPaths.DISCOUNTEDIT}>
-          </Route>
-
+        <Route element={<AdminMaster />} path={adminPaths.HOME}>
+          <Route element={<AdminProduct />} path={adminPaths.PRODUCTS}></Route>
+          <Route
+            element={<ProductCreate />}
+            path={adminPaths.CREATEPRODUCTS}
+          ></Route>
+          <Route
+            element={<ProductSale />}
+            path={adminPaths.SALEPRODUCT}
+          ></Route>
+          <Route
+            element={<ProductSaleCreate />}
+            path={adminPaths.SALEPRODUCTCREATE}
+          ></Route>
+          <Route element={<Variants />} path={adminPaths.VARIANT}></Route>
+          <Route
+            element={<DiscountEdit />}
+            path={adminPaths.DISCOUNTEDIT}
+          ></Route>
         </Route>
       </Routes>
     </>

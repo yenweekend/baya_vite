@@ -54,6 +54,10 @@ button {
   border: 0;
 }
 body {
+  color: var(--shop-color-text);
+  line-height: 1.45;
+  font-size: 14px;
+  background: var(--shop-color-bg);
   min-height: 100vh;
   font-weight: 400;
   font-size: 16px;
@@ -71,12 +75,9 @@ a,
 div,
 span,
 p {
-  /* font-family: "Quicksand", sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-size: 14px;
-  font-weight: 500; */
-    font-family: "Roboto", serif;
-    font-weight: 400;
-    font-style: normal;
+  font-weight: 500;
 }
 * {
   scroll-behavior: smooth;
@@ -170,26 +171,7 @@ p {
   border-radius: 10px;
   background-color: #d62929;
 }
-/* .carousel-control-next-icon,
-.carousel-control-prev-icon {
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  border-radius: 50%;
-  user-select: none;
-  box-shadow: rgb(184, 193, 202) 0px 0px 10px;
-  z-index: 2;
-  position: absolute !important;
-  border: 1px solid transparent !important;
-  background: var(--bg-content) !important;
-  width: 48px !important;
-  height: 48px !important;
-  display: flex !important;
-  cursor: pointer !important;
-  font-size: 16px !important;
-  color: var(--text-primary) !important;
-} */
+
 .scrollbar_custom::-webkit-scrollbar {
   width: 5px;
   background-color: #f0f3fa;
@@ -224,6 +206,9 @@ p {
 }
 .filter_otp .ant-select-selector {
   height: 35px !important;
+}
+.filter-group {
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.08);
 }
 .ant-select-selector {
   outline: none;
@@ -550,31 +535,29 @@ p {
   position: sticky;
   top: 160px;
 }
-.input_filter {
+
+.checkbox > input {
+  border: 1px solid #000;
   cursor: pointer;
-  width: 20px;
-  height: 20px;
-  border: 1px solid #dbdfe6;
-  border-radius: 6px;
-  transition: all 0.1s linear;
+  border-radius: 4px;
+  appearance: none;
 }
-.input_filter > div {
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-45deg);
-  width: 10px;
-  height: 6px;
-  border-left: 2px solid transparent;
-  border-bottom: 2px solid transparent;
-}
-.input_checkbox:checked + .input_filter {
-  background-color: #c23f5b;
-  border-color: #c23f5b;
-}
-.input_checkbox:checked + .input_filter > div {
-  border-left: 2px solid #fff;
+.checkbox > input:checked:after {
+  content: " ";
   border-bottom: 2px solid #fff;
+  border-right: 2px solid #fff;
+  height: 9px;
+  width: 5px;
+  position: absolute;
+  top: 10px;
+  left: 7px;
+  transform: translate(-50%, -63%) rotate(45deg);
 }
+.checkbox > input:checked {
+  background-color: var(--primary-bg);
+  border-color: transparent;
+}
+
 /* pagination  */
 .ant-pagination-item {
   border-radius: 50% !important;
@@ -793,37 +776,52 @@ p {
 }
 /* custom carousel arrow  */
 .ant-carousel .slick-arrow {
-  background-color: #fff !important;
-  opacity: 1;
-  visibility: 1;
+  cursor: pointer !important;
+  background-color: var(--primary-bg) !important;
+  opacity: 0;
+  visibility: 0;
   width: 30px;
   height: 30px;
-  border-radius: 50%;
+  transition: all 0.3s linear;
+}
+.ant-carousel .slick-arrow .slick-prev {
+  transform: translateX(-10px);
+}
+.ant-carousel .slick-arrow .slick-next {
+  transform: translateX(10px);
 }
 .ant-carousel .slick-arrow::after {
   top: 50%;
-  color: #000;
+  color: #fff;
 }
 .ant-carousel .slick-next::after {
   left: 45%;
-
   transform: translate(-50%, -50%) rotate(135deg);
 }
 .ant-carousel .slick-prev::after {
   left: 55%;
-
   transform: translate(-50%, -50%) rotate(-45deg);
 }
-/* customer react slick */
-/* .slick-next::before {
-  display: none;
+.slick-slider:hover > .slick-arrow {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(0);
 }
-.slick-prev::before {
-  display: none;
-} */
-/* .slick-slide {
-  width: fit-content !important;
-} */
+
+.center-y {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.logo-text {
+  font-family: "Playwrite IN", serif;
+}
 .shop_title,
 .shop_title span {
   font-family: "Playfair Display", serif;
@@ -831,6 +829,141 @@ p {
   text-transform: uppercase;
   font-size: 30px;
 }
-.slogan {
-  font-family: "Great Vibes", cursive;
+
+@layer base {
+  :root {
+    --primary-bg: #c4123f;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --shop-color-bg: #f7f7f7;
+    --shop-color-main: #c31425;
+    --shop-color-text: #252a2b;
+    --shop-color-title: #c31425;
+    --shop-color-hover: #c31425;
+    --shop-color-button: #c31425;
+    --shop-color-border: #eae4e8;
+    --home-category-bg-1: #faf1ff;
+    --home-category-bg-2: #faf4eb;
+    --home-category-bg-3: #f4e6e5;
+    --home-category-bg-4: #e6f2f4;
+    --home-category-bg-5: #fff6f6;
+    --home-coupon-bg: #fdf0d1;
+    --home-coupon-light: #f1c150;
+    --home-coupon-border: #f8d0d3;
+    --home-coupon-text: #333333;
+    --home-collection1-bg: #ffeef0;
+    --home-collection1-icon: #c4122f;
+    --home-collection1-color-text: #333333;
+    --home-categorize-bg: #c4122f;
+    --home-categorize-color: #ffffff;
+    --home-collection2-bg: #d7d5c9;
+    --home-collection2-title: #ff0000;
+    --home-collection3-bg: #e9dabe;
+    --footer-bg-color-1: #ffffff;
+    --footer-bg-color-2: #ffffff;
+    --footer-bg-color-copyright: #f2f8fd;
+    --footer-color-title: #333333;
+    --footer-color-text: #333333;
+    --footer-color-hover: #c31425;
+  }
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+@layer utilities {
+  .btn-loadmore {
+    position: relative;
+    color: var(--shop-color-button);
+    border: 1px solid var(--shop-color-button);
+    background: var(--shop-color-hover);
+    text-transform: initial;
+    font-size: 14px;
+    padding: 10px 25px;
+    overflow: hidden;
+    display: inline-block;
+    z-index: 1;
+    line-height: normal;
+    letter-spacing: 1px;
+    outline: none;
+    transition: color 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+      border 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  }
+  .btn-loadmore::before {
+    content: "";
+    background: #fff;
+    position: absolute !important;
+    left: -2px;
+    top: 0;
+    bottom: 0;
+    right: -2px;
+    z-index: -1;
+    box-sizing: border-box;
+    transform: scale(1, 1);
+    transform-origin: left center;
+    transition: transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+      -webkit-transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  }
+  .btn-loadmore:hover {
+    color: #fff;
+    border-color: var(--shop-color-hover);
+  }
+  .btn-loadmore:hover::before {
+    transform-origin: right center;
+    transform: scale(0, 1);
+    /* background: #fff; */
+  }
 }

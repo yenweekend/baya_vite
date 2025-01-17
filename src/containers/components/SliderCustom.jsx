@@ -1,11 +1,10 @@
-import React, {useRef, useState,useCallback, useEffect} from 'react'
-import menuDropDowns from '../../utils/dropdown';
-import icons from '../../utils/icons';
-import { Link } from 'react-router-dom';
-import Items from './Items';
-import PrevButton from './PrevButton';
-import NextButton from './NextButton';
-const SliderCustom = ({data}) => {
+import React, { useRef, useState, useCallback, useEffect } from "react";
+import menuDropDowns from "../../utils/navigation";
+import icons from "../../utils/icons";
+import { Link } from "react-router-dom";
+import PrevButton from "./PrevButton";
+import NextButton from "./NextButton";
+const SliderCustom = ({ data }) => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const next_ref = useRef();
   const prev_ref = useRef();
@@ -41,35 +40,31 @@ const SliderCustom = ({data}) => {
     }
     brandslide_ref.current.scrollLeft = newScrollPosition;
   }, [scrollPosition]);
-  
+
   return (
     <div className="relative" ref={container_ref}>
-        <div
-          className="menu_otps w-full  overflow-hidden overflow-x-scroll no-scrollbar"
-          ref={brandslide_ref}
-        >
-          <div className="flex items-center  menu_lists gap-[20px]">
-            {data?.map((product) => (<Items width={260} key={product.id} detail={product}/>)
-            )}
-            
-          </div>
-        </div>
-        <div
-          className={` absolute top-[50%] translate-y-[-50%]  left-[-20px] hidden`}
-          ref={prev_ref}
-          onClick={handlePrevSlide}
-        >
-          <PrevButton/>
-        </div>
-        <div
-          className={` absolute top-[50%] translate-y-[-50%] right-[30px]`}
-          ref={next_ref}
-          onClick={handleNextSlide}
-        >
-          <NextButton/>
-        </div>
+      <div
+        className="menu_otps w-full  overflow-hidden overflow-x-scroll no-scrollbar"
+        ref={brandslide_ref}
+      >
+        <div className="flex items-center  menu_lists gap-[20px]"></div>
       </div>
-  )
-}
+      <div
+        className={` absolute top-[50%] translate-y-[-50%]  left-[-20px] hidden`}
+        ref={prev_ref}
+        onClick={handlePrevSlide}
+      >
+        <PrevButton />
+      </div>
+      <div
+        className={` absolute top-[50%] translate-y-[-50%] right-[30px]`}
+        ref={next_ref}
+        onClick={handleNextSlide}
+      >
+        <NextButton />
+      </div>
+    </div>
+  );
+};
 
-export default SliderCustom
+export default SliderCustom;

@@ -4,67 +4,49 @@ import styled from "styled-components";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import icons from "../../../utils/icons";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import { Header, Footer } from "../../components";
-import axios from "axios";
-import { apiUrl } from "../../../utils/constants";
-import {toastifySelector} from "../../../redux-toolkit/selector/home.selector";
+import Header from "./Header";
+import Footer from "./Footer";
 import { useSelector } from "react-redux";
+let lastScrollTop = 0;
 
 const Master = () => {
-  const toastRef = useRef();
-  const page_header_ref = useRef();
   const top_page_ref = useRef();
   const to_top_ref = useRef();
-  const toastify = useSelector(toastifySelector);
   const handleScroll = () => {
-    if (document.documentElement.scrollTop > 2500) {
+    if (document.documentElement.scrollTop > 1000) {
       to_top_ref.current.classList.remove("hidden");
       to_top_ref.current.classList.add("block");
     } else {
       to_top_ref.current.classList.remove("block");
       to_top_ref.current.classList.add("hidden");
     }
-    if (top_page_ref.current.getBoundingClientRect().y === 150) {
-      page_header_ref.current.classList.remove("is_scroll");
+    const navbar = document.querySelector(".nav-bar");
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollTop > lastScrollTop && scrollTop > 250) {
+      navbar.style.top = "-248px";
+      navbar.style.opacity = 0;
     } else {
-      page_header_ref.current.classList.add("is_scroll");
+      navbar.style.top = "0px";
+      navbar.style.opacity = 1;
     }
+    lastScrollTop = scrollTop;
   };
-  const toast = useCallback((toastify) => {
-    const toast = document.createElement("li");
-    const autoRemoveId = setTimeout(() => {
-      toastRef?.current?.removeChild(toast);
-    }, [4000]);
-    toast.onclick = (event) => {
-      if (event.target.closest(".close_toast")) {
-        toastRef.current.removeChild(toast);
-        clearTimeout(autoRemoveId);
-      }
-    };
-    toast.classList.add("toast_bg");
-    toast.innerHTML = `<span>${toastify.text}</span>
-    <i class="fa-solid fa-xmark close_toast"></i>
-   `;
-    toast.style.animation = `slideInLeft ease .3s forwards, fadeOut linear 1s 3s forwards`;
-    toastRef.current.appendChild(toast);
-  }, []);
+
   useEffect(() => {
+    window.scrollTo(0, 0);
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  useEffect(() => {
-    if (toastify != null) {
-      toast(toastify);
-    }
-  }, [toastify]);
 
   return (
     <>
-      <MasterStyled className={`layout_master`} ref={top_page_ref}>
-        <Header ref={page_header_ref} />
-        <Outlet />
+      <MasterStyled ref={top_page_ref}>
+        <Header />
+        <div className="wrap-container">
+          <Outlet />
+        </div>
         <Footer />
         <div
           className="fixed bottom-2 right-2 hidden "
@@ -77,40 +59,19 @@ const Master = () => {
             <icons.arrowup className="text-[24px] "></icons.arrowup>
           </div>
         </div>
-        <ToastStyled ref={toastRef}></ToastStyled>
       </MasterStyled>
-
     </>
   );
 };
 const MasterStyled = styled.div`
-  
-  .input_filter {
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    border: 1px solid #dbdfe6;
-    border-radius: 6px;
-    transition: all 0.1s linear;
+  .home-collection {
+    margin-top: 30px;
   }
-  .input_filter > div {
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-45deg);
-    width: 10px;
-    height: 6px;
-    border-left: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-  }
-  .input_checkbox:checked + .input_filter {
-    background-color: #c23f5b;
-    border-color: #c23f5b;
-  }
-  .primary_color{
+  .primary_color {
     color: var(--primary);
   }
-  .text_primary{
-    color: var( --text-primary);
+  .text_primary {
+    color: var(--text-primary);
   }
 
   .ellipsis_1_lines {
@@ -130,13 +91,13 @@ const MasterStyled = styled.div`
     }
     75% {
       opacity: 0;
-      top: 148px;
+      top: 238px;
       left: 0;
       display: none;
     }
     100% {
       opacity: 1;
-      top: 148px;
+      top: 238px;
       left: 0;
       display: block;
     }
@@ -187,9 +148,7 @@ const MasterStyled = styled.div`
     height: 100%;
     top: 0px;
   }
- 
-  
-  
+
   .footer_desc {
     max-width: 500px;
     margin-right: 20px;
@@ -287,35 +246,16 @@ const MasterStyled = styled.div`
     border-radius: 15px;
   }
 
-  .dropdown_item.is_dropdown {
-    display: block !important;
-  }
-  .btn_black_gradient {
-    border-radius: 26px;
-    border: none;
-    background: rgb(0, 0, 0) !important;
-    color: rgb(255, 255, 255) !important;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-    opacity: 0.8;
-  }
-  .page_header.is_scroll {
-    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-  }
-  .wrap_container {
+  .wrap-container {
     box-sizing: content-box;
     margin-left: auto;
     transition: background-color 400ms linear 0s;
-
-    color: rgb(0, 0, 0);
     margin-right: auto;
     max-width: 1366px;
     position: relative;
     width: 80%;
   }
-  
+
   .header_page_text {
     font-size: var(--font-size-s);
     font-family: var(--font-family);
@@ -335,16 +275,7 @@ const MasterStyled = styled.div`
     top: 50%;
     transform: translateY(-50%);
   }
-  .form_group {
-    height: 40px;
-    padding-right: 4px;
-    background: rgb(246, 246, 246);
-    transition: background-color 800ms linear 0s;
-    border-radius: 42px;
-    width: 400px;
-    max-width: 400px;
-    border: 1px solid transparent;
-  }
+
   .monserat_font {
     font-family: var(--font-family);
   }
@@ -373,80 +304,8 @@ const MasterStyled = styled.div`
     transform: translateY(-50%);
   }
 
-  .btn_menu {
-    cursor: pointer;
-    height: 35px;
-    padding: 0px 20px;
-    border: 1px solid rgb(239, 239, 239);
-    border-radius: 8px;
-    background: rgb(255, 255, 255);
-    color: rgb(0, 0, 0);
-    transition: background-color 400ms linear 0s;
-  }
-  .btn_menu > span {
-    font-size: 16px;
-  }
-  .btn_menu:hover {
-    background-color: rgb(239, 239, 239);
-  }
-
-  .menu_lists::-webkit-scrollbar {
+  .nav-list::-webkit-scrollbar {
     display: none;
-  }
-`;
-const ToastStyled = styled.ul`
-  position: absolute;
-  z-index: 9999;
-  bottom: 90px;
-  left: 0;
-  width: 360px;
-  transform: translateX(-100%);
-  .close_toast {
-    color: var(--text-primary);
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-  }
-  .toast_bg {
-    width: 100%;
-    padding: 10px 20px;
-    border-radius: 4px;
-    background-color: blue;
-    box-shadow: 0 2px 5px blue;
-  }
-  li {
-    width: 100%;
-    padding: 10px 20px;
-    border-radius: 4px;
-    background-color: blue;
-    box-shadow: 0 2px 5px black;
-    transform: translateX(100%);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  li span {
-    color:white;
-    line-height: 1.3;
-    font-size: 14px;
-  }
-  .bold_text {
-    font-weight: 500;
-  }
-  @keyframes fadeOut {
-    to {
-      opacity: 0;
-    }
-  }
-  @keyframes slideInLeft {
-    from {
-      opacity: 0;
-      transform: translateX(0);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(100%);
-    }
   }
 `;
 

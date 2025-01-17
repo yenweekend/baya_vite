@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import icons from "../../../utils/icons";
-import { BreadCrumb, Filter, Item4 } from "../../components";
+import { BreadCrumb } from "../../components";
 import { card } from "../../../utils/scrape_data";
 import { useLocation } from "react-router-dom";
 const Category = () => {
@@ -195,54 +195,10 @@ const Category = () => {
                 </div>
               </div>
             </div>
-            <Filter
-              title={"Danh mục"}
-              filterWith={[
-                "Kem dưỡng mặt",
-                "Sữa rửa mặt",
-                "Serum",
-                "Chống nắng",
-              ]}
-            />
-            <Filter
-              title={"Loại sản phẩm"}
-              filterWith={[
-                "mặt nạ ngủ",
-                "nước cân bằng",
-                "sửa rửa mặt",
-                "tinh chất",
-                "mặt nạ giấy",
-                "kem mắt",
-                "kem dưỡng da",
-                "bộ chăm sóc da",
-                "sáp chống nắng",
-                "serum/kem chống nắng",
-                "sữa dưỡng da",
-              ]}
-            />
-            <Filter
-              title={"Dung tích"}
-              filterWith={[
-                "50ml",
-                "30ml",
-                "60ml",
-                "10ml",
-                "180ml",
-                "130ml",
-                "25ml",
-                "28ml",
-              ]}
-            />
           </div>
         </div>
         <div className="flex_75">
-          <div className="w-full flex flex-wrap gap-y-4">
-            <Item4 />
-            <Item4 />
-            <Item4 />
-            <Item4 />
-            <Item4 />
-          </div>
+          <div className="w-full flex flex-wrap gap-y-4"></div>
         </div>
       </div>
       <div className="wrap_container">
