@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import useBreadcrumbs from "use-react-router-breadcrumbs";
 import { Link } from "react-router-dom";
-import icons from "../../utils/icons";
 import styled from "styled-components";
 const BreadCrumb = ({ url }) => {
   const routes = [
@@ -31,14 +30,9 @@ const BreadCrumb = ({ url }) => {
                 {breadcrumb}
               </Link>
               {index ===
-              breadcrumbs.filter((el) => !el.match.route === false).length -
-                1 ? (
-                ""
-              ) : (
-                <div className="flex items-center justify-center mx-[4px]">
-                  <icons.next className="text-[8px]"></icons.next>
-                </div>
-              )}
+              breadcrumbs.filter((el) => !el.match.route === false).length - 1
+                ? ""
+                : helllo}
             </>
           ))}
       </BreadCrumbStyled>

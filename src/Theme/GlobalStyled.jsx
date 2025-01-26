@@ -31,7 +31,7 @@ const GlobalStyle = createGlobalStyle`
     --text-primary: #000;
     --text-default: #1f2933;
     --text-light-primary: #3e4c59;
-    --text-secondary: #646464;
+    --text-redniary: #646464;
     --text-tab-title: #7f817c;
     --text-disabled: #969696;
     --text-form-label: #1f2933;

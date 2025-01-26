@@ -1,452 +1,117 @@
-const navigationList = [
+const navigationComponents = [
   {
-    title: "thương hiệu",
-    dropdown: true,
-    type: 1,
-    content: {
-      titleDrop: "tất cả thương hiệu ",
-      items: [
-        { name: "AHC", link: "/collections/ahc" },
-        {
-          name: "Beauty Box",
-          link: "/collections/beauty-box",
-        },
-        {
-          name: "Banila Co",
-          link: "/collections/banila-co",
-        },
-        { name: "Cosrx", link: "/collections/cosrx" },
-        { name: "Clio", link: "/collections/club-clio" },
-        {
-          name: "Dear Dahlia",
-          link: "/collections/dear-dahlia",
-        },
-        {
-          name: "Dermatory",
-          link: "/collections/dermatory",
-        },
-        {
-          name: "Peripera",
-          link: "/collections/peripera",
-        },
-        {
-          name: "THE FACE SHOP",
-          link: "/collections/thefaceshop",
-        },
-        { name: "Goodal", link: "/collections/goodal" },
-        {
-          name: "JMsolution",
-          link: "/collections/jmsolution",
-        },
-        {
-          name: "Skinfood",
-          link: "/collections/skinfood",
-        },
-      ],
-      images: [
-        {
-          link: "/collections/ahc",
-          image:
-            "https://image.hsv-tech.io/400x0/bbx/common/072d0918-da1c-4fd3-a3ca-0c75e7b679da.webp",
-        },
-        {
-          link: "/collections/club-clio",
-          image:
-            "https://image.hsv-tech.io/400x0/bbx/common/04606b0d-f700-421d-b952-d6bc5ecd5853.webp",
-        },
-        {
-          link: "/collections/banila-co",
-          image:
-            "https://image.hsv-tech.io/400x0/bbx/common/a1edb272-def5-4897-9137-8e1cc76c9838.webp",
-        },
-      ],
-    },
-    link: "/brands",
-  },
-  {
-    title: "Khuyễn mãi hot",
-    dropdown: true,
-    type: 1,
-    content: {
-      titleDrop: "khuyến mãi hot ",
-      items: [
-        {
-          name: "CÓ ĐƠN LÀ CÓ QUÀ ĐỘC QUYỀN | Online và Click &amp; Collect",
-          link: "/collections/thuong-hieu-my-pham-thinh-hanh",
-        },
-        {
-          name: "ƯU ĐÃI 50% Thương Hiệu Thịnh Hành | Áp dụng tại website và HTCH",
-          link: "/collections/uu-dai-ngay-doi",
-        },
-      ],
-      images: [
-        {
-          link: "/collections/uu-dai-ngay-doi",
-          image:
-            "https://image.hsv-tech.io/400x0/bbx/common/8ffb5e56-3850-4f04-90b4-90d93502e967.webp",
-        },
-        {
-          link: "/collections/uu-dai-ngay-doi",
-          image:
-            "https://image.hsv-tech.io/400x0/bbx/common/390c0c3e-24ad-47ce-8bf0-4253b075ba97.webp",
-        },
-        {
-          link: "/products/phan-nuoc-hieu-ung-cang-bong-clio-kill-cover-high-glow-cushion-14gx2",
-          image:
-            "https://image.hsv-tech.io/400x0/bbx/common/be5ed7af-08c2-4a10-9772-26ba24dc3f28.webp",
-        },
-      ],
-    },
-    link: "/",
-  },
-  {
-    title: "sản phẩm cao cấp",
-    dropdown: false,
-    type: 1,
-    link: "/",
-  },
-  {
-    title: "trang điểm",
-    dropdown: true,
-    type: 2,
-    content: [
-      {
-        category: {
-          link: "/collections/trang-diem-mat",
-          title: "Trang điểm mặt",
-        },
-        sub_category: [
-          {
-            link: "/collections/phan-nuoc-cushion",
-            title: "Cushion",
-          },
-          {
-            link: "/collections/kem-nen-foundation",
-            title: "Kem Nền",
-          },
-          {
-            link: "/collections/phan-phu",
-            title: "Phấn Phủ",
-          },
-          {
-            link: "/collections/kem-che-khuyet-diem",
-            title: "Che Khuyết Điểm",
-          },
-          {
-            link: "/collections/kem-lot",
-            title: "Kem Lót",
-          },
-          {
-            link: "/collections/phan-ma-hong",
-            title: "Phấn Má Hồng",
-          },
-          {
-            link: "/collections/tao-khoi",
-            title: "Tạo Khối",
-          },
-        ],
-      },
-      {
-        category: {
-          link: "/collections/trang-diem-moi",
-          title: "trang điểm môi",
-        },
-        sub_category: [
-          {
-            link: "/collections/son-thoi",
-            title: "Son Thỏi",
-          },
-          {
-            link: "/collections/son-kem",
-            title: "Son Kem - Tint",
-          },
-          {
-            link: "/collections/son-duong-moi",
-            title: "Son Dưỡng Môi - Đặc Trị",
-          },
-          {
-            link: "/collections/son-bong",
-            title: "Son Bóng",
-          },
-        ],
-      },
-      {
-        category: {
-          link: "/collections/make-up-eye",
-          title: "Trang Điểm Mắt",
-        },
-        sub_category: [
-          {
-            link: "/collections/phan-mat",
-            title: "Phấn Mắt",
-          },
-          {
-            link: "/collections/mascara",
-            title: "Mascara ",
-          },
-          {
-            link: "/collections/chi-ke-chan-may",
-            title: "Chì Kẻ Mày",
-          },
-          {
-            link: "/collections/chi-ke-vien-mat",
-            title: "Kẻ Mắt",
-          },
-        ],
-      },
-      {
-        category: {
-          link: "/collections/phu-kien-trang-diem",
-          title: "Phụ kiện trang điểm",
-        },
-        sub_category: [
-          {
-            link: "/collections/co-trang-diem",
-            title: "Cọ trang điểm",
-          },
-          {
-            link: "/collections/mut-trang-diem",
-            title: "Bông Mút trang điểm",
-          },
-          {
-            link: "/collections/phu-kien-trang-diem-khac",
-            title: "Phụ Kiện Trang Điểm Khác",
-          },
-        ],
-      },
+    title: "Sofa - Ghế thư giãn",
+    link: "/collections/sofa-ghe-thu-gian",
+    subNav: [
+      { title: "Sofa", link: "/collections/sofa" },
+      { title: "Ghế thư giãn", link: "/collections/ghe-thu-gian" },
+      { title: "Đệm ngồi", link: "/collections/dem-ngoi" },
     ],
-    image:
-      "https://image.hsv-tech.io/400x0/bbx/common/17f013f9-739b-4a9a-afe7-0d45b35e1802.webp",
-    link: "/categories/trang-diem",
   },
   {
-    title: "chăm sóc da",
-    dropdown: true,
-    type: 2,
-    content: [
-      {
-        link: "/collections/duong-da-mat",
-        title: "Dưỡng Da",
-        sub_category: [
-          {
-            link: "/collections/kem-duong-da-mat-va-mat",
-            title: "Kem Dưỡng Da",
-          },
-          {
-            link: "/collections/tinh-chat-duong",
-            title: "Serum",
-          },
-          {
-            link: "/collections/nuoc-can-bang",
-            title: "Toner",
-          },
-          {
-            link: "/collections/sua-duong",
-            title: "Sữa Dưỡng",
-          },
-          {
-            link: "/collections/bo-duong-cham-soc",
-            title: "Bộ Dưỡng Chăm Sóc da",
-          },
-        ],
-      },
-      {
-        category: {
-          link: "/collections/lam-sach-da",
-          title: "Làm Sạch",
-        },
-        sub_category: [
-          {
-            link: "/collections/sua-rua-mat",
-            title: "Sữa Rửa Mặt",
-          },
-          {
-            link: "/collections/tay-trang-da-mat",
-            title: "Tẩy Trang",
-          },
-          {
-            link: "/collections/tay-te-bao-chet-da-mat",
-            title: "Tẩy Tế Bào Chết Da Mặt",
-          },
-        ],
-      },
-      {
-        category: {
-          link: "/collections/mat-na",
-          title: "Mặt Nạ",
-        },
-
-        sub_category: [
-          {
-            link: "/collections/mat-na-giay",
-            title: "Mặt Nạ Giấy",
-          },
-          {
-            link: "/collections/mat-na-mat-moi",
-            title: "Mặt Nạ Mắt & Môi",
-          },
-          {
-            link: "/collections/mat-na-ngu",
-            title: "Mặt Nạ Ngủ",
-          },
-        ],
-      },
-      {
-        category: {
-          link: "/collections/chong-nang-toan-dien",
-          title: "Chống nắng toàn diện",
-        },
-      },
-      {
-        category: {
-          link: "/collections/phu-kien-cham-soc-da",
-          title: "Phụ Kiện Chăm Sóc Da Mặt",
-        },
-
-        sub_category: [
-          {
-            link: "/collections/phu-kien-cham-soc-da",
-            title: "Phụ kiện làm sạch",
-          },
-          {
-            link: "/collections/phu-kien-tri-mun",
-            title: "Phụ kiện trị mụn",
-          },
-        ],
-      },
+    title: "Bàn",
+    link: "/collections/ban",
+    subNav: [
+      { title: "Bàn ăn", link: "/collections/ban-an" },
+      { title: "Bàn trà, cà phê", link: "/collections/ban-tra-ca-phe" },
+      { title: "Bàn làm việc", link: "/collections/ban-lam-viec" },
+      { title: "Bàn học", link: "/collections/ban-hoc" },
+      { title: "Bàn trang điểm", link: "/collections/ban-trang-diem" },
+      { title: "Bàn góc", link: "/collections/ban-goc" },
+      { title: "Bàn ngoài trời", link: "/collections/ban-ngoai-troi" },
+      { title: "Bộ bàn ghế", link: "/collections/bo-ban-ghe" },
     ],
-    image:
-      "https://image.hsv-tech.io/400x0/bbx/common/466d70db-6022-4fa1-aa04-dcfdc284968e.webp",
-    link: "/",
   },
   {
-    title: "chăm sóc cá nhân",
-    dropdown: true,
-    type: 2,
-    content: [
-      {
-        category: {
-          link: "/collections/nuoc-hoa",
-          title: "nước hoa",
-        },
-        sub_category: [],
-      },
-      {
-        category: {
-          link: "/collections/cham-soc-suc-khoe",
-          title: "chăm sóc sức khỏe",
-        },
-        sub_category: [
-          {
-            link: "/collections/khau-trang",
-            title: "khẩu trang y tế",
-          },
-          {
-            link: "/collections/thuc-pham-chuc-nang",
-            title: "Thực phẩm chức năng",
-          },
-        ],
-      },
-      {
-        category: {
-          link: "/collections/cham-soc-rang-mieng",
-          title: "Chăm sóc răng miệng",
-        },
-
-        sub_category: [],
-      },
+    title: "Ghế",
+    link: "/collections/ghe",
+    subNav: [
+      { title: "Ghế ăn", link: "/collections/ghe-an" },
+      { title: "Ghế đôn", link: "/collections/ghe-don" },
+      { title: "Ghế văn phòng", link: "/collections/ghe-van-phong" },
+      { title: "Ghế ngồi học", link: "/collections/ghe-ngoi-hoc" },
+      { title: "Ghế trẻ em", link: "/collections/ghe-tre-em" },
+      { title: "Ghế thư giãn", link: "/collections/ghe-thu-gian" },
     ],
-    image:
-      "https://image.hsv-tech.io/400x0/bbx/common/5ddd257a-98af-40b5-8c57-da939429784a.webp",
-    link: "/",
   },
   {
-    title: "chăm sóc cơ thể",
-    dropdown: true,
-    type: 2,
-    content: [
-      {
-        category: {
-          link: "/collections/cham-soc-co-the",
-          title: "Chăm sóc toàn thân",
-        },
-        sub_category: [
-          {
-            link: "/collections/sua-gel-tam",
-            title: "Sữa tắm",
-          },
-          {
-            link: "/collections/duong-the",
-            title: "Dưỡng thể",
-          },
-          {
-            link: "/collections/lam-sach-te-bao-chet-co-the",
-            title: "Tẩy tế bào chết cơ thể",
-          },
-          {
-            link: "/collections/duong-da-tay-chan",
-            title: "Kem dưỡng tay",
-          },
-          {
-            link: "/collections/lan-khu-mui",
-            title: "Lăn khử mùi",
-          },
-          {
-            link: "/collections/dung-cu-cham-soc-co-the",
-            title: "Dụng cụ chăm sóc cơ thể",
-          },
-        ],
-      },
-      {
-        category: {
-          link: "/collections/cham-soc-toc",
-          title: "Chăm sóc tóc",
-        },
-        sub_category: [
-          {
-            link: "/collections/dau-goi-dau",
-            title: "Dầu gội",
-          },
-          {
-            link: "/collections/dau-xa-toc",
-            title: "Dầu xả",
-          },
-          {
-            link: "/collections/san-pham-duong-toc",
-            title: "Dưỡng tóc",
-          },
-          {
-            link: "/collections/san-pham-nhuom-toc",
-            title: "Nhuộm tóc",
-          },
-          {
-            link: "/collections/dung-cu-cho-toc",
-            title: "Dụng cụ chăm sóc tóc",
-          },
-        ],
-      },
+    title: "Giường nệm",
+    link: "/collections/giuong-nem",
+    subNav: [
+      { title: "Giường", link: "/collections/giuong" },
+      { title: "Nệm", link: "/collections/nem" },
+      { title: "Nệm Yoga", link: "/collections/nem-yoga-1" },
     ],
-    image:
-      "https://image.hsv-tech.io/400x0/bbx/common/eb9a1f2d-d6ba-488b-98ce-57ea6eaf7438.webp",
-    link: "/",
   },
   {
-    title: "mã giảm",
-    dropdown: false,
-    type: 1,
-    link: "/",
+    title: "Chăn ga gối",
+    link: "/collections/chan-ga-goi",
+    subNav: [
+      { title: "Chăn", link: "/collections/chan" },
+      { title: "Ga", link: "/collections/ga" },
+      { title: "Gối ngủ", link: "/collections/goi-ngu" },
+      { title: "Gối tựa", link: "/collections/goi-tua" },
+      { title: "Gối ôm", link: "/collections/goi-om" },
+      { title: "Gối tập yoga", link: "/collections/goi-yoga" },
+    ],
   },
   {
-    title: "sản phẩm mới",
-    dropdown: false,
-    type: 1,
-    link: "/",
+    title: "Tủ kệ",
+    link: "/collections/tu-ke",
+    subNav: [
+      { title: "Kệ sách", link: "/collections/ke-sach" },
+      { title: "Tủ quần áo", link: "/collections/tu-quan-ao" },
+      { title: "Tủ kệ Tivi", link: "/collections/tu-tivi" },
+      { title: "Tủ đầu giường", link: "/collections/tu-dau-giuong" },
+      { title: "Tủ kệ giày", link: "/collections/tu-ke-giay" },
+      { title: "Tủ ngăn kéo", link: "/collections/tu-ngan-keo" },
+    ],
   },
   {
-    title: "Đặt hàng Oline & nhận tại cửa hàng",
-    dropdown: false,
-    type: 1,
-    link: "/",
+    title: "Nội thất văn phòng",
+    link: "/collections/noi-that-van-phong",
+    subNav: [
+      { title: "Ghế văn phòng", link: "/collections/ghe-van-phong" },
+      { title: "Dụng cụ văn phòng", link: "/collections/van-phong-pham" },
+    ],
+  },
+  {
+    title: "Trang trí",
+    link: "/collections/trang-tri-nha-cua",
+    subNav: [
+      { title: "Lọ hoa - Bình hoa", link: "/collections/lo-hoa" },
+      { title: "Gương treo tường", link: "/collections/guong-treo-tuong" },
+      { title: "Gương đứng", link: "/collections/guong-dung" },
+      { title: "Nến thơm", link: "/collections/nen-thom" },
+      { title: "Đồng hồ báo thức", link: "/collections/dong-ho-bao-thuc" },
+      { title: "Tiện ích sắp xếp", link: "/collections/tien-ich-sap-xep" },
+    ],
+  },
+  {
+    title: "Nhà bếp",
+    link: "/collections/phu-kien-nha-bep-1",
+    subNav: [
+      { title: "Tô - Chén - Đĩa", link: "/collections/to-chen-dia" },
+      { title: "Cốc & Ly", link: "/collections/coc-ly" },
+      { title: "Ấm trà - Bộ ấm trà", link: "/collections/am-tra-bo-am-tra" },
+      { title: "Dụng cụ nấu nướng", link: "/collections/dung-cu-nau-nuong" },
+      {
+        title: "Giá đỡ - Dụng cụ đựng",
+        link: "/collections/gia-do-dung-cu-dung",
+      },
+      { title: "Khăn trải bàn", link: "/collections/khan-trai-ban" },
+      { title: "Găng tay - Tạp dề", link: "/collections/gang-tay-tap-de" },
+    ],
+  },
+  {
+    title: "Phòng tắm",
+    link: "/collections/phu-kien-phong-tam",
+    subNav: [
+      { title: "Thảm phòng tắm", link: "/collections/tham-phong-tam" },
+      { title: "Rèm tắm", link: "/collections/rem-tam" },
+      { title: "Vật dụng phòng tắm", link: "/collections/dung-cu-phong-tam" },
+    ],
   },
 ];
-export default navigationList;
+
+export default navigationComponents;

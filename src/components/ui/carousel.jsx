@@ -109,7 +109,7 @@ const Carousel = React.forwardRef(
         <div
           ref={ref}
           onKeyDownCapture={handleKeyDown}
-          className={cn("relative", className)}
+          className={cn("", className)}
           role="region"
           aria-roledescription="carousel"
           {...props}
@@ -126,12 +126,12 @@ const CarouselContent = React.forwardRef(({ className, ...props }, ref) => {
   const { carouselRef, orientation } = useCarousel();
 
   return (
-    <div ref={carouselRef} className="overflow-hidden">
+    <div ref={carouselRef} className="overflow-hidden mx-[-6px]">
       <div
         ref={ref}
         className={cn(
           "flex",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+          orientation === "horizontal" ? "" : "-mt-4 flex-col",
           className
         )}
         {...props}
@@ -151,7 +151,7 @@ const CarouselItem = React.forwardRef(({ className, ...props }, ref) => {
       aria-roledescription="slide"
       className={cn(
         "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-4" : "pt-4",
+        orientation === "horizontal" ? "" : "pt-4",
         className
       )}
       {...props}
@@ -170,17 +170,17 @@ const CarouselPrevious = React.forwardRef(
         variant={variant}
         size={size}
         className={cn(
-          "absolute h-8 w-8 bg-[--primary-bg] rounded-none cursor-pointer",
-          orientation === "horizontal"
-            ? "-left-12 top-1/2 -translate-y-1/2"
-            : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
+          " h-8 w-8 hover:bg-redichi transition-all duration-150 ease-linear hover:text-[#fff] rounded-full cursor-pointer ",
+          // orientation === "horizontal"
+          //   ? "-left-12 top-1/2 -translate-y-1/2"
+          //   : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
           className
         )}
         disabled={!canScrollPrev}
         onClick={scrollPrev}
         {...props}
       >
-        <ChevronLeft className="h-4 w-4 text-[#fff]" />
+        <ChevronLeft className="h-4 w-4 text-inherit" size={24} />
         <span className="sr-only">Previous slide</span>
       </Button>
     );
@@ -198,17 +198,17 @@ const CarouselNext = React.forwardRef(
         variant={variant}
         size={size}
         className={cn(
-          "absolute h-8 w-8  bg-[--primary-bg] rounded-none cursor-pointer",
-          orientation === "horizontal"
-            ? "-right-12 top-1/2 -translate-y-1/2"
-            : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+          " h-8 w-8 hover:bg-redichi transition-all duration-150 ease-linear hover:text-[#fff] rounded-full cursor-pointer  ",
+          // orientation === "horizontal"
+          //   ? "-right-12 top-1/2 -translate-y-1/2"
+          //   : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
           className
         )}
         disabled={!canScrollNext}
         onClick={scrollNext}
         {...props}
       >
-        <ChevronRight className="h-4 w-4 text-[#fff] text-[20px]" />
+        <ChevronRight className="h-4 w-4 text-inherit text-[20px]" size={24} />
         <span className="sr-only">Next slide</span>
       </Button>
     );

@@ -1,182 +1,219 @@
-      <Button onClick={showDrawerWishlist}>
-                <div className="cursor-pointer">
-                  <icons.heartthin className={`text-[24px]`}></icons.heartthin>
+  const formRef = useRef();
+  const [payment, setPayment] = useState("cod");
+  const [orderCity, setOrderCity] = useState();
+  const [orderDistrict, setOrderDistrict] = useState();
+  const [orderWard, setOrderWard] = useState();
+  const [province, setProvince] = useState(null);
+  const [district, setDistrict] = useState(null);
+  const [ward, setWard] = useState(null);
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(`${apiUrl}api/getprovince`);
+        if (response?.data?.success) {
+          setProvince(response?.data?.data);
+          return;
+        }
+        console.log(response?.data?.success);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+  const handleChange = async (value, objectValues) => {
+    if (!objectValues.id) {
+      setOrderWard(objectValues);
+      return 1;
+    }
+    if (objectValues.id == 1) {
+      setOrderCity(objectValues);
+      setOrderDistrict(null);
+      setOrderWard(null);
+    } else if (objectValues.id == 2) {
+      setOrderDistrict(objectValues);
+      setOrderWard(null);
+    }
+    try {
+      const response = await axios.post(`${apiUrl}api/address`, objectValues);
+      if (response?.data?.success) {
+        if (!response?.data?.type) {
+          setWard(response?.data?.data);
+          return;
+        }
+        setDistrict(response?.data?.data);
+        return 1;
+      }
+      console.log(response?.data?.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      city: orderCity.label,
+      district: orderDistrict.label,
+      ward: orderWard.label,
+      payment,
+    };
+    console.log(data);
+  };
+  const handleChangeRadio = (e) => {
+    setPayment(e.target.value);
+  };
+   <form onSubmit={handleSubmit}>
+        <div className="flex items-start gap-[20px]">
+          <div className="flex_625 ">
+            <h3 className="font-medium text-[18px] mb-4">
+              Thông tin người mua hàng
+            </h3>
+            <div>
+              <div className="flex items-center gap-[10px] flex-wrap">
+                <div className="flex-auto w-[calc((100%/2)-10px)] ">
+                  <input
+                    className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
+                    type="text"
+                    name="firstname"
+                  ></input>
                 </div>
-              </Button>
-              <Drawer
-                title="Thứ t yêu"
-                onClose={onCloseuWishlist}
-                open={openWishlist}
-              >
-                <div className="p-[20px] flex flex-col gap-3">
-                  <div className="flex items-center gap-3 ">
-                    <div className="w-[42px] h-[42px] overflow-hidden flex-shrink-0">
-                      <img
-                        src="https://image.hsv-tech.io/150x0/bbx/common/906cb875-3ec2-400d-9ed2-aab078c8eee3.webp"
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="uppercase font-bold">
-                        Combo 14 Mặt Nạ Giấy Dermatory Dưỡng Da Săn Chắc, Sáng
-                        Mịn (4 Vita-A Retinal + 10 Pro Shot)
-                      </span>
-                      <div className="flex justify-between mt-2">
-                        <span className="">400.000đ</span>
-                        <button className="" type="button">
-                          Xóa
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 ">
-                    <div className="w-[42px] h-[42px] overflow-hidden flex-shrink-0">
-                      <img
-                        src="https://image.hsv-tech.io/150x0/bbx/common/906cb875-3ec2-400d-9ed2-aab078c8eee3.webp"
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="uppercase font-bold">
-                        Combo 14 Mặt Nạ Giấy Dermatory Dưỡng Da Săn Chắc, Sáng
-                        Mịn (4 Vita-A Retinal + 10 Pro Shot)
-                      </span>
-                      <div className="flex justify-between mt-2">
-                        <span className="">400.000đ</span>
-                        <button className="" type="button">
-                          Xóa
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                <div className="flex-auto w-[calc((100%/2)-10px)]">
+                  <input
+                    className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
+                    type="text"
+                    name="lastname"
+                  ></input>
                 </div>
-              </Drawer>
-              <Button onClick={showDrawer}>
-                <div className="cursor-pointer relative">
-                  <icons.bagthin className={`text-[24px]`}></icons.bagthin>
-                  <div className="absolute w-5 h-5 bg-[#C80036] rounded-[50%] flex items-center justify-center top-[-3px] right-[-7px] text-white text-[12px]">
-                    2
-                  </div>
-                </div>
-              </Button>
-              <Drawer title="Giỏ hàng của tôi" onClose={onClose} open={open}>
-                <div className={`w-[490px]   bg-white `}>
-                  <div>
-                    <div className="flex items-center px-[15px] mb-[30px] gap-3 mt-2">
-                      <div className=" rounded-full text-center bg-black text-white  text-[16px] flex-auto py-2 cursor-pointer">
-                        Giao hàng (2)
-                      </div>
-                      <div className=" rounded-full text-center bg-[rgb(239,239,239)] text-black  text-[16px] flex-auto py-2 cursor-pointer">
-                        Lấy tại cửa hàng (0)
-                      </div>
-                    </div>
-                    <div className="px-[15px]">
-                      <label className="flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="hidden input_checkbox"
-                          onChange={handleCheckAll}
-                          ref={checkAllRef}
-                        ></input>
-                        <div className="input_filter relative mr-2">
-                          <div className="absolute "></div>
-                        </div>
-                        Chọn tất cả
-                      </label>
-                    </div>
-                    <div className="devide bg-[rgba(0,0,0,.06)] h-[0.8px]  my-[15px]"></div>
-                  </div>
-                  <div className="pt-[15px] h-[400px]">
-                    <div className="flex flex-col gap-3 overflow-y-auto h-full px-[15px] scrollbar">
-                      {items?.map((item) => (
-                        <label className="flex items-center" key={item.id}>
-                          <input
-                            type="checkbox"
-                            className="hidden input_checkbox"
-                            value={item.id}
-                            checked={item.checked}
-                            onChange={() => {
-                              setItems(
-                                items?.map((e) => {
-                                  return e.id === item.id
-                                    ? { ...e, checked: !e.checked }
-                                    : e;
-                                })
-                              );
-                            }}
-                          ></input>
-                          <div className="input_filter relative mr-2">
-                            <div className="absolute "></div>
-                          </div>
-                          <div className="flex-auto flex items-start">
-                            <div className="h-[80px] w-[80px] ">
-                              <img src="	https://image.hsv-tech.io/150x0/bbx/common/626d1395-e9a8-4819-8e28-48069bd9f93f.webp"></img>
-                            </div>
-                            <div className="flex-auto ml-[10px]">
-                              <div className="flex justify-between items-center">
-                                <div className="mr-[10px] ellipsis_2_lines ">
-                                  {item.name}
-                                </div>
-                                <div
-                                  className="flex items-center justify-center w-[22px] h-[22px] bg-[rgb(223,223,223)] rounded-[50%] cursor-pointer"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    setItems(
-                                      items?.filter((i) => {
-                                        return i.id !== item.id;
-                                      })
-                                    );
-                                  }}
-                                >
-                                  <icons.minus className="text-[16px]"></icons.minus>
-                                </div>
-                              </div>
-                              <div>SKU: {item.sku}</div>
-                              <div className="flex items-centers justify-between">
-                                <div className="flex items-center border-[1.5px] border-solid border-[rgb(239,239,239)]  rounded-full ">
-                                  <div className="minus flex items-center justify-center   cursor-pointer">
-                                    <icons.minus className="text-[25px] py-[3px] px-[7px]"></icons.minus>
-                                  </div>
-                                  <div className="quantity_text text-center">
-                                    1
-                                  </div>
-                                  <div className="plus flex items-center justify-center  cursor-pointer">
-                                    <icons.plus className="text-[25px] py-[3px] px-[7px]"></icons.plus>
-                                  </div>
-                                </div>
-                                <div>{item.price}đ</div>
-                              </div>
-                            </div>
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="devide bg-[rgba(0,0,0,.06)] h-[0.8px]  my-[15px]"></div>
-                  <div className=" px-[23px] pb-[20px]">
-                    <div className="flex items-center justify-between">
-                      <div>Giao hàng</div>
-                      <div>500.000đ</div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>Click & Collect</div>
-                      <div>0đ</div>
-                    </div>
-                    <div
-                      className="gradient_header rounded-full h-10 px-5 py-[5px] text-center cursor-pointer mt-2"
-                      onClick={() => {
-                        setPopup(false);
+              </div>
+              <div>
+                <div className="py-3">
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="hidden input_checkbox"
+                      onChange={(e) => {
+                        if (e.target.checked && formRef && formRef?.current) {
+                          formRef.current.classList.remove("hidden");
+                          formRef.current.classList.add("block");
+                          return;
+                        }
+                        formRef.current.classList.add("hidden");
+                        formRef.current.classList.remove("block");
                       }}
-                    >
-                      <Link
-                        to={"/preview-order"}
-                        className=" font-medium text-[18px] text-white no-underline"
-                      >
-                        Tiếp tục với hình thức giao hàng
-                      </Link>
+                      name="recipent"
+                    ></input>
+                    <div className="input_filter relative mr-2">
+                      <div className="absolute "></div>
+                    </div>
+                    Người nhận là người khác
+                  </label>
+                </div>
+                <div className="hidden" ref={formRef}>
+                  <div className="flex items-center gap-[10px] flex-wrap ">
+                    <div className=" w-[calc((100%/2)-10px)]">
+                      <input
+                        className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
+                        type="text"
+                        placeholder="Tên"
+                        name="recipent_firstname"
+                      ></input>
+                    </div>
+                    <div className=" w-[calc((100%/2)-10px)]">
+                      <input
+                        className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
+                        type="text"
+                        placeholder="Họ"
+                        name="recipent_lastname"
+                      ></input>
+                    </div>
+                    <div className=" w-[calc((100%/2)-10px)]">
+                      <input
+                        className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
+                        type="text"
+                        placeholder="+84"
+                        name="recipent_phone"
+                      ></input>
                     </div>
                   </div>
                 </div>
-              </Drawer>
+              </div>
+            </div>
+            <h3 className="font-medium text-[18px] mb-4">
+              Thông tin người nhận hàng
+            </h3>
+            <div>
+              <div className="flex items-center gap-[10px] flex-wrap">
+                <div className="flex-auto w-full ">
+                  <Select
+                    showSearch
+                    style={{
+                      width: "100%",
+                      height: "50px",
+                    }}
+                    placeholder="Tỉnh/Thành phố"
+                    options={province}
+                    virtual={false}
+                    optionFilterProp="label"
+                    filterOption={(input, option) =>
+                      (slugify(option?.label) ?? "").includes(slugify(input))
+                    }
+                    onChange={handleChange}
+                    value={orderCity?.value}
+                  />
+                </div>
+                <div className="flex-auto w-[calc((100%/2)-10px)] relative">
+                  <Select
+                    showSearch
+                    style={{
+                      width: "100%",
+                      height: "50px",
+                    }}
+                    placeholder="Quận/huyện"
+                    options={district}
+                    virtual={false}
+                    onChange={handleChange}
+                    optionFilterProp="label"
+                    filterOption={(input, option) =>
+                      (slugify(option?.label) ?? "").includes(slugify(input))
+                    }
+                    value={orderDistrict?.value}
+                  />
+                </div>
+                <div className="flex-auto w-[calc((100%/2)-10px)] relative">
+                  <Select
+                    showSearch
+                    style={{
+                      width: "100%",
+                      height: "50px",
+                    }}
+                    placeholder="Phường/xã"
+                    options={ward}
+                    virtual={false}
+                    optionFilterProp="label"
+                    onChange={handleChange}
+                    filterOption={(input, option) =>
+                      (slugify(option?.label) ?? "").includes(slugify(input))
+                    }
+                    value={orderWard?.value}
+                  />
+                </div>
+                <div className="flex-auto w-full">
+                  <input
+                    className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
+                    type="text"
+                    placeholder="Tòa nhà, số nhà, tên đường"
+                    name="addressline1"
+                  ></input>
+                </div>
+                <div className="flex-auto w-full">
+                  <input
+                    className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
+                    type="text"
+                    placeholder="Tên địa chỉ (Vd: văn phòng, nhà ...)"
+                    name="addressline2"
+                  ></input>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>

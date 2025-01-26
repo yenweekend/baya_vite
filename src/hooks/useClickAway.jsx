@@ -12,15 +12,9 @@ const useClickAway = (dropdownRef, targetRef, onClickAway) => {
         onClickAway();
       }
     };
-    const handleScroll = () => {
-      onClickAway();
-    };
-
     document.addEventListener("mousedown", handleClick);
-    window.addEventListener("scroll", handleScroll);
     return () => {
       document.removeEventListener("mousedown", handleClick);
-      window.addEventListener("scroll", handleScroll);
     };
   }, [dropdownRef, onClickAway]);
 };

@@ -1,76 +1,105 @@
 import { Route, Routes } from "react-router-dom";
 import {
   Home,
-  BrandDetail,
   Products,
-  ListBrands,
-  Category,
-  Ckeditor,
   PrevidewOrder,
   CheckOut,
-  StoreView,
-  Store,
   Register,
   Identify,
   Login,
   ChangePassword,
-} from "./containers/pages/user";
-import {
-  AdminProduct,
-  ProductCreate,
-  ProductSale,
-  ProductSaleCreate,
-  Variants,
-  DiscountEdit,
-} from "./containers/pages/admin/index";
-import UserMaster from "./containers/layouts/user/Master";
-import AdminMaster from "./containers/layouts/admin/Master";
-import paths from "./utils/paths";
-import { adminPaths } from "./utils/paths";
+  CartDetail,
+  PageMaster,
+  AboutUs,
+  Service,
+  OrderInstruction,
+  Installment,
+  PayInstruction,
+  Warranty,
+  ShippingCost,
+  RefundPolicy,
+  DeliveryPolicy,
+  PaymentMethods,
+  Security,
+  Chain,
+  Contact,
+  Blogs,
+  BlogDetail,
+} from "./containers/pages/ui";
 
+import UserMaster from "./containers/layouts/user/Master";
+import paths from "./utils/paths";
+import { NotFound } from "./containers/components";
 function App() {
   return (
     <>
       <Routes>
-        <Route element={<Register />} path="/register"></Route>
-        <Route element={<Login />} path="/login"></Route>
-        <Route element={<Identify />} path="/login/identify"></Route>
+        <Route element={<CheckOut />} path={paths.CHECKOUT}></Route>
+
         <Route
           element={<ChangePassword />}
           path="/auth/resetpassword/:token"
         ></Route>
         <Route element={<UserMaster />} path={paths.MASTER}>
+          <Route element={<Register />} path="/account/register"></Route>
+          <Route element={<Login />} path="/account/login"></Route>
+          <Route element={<Identify />} path="/login/identify"></Route>
           <Route element={<Home />} path={paths.HOME}></Route>
-          <Route element={<BrandDetail />} path={paths.BRAND_DETAIL}></Route>
-          <Route element={<ListBrands />} path={paths.BRAND}></Route>
           <Route element={<Products />} path={paths.PRODUCTS}></Route>
-          <Route element={<Category />} path={paths.CATEGORY}></Route>
           <Route element={<PrevidewOrder />} path={paths.PREVIEWORDER}></Route>
-          <Route element={<CheckOut />} path={paths.CHECKOUT}></Route>
-          <Route element={<StoreView />} path={paths.STOREDETAIL}></Route>
-          <Route element={<Store />} path={paths.STORE}></Route>
-          <Route element={<Ckeditor />} path={"/ckeditor"}></Route>
-          <Route element={<Home />} path="/*"></Route>
-        </Route>
-        <Route element={<AdminMaster />} path={adminPaths.HOME}>
-          <Route element={<AdminProduct />} path={adminPaths.PRODUCTS}></Route>
           <Route
-            element={<ProductCreate />}
-            path={adminPaths.CREATEPRODUCTS}
+            element={<BlogDetail />}
+            path={"/blogs/nguon-cam-hung/:slug"}
           ></Route>
-          <Route
-            element={<ProductSale />}
-            path={adminPaths.SALEPRODUCT}
-          ></Route>
-          <Route
-            element={<ProductSaleCreate />}
-            path={adminPaths.SALEPRODUCTCREATE}
-          ></Route>
-          <Route element={<Variants />} path={adminPaths.VARIANT}></Route>
-          <Route
-            element={<DiscountEdit />}
-            path={adminPaths.DISCOUNTEDIT}
-          ></Route>
+          <Route element={<Blogs />} path={"/blogs/nguon-cam-hung"}></Route>
+          <Route element={<CartDetail />} path={"/cart"}></Route>
+          <Route element={<Chain />} path={"/pages/he-thong-cua-hang"}></Route>
+          <Route element={<Contact />} path={"/pages/lien-he"}></Route>
+
+          <Route element={<PageMaster />} path={"/pages"}>
+            <Route element={<AboutUs />} path={"/pages/about-us"}></Route>
+            <Route
+              element={<Service />}
+              path={"/pages/dieu-khoan-dich-vu"}
+            ></Route>
+            <Route
+              element={<OrderInstruction />}
+              path={"/pages/huong-dan-dat-hang"}
+            ></Route>
+            <Route
+              element={<Installment />}
+              path={"/pages/mua-hang-tra-gop"}
+            ></Route>
+            <Route
+              element={<PayInstruction />}
+              path={"/pages/huong-dan-thanh-toan-vnpay-qr-tren-website"}
+            ></Route>
+            <Route
+              element={<Warranty />}
+              path={"/pages/chinh-sach-bao-hanh"}
+            ></Route>
+            <Route
+              element={<ShippingCost />}
+              path={"/pages/chi-phi-van-chuyen"}
+            ></Route>
+            <Route
+              element={<RefundPolicy />}
+              path={"/pages/chinh-sach-doi-tra"}
+            ></Route>
+            <Route
+              element={<DeliveryPolicy />}
+              path={"/pages/chinh-sach-van-chuyen-va-giao-nhan"}
+            ></Route>
+            <Route
+              element={<PaymentMethods />}
+              path={"/pages/chinh-sach-thanh-toan"}
+            ></Route>
+            <Route
+              element={<Security />}
+              path={"/pages/chinh-sach-bao-mat-thong-tin"}
+            ></Route>
+          </Route>
+          <Route element={<NotFound />} path="/*"></Route>
         </Route>
       </Routes>
     </>
