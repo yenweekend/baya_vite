@@ -92,7 +92,7 @@ const Master = () => {
           </button>
         </div>
         <Header />
-        <div className=" pb-[30px]  mx-auto min-990:max-w-[1366px] relative w-[90%]  md:max-w-[720px] max-990:w-[100%] ">
+        <div className=" pb-[30px]  mx-auto 2md:max-w-[1366px] relative w-[90%]  md:max-w-[720px]  max-990:w-[100%] xl:w-[100%] min-1350:max-w-[1366px] xl:px-[15px]">
           <Outlet />
         </div>
         <Footer />

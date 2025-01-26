@@ -240,7 +240,7 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="flex  text-footertext px-[15px] flex-col min-990:hidden">
+        <div className="flex  text-footertext px-[15px] flex-col 2md:hidden">
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger

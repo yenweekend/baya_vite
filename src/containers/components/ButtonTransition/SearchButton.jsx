@@ -32,14 +32,14 @@ export function SearchButton() {
           </a>
         </DropdownTrigger>
         <DropdownContent className={"py-[15px] px-[24px] w-[400px]"}>
-          <SearchDiv className={"min-990:min-w-[240px]"} />
+          <SearchDiv className={"2md:min-w-[240px]"} />
         </DropdownContent>
       </Dropdown>
     );
   }
   return (
     <DropdownScreen open={open} onOpenChange={setOpen}>
-      <DropdownScreenTrigger className={" flex min-990:hidden"}>
+      <DropdownScreenTrigger className={" flex 2md:hidden"}>
         <X
           size={30}
           className={`text-[#fff] transition-all ease-linear duration-150   ${

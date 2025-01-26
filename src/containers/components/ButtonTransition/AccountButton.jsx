@@ -86,7 +86,7 @@ export function AccountButton() {
   }
   return (
     <DropdownScreen open={open} onOpenChange={setOpen}>
-      <DropdownScreenTrigger className={" flex min-990:hidden"}>
+      <DropdownScreenTrigger className={" flex 2md:hidden"}>
         <X
           size={30}
           className={`text-[#fff] transition-all center-x absolute ease-linear duration-150   ${

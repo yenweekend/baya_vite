@@ -49,7 +49,7 @@ const Home = () => {
       <HomeStyled>
         <div>
           <section className="banner ">
-            <div className=" min-990:px-2 flex-shrink-0 w-full">
+            <div className=" 2md:px-2 flex-shrink-0 w-full">
               <CarouselAntd
                 arrows
                 infinite={false}
@@ -82,19 +82,19 @@ const Home = () => {
               </CarouselAntd>
             </div>
           </section>
-          <div className="flex  items-stretch overflow-y-auto no-scrollbar  max-768:pl-[-30px] mt-[15px] max-768:pr-[15px]">
-            <div className=" min-990:basis-1/4 w-[70%] flex-shrink-0 min-990:px-[15px] pl-[15px]  md:w-[40%]">
+          <div className="flex  items-stretch overflow-y-auto no-scrollbar  mt-[15px] max-768:pl-[15px] ">
+            <div className=" 2md:basis-1/4 w-[70%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
               <CollectionCard />
             </div>
-            <div className=" min-990:basis-1/4 w-[70%] flex-shrink-0 min-990:px-[15px] pl-[15px]  md:w-[40%]">
+            <div className=" 2md:basis-1/4 w-[70%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
               {" "}
               <CollectionCard />
             </div>
-            <div className=" min-990:basis-1/4 w-[70%] flex-shrink-0 min-990:px-[15px] pl-[15px]  md:w-[40%]">
+            <div className=" 2md:basis-1/4 w-[70%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
               {" "}
               <CollectionCard />
             </div>
-            <div className=" min-990:basis-1/4 w-[70%] flex-shrink-0 min-990:px-[15px] pl-[15px]  md:w-[40%]">
+            <div className=" 2md:basis-1/4 w-[70%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
               {" "}
               <CollectionCard />
             </div>
@@ -115,7 +115,7 @@ const Home = () => {
                   {Array.from({ length: 10 }).map((_, index) => (
                     <CarouselItem
                       key={index}
-                      className=" lg:basis-1/5  min-990:basis-1/4 md:basis-1/2 basis-[40%]"
+                      className="2lg:basis-1/5 md:basis-1/2 basis-[40%] 2md:basis-1/4"
                     >
                       <div className="px-[6px]">
                         <Card className={"rounded-none"}>
@@ -147,14 +147,14 @@ const Home = () => {
               </HoverEffectButton>
             </div>
           </section>
-          <div className="coupon home-collection flex min-990:items-stretch overflow-y-auto no-scrollbar max-768:pl-[15px]  max-768:pr-[15px] ">
-            <div className="min-990:basis-1/4 w-[90%] flex-shrink-0 min-990:px-[15px] pl-[15px] md:basis-1/2  [&:first-child]:pl-0 ">
+          <div className=" home-collection flex 2md:items-stretch overflow-x-auto no-scrollbar md:ml-[-15px] max-768:pr-[15px] ">
+            <div className="lg:w-[50%] xl:w-[25%] 2md:w-[50%] w-[90%] flex-shrink-0 2md:px-[15px] pl-[15px] md:w-[80%]  ">
               <CouponCard />
             </div>
-            <div className="min-990:basis-1/4 w-[90%] flex-shrink-0 min-990:px-[15px] pl-[15px] md:basis-1/2  [&:first-child]:pl-0 ">
+            <div className="lg:w-[50%] xl:w-[25%] 2md:w-[50%] w-[90%] flex-shrink-0 2md:px-[15px] pl-[15px] md:w-[80%]  ">
               <CouponCard />
             </div>
-            <div className="min-990:basis-1/4 w-[90%] flex-shrink-0 min-990:px-[15px] pl-[15px] md:basis-1/2  [&:first-child]:pl-0 ">
+            <div className="lg:w-[50%] xl:w-[25%] 2md:w-[50%] w-[90%] flex-shrink-0 2md:px-[15px] pl-[15px] md:w-[80%]  ">
               <CouponCard />
             </div>
           </div>
@@ -176,7 +176,7 @@ const Home = () => {
                   {Array.from({ length: 10 }).map((_, index) => (
                     <CarouselItem
                       key={index}
-                      className=" lg:basis-1/5  min-990:basis-1/4 md:basis-1/2 basis-[40%]"
+                      className="2lg:basis-1/5 md:basis-1/2 basis-[40%] 2md:basis-1/4"
                     >
                       <div className="px-[6px]">
                         <Card className={"rounded-none"}>
@@ -208,11 +208,11 @@ const Home = () => {
               </HoverEffectButton>
             </div>
           </div>
-          <div className="max-w-[1400px] min-990:px-[15px] home-collection">
-            <div className="min-990:py-[15px] min-990:px-5 bg-[url('https://theme.hstatic.net/200000796751/1001266995/14/categorize_img.jpg?v=82')] bg-no-repeat bg-cover relative flex ">
+          <div className="max-w-[1400px] 2md:px-[15px] home-collection">
+            <div className="2md:py-[15px] 2md:px-5 bg-[url('https://theme.hstatic.net/200000796751/1001266995/14/categorize_img.jpg?v=82')] bg-no-repeat bg-cover relative flex ">
               <div className="absolute   bg-[#000] opacity-35 inset-0"></div>
-              <div className="min-990:basis-2/12 basis-1/2 md:basis-1/3 px-[15px] flex flex-col relative max-990:justify-center">
-                <h3 className="text-[18px] font-semibold mb-[8px] text-catecolor min-990:text-right  text-center md:text-[20px]">
+              <div className="2md:basis-2/12 basis-1/2 md:basis-1/3 px-[15px] flex flex-col relative max-990:justify-center">
+                <h3 className="text-[18px] font-semibold mb-[8px] text-catecolor 2md:text-right  text-center md:text-[20px]">
                   Xu hướng tìm kiếm
                 </h3>
                 <a
@@ -222,8 +222,8 @@ const Home = () => {
                   Xem ngay
                 </a>
               </div>
-              <div className="min-990:basis-10/12 basis-1/2 md:basis-2/3 relative flex max-768:flex-col overflow-y-auto max-768:h-[160px] no-scrollbar md:flex-row md:py-[15px]">
-                <div className="basis-1/2 px-[15px] flex flex-col min-990:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
+              <div className="2md:basis-10/12 basis-1/2 md:basis-2/3 relative flex max-768:flex-col overflow-y-auto max-768:h-[160px] no-scrollbar md:flex-row md:py-[15px]">
+                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
                   <div className="w-full px-[10px]">
                     <a
                       href="/collections/sofa"
@@ -240,7 +240,7 @@ const Home = () => {
                     Sofa
                   </span>
                 </div>
-                <div className="basis-1/2 px-[15px] flex flex-col min-990:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
+                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
                   <div className="w-full px-[10px]">
                     <a
                       href="/collections/sofa"
@@ -257,7 +257,7 @@ const Home = () => {
                     Sofa
                   </span>
                 </div>
-                <div className="basis-1/2 px-[15px] flex flex-col min-990:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
+                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
                   <div className="w-full px-[10px]">
                     <a
                       href="/collections/sofa"
@@ -274,7 +274,7 @@ const Home = () => {
                     Sofa
                   </span>
                 </div>
-                <div className="basis-1/2 px-[15px] flex flex-col min-990:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
+                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
                   <div className="w-full px-[10px]">
                     <a
                       href="/collections/sofa"
@@ -291,7 +291,7 @@ const Home = () => {
                     Sofa
                   </span>
                 </div>
-                <div className="basis-1/2 px-[15px] flex flex-col min-990:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
+                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
                   <div className="w-full px-[10px]">
                     <a
                       href="/collections/sofa"
@@ -308,7 +308,7 @@ const Home = () => {
                     Sofa
                   </span>
                 </div>
-                <div className="basis-1/2 px-[15px] flex flex-col min-990:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
+                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
                   <div className="w-full px-[10px]">
                     <a
                       href="/collections/sofa"
@@ -325,7 +325,7 @@ const Home = () => {
                     Sofa
                   </span>
                 </div>
-                <div className="basis-1/2 px-[15px] flex flex-col min-990:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
+                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
                   <div className="w-full px-[10px]">
                     <a
                       href="/collections/sofa"
@@ -342,7 +342,7 @@ const Home = () => {
                     Sofa
                   </span>
                 </div>
-                <div className="basis-1/2 px-[15px] flex flex-col min-990:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
+                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
                   <div className="w-full px-[10px]">
                     <a
                       href="/collections/sofa"
@@ -373,7 +373,7 @@ const Home = () => {
                 {Array.from({ length: 10 }).map((_, index) => (
                   <CarouselItem
                     key={index}
-                    className=" lg:basis-1/4 xl:basis-1/5 basis-1/4"
+                    className="lg:basis-1/4 xl:basis-1/5 basis-1/4"
                   >
                     <div className="p-1">
                       <Card className={"rounded-none"}>
@@ -404,14 +404,14 @@ const Home = () => {
             </div>
           </div>
           <div className="flex items-center">
-            <div className="basis-1/5 bg-collectionni max-990:hidden">
+            <div className="2md:basis-1/5 bg-collectionni max-990:hidden">
               <img
                 src="https://theme.hstatic.net/200000796751/1001266995/14/home_coll_1_banner.jpg?v=82"
                 alt=""
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="min-990:basis-4/5 min-990:pl-[14px] grid grid-cols-5 grid-rows-2 gap-y-[12px] max-990:grid-cols-2 md:flex-auto">
+            <div className="2md:basis-4/5 xl:grid-cols-5 2md:pl-[14px] grid  grid-rows-2 gap-y-[12px] md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 md:flex-auto w-full grid-cols-2">
               {Array.from({ length: 3 }).map((_, index) => (
                 <div
                   className=" flex-shrink-0 flex-grow-0 px-[6px]"
@@ -428,8 +428,8 @@ const Home = () => {
             </HoverEffectButton>
           </div>
         </section>
-        <section className="banner flex min-990:-mx-[15px] max-990:gap-y-3 max-990:flex-col home-collection">
-          <div className="  min-990:basis-1/2 relative px-[15px] ">
+        <section className="banner flex 2md:-mx-[15px] max-990:gap-y-3 max-990:flex-col home-collection">
+          <div className="  2md:basis-1/2 relative px-[15px] ">
             <a
               href="/collections/chan-ga-goi"
               className="w-full block banner-hover-effect overflow-hidden rounded"
@@ -441,7 +441,7 @@ const Home = () => {
               />
             </a>
           </div>
-          <div className="  min-990:basis-1/2 relative px-[15px] ">
+          <div className="  2md:basis-1/2 relative px-[15px] ">
             <a
               href="/collections/nen-thom"
               className="w-full block banner-hover-effect overflow-hidden rounded"
@@ -455,8 +455,8 @@ const Home = () => {
           </div>
         </section>
         <section className="home-collection ">
-          <div className="flex min-990:items-stretch w-full max-990:flex-col">
-            <div className=" min-990:basis-7/10 bg-[#fff] min-990:pt-[20px] min-990:pr-[20px] flex flex-col justify-end  min-990:max-w-[70%] flex-grow-0 relative">
+          <div className="flex 2md:items-stretch w-full max-990:flex-col">
+            <div className=" 2md:basis-7/10 bg-[#fff] 2md:pt-[20px] 2md:pr-[20px] flex flex-col justify-end  2md:max-w-[70%] flex-grow-0 relative">
               <div className="">
                 <h2 className="collection-title capitalize pl-[20px] max-990:pl-[15px] mb-[15px] max-990:pt-3">
                   Chút xinh xắn cho nhà tắm
@@ -472,7 +472,7 @@ const Home = () => {
                       {Array.from({ length: 3 }).map((_, index) => (
                         <CarouselItem
                           key={index}
-                          className="min-1200:basis-1/3 min-990:basis-1/2 basis-[80%] md:basis-1/2"
+                          className="2lg:basis-1/3 2md:basis-1/2 basis-[80%] md:basis-1/2"
                         >
                           <div className="px-[6px]">
                             <Card className={"rounded-none"}>
@@ -486,7 +486,7 @@ const Home = () => {
                         </CarouselItem>
                       ))}
                     </CarouselContent>
-                    <div className="absolute top-[12px] right-[20px] flex items-center gap-4 min-1200:hidden max-990:top-[6px] max-990:right-[10px]">
+                    <div className="absolute top-[12px] right-[20px] flex items-center gap-4 2lg:hidden max-990:top-[6px] max-990:right-[10px]">
                       <CarouselPrevious
                         className={"bg-[#fff] shadow-carousel text-blackni"}
                       />
@@ -498,7 +498,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            <div className=" min-990:basis-3/10 flex-shrink-0 bg-categoryni flex-col flex items-center justify-center max-990:px-[15px]">
+            <div className=" 2md:basis-3/10 flex-shrink-0 bg-categoryni flex-col flex items-center justify-center max-990:px-[15px]">
               <a
                 href="/collections/nen-thom"
                 className="w-full block banner-hover-effect overflow-hidden "
@@ -527,7 +527,7 @@ const Home = () => {
                 {Array.from({ length: 10 }).map((_, index) => (
                   <CarouselItem
                     key={index}
-                    className=" lg:basis-1/5  min-990:basis-1/4 basis-[80%] md:basis-1/3"
+                    className="lg:basis-1/5  2md:basis-1/4 basis-[80%] md:basis-1/3"
                   >
                     <div className="px-[6px]">
                       <Card className={"rounded-none"}>
@@ -550,7 +550,7 @@ const Home = () => {
             </Carousel>
           </div>
         </section>
-        <div className="fixed bottom-0 right-0 left-0 bg-redni text-[#fff] flex items-center justify-between py-[12px] px-[20px] min-990:hidden z-[40]">
+        <div className="fixed bottom-0 right-0 left-0 bg-redni text-[#fff] flex items-center justify-between py-[12px] px-[20px] 2md:hidden z-[40]">
           <span>7 sản phẩm</span>
           <span>2,170,000đ</span>
           <Drawer>

@@ -7,6 +7,7 @@ export { default as PrevidewOrder } from "./PreviewOrder";
 export { default as CheckOut } from "./CheckOut";
 export { default as Blogs } from "./Blogs";
 export { default as BlogDetail } from "./BlogDetail";
+export { default as CollectionDetail } from "./CollectionDetail";
 
 export { default as Register } from "./Account/Register";
 export { default as Identify } from "./Identify";

@@ -5,7 +5,7 @@ const Search = ({ className }) => {
   return (
     <form
       className={cn(
-        "h-10 relative bg-[#fff] pr-[4px]  min-990:min-w-[400px] flex-auto group",
+        "h-10 relative bg-[#fff] pr-[4px]  2md:min-w-[400px] flex-auto group",
         className
       )}
       id="search-div"

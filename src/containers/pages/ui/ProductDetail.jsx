@@ -146,8 +146,8 @@ const ProductDetail = () => {
           showClass: "f-fadeIn",
         }}
       ></FancyBoxWrapper>
-      <div className="flex gap-[12px] items-stretch">
-        <div className="basis-45  flex-grow-0">
+      <div className="flex 2md:gap-[12px] 2md:items-stretch  2md:flex-row flex-col">
+        <div className="2md:basis-45 flex-grow-0 w-full">
           <div className=" pb-[100%] w-full h-0 sticky top-0 bg-[#fff]">
             <div className="absolute w-full h-full flex flex-col justify-between">
               <div className=" w-full  flex  flex-row-reverse  ">
@@ -193,7 +193,7 @@ const ProductDetail = () => {
                     ))}
                   </Swiper>
                 </div>
-                <div className="flex-grow-0 min-990:w-[80px] pt-3 w-[76px] flex-shrink-0 px-3 ">
+                <div className="flex-grow-0 2md:w-[80px] pt-3 w-[76px] flex-shrink-0 px-3 ">
                   <Swiper
                     onSwiper={setThumbsSwiper}
                     loop={false}
@@ -263,12 +263,12 @@ const ProductDetail = () => {
           </div>
           <div className=""></div>
         </div>
-        <div className="basis-55 ">
+        <div className="2md:basis-55 w-full">
           <div className=" bg-[#fff]   p-[15px]">
             <div className=" leading-[130%] text-[20px] font-bold  text-redichi">
               Đệm Trang Trí Vải Cotton Nhiều Màu ROSABELLA
             </div>
-            <div className="flex flex-wrap items-center product-origin mb-[15px]">
+            <div className="flex flex-wrap items-center product-origin mb-[15px] gap-2">
               <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
                 thương hiệu
                 <b className="text-[--shop-color-main]"> Hàn Quốc</b>
@@ -443,7 +443,7 @@ const ProductDetail = () => {
                 </div>
               </div>
             </div>
-            <div className="warranty flex items-center gap-3 mt-[15px]">
+            <div className="warranty flex md:items-center gap-3 mt-[15px] md:flex-row flex-col">
               <div className="basis-1/3 flex items-center gap-2">
                 <div className="w-[30px] h-[30px]">
                   <img
@@ -460,7 +460,9 @@ const ProductDetail = () => {
                     alt=""
                   />
                 </div>
-                <span className="text-vendor text-[14px]">1 năm bảo hành</span>
+                <span className="text-vendor text-[14px]">
+                  Hỗ trợ đổi trong 3 ngày cho sản phẩm nguyên giá
+                </span>
               </div>
               <div className="basis-1/3 flex items-center gap-2">
                 <div className="w-[30px] h-[30px]">
@@ -475,8 +477,8 @@ const ProductDetail = () => {
                 </span>
               </div>
             </div>
-            <div className="flex items-center mt-[15px] gap-3">
-              <div className="basis-1/2 ">
+            <div className="flex items-center justify-center mt-[15px] gap-3">
+              <div className="basis-1/2 2md:block hidden">
                 <HoverEffectBox className={"w-full rounded"}>
                   <span className="text-inheirt text-[14px] font-bold">
                     Thêm vào giỏ hàng
@@ -491,7 +493,7 @@ const ProductDetail = () => {
             </div>
           </div>
           <div className="bg-[#fff] mt-[15px] p-[15px]">
-            <div className="grid grid-cols-2 gap-[15px]">
+            <div className="grid max-768:auto-cols-[85%]  md:auto-cols-[60%] max-1280:grid-flow-col max-1280:gap-4 max-1280:overflow-x-auto max-1280:no-scrollbar xl:grid-cols-2 xl:gap-[15px]">
               <CouponCard />
               <CouponCard />
               <CouponCard />
@@ -575,7 +577,7 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
-      <div className="fixed bottom-0 right-0 left-0  text-[#fff] bg-[#fff] flex items-center justify-between py-[12px] px-[20px] min-990:hidden pt-2  border-t z-[50]">
+      <div className="fixed bottom-0 right-0 left-0  text-[#fff] bg-[#fff] flex items-center justify-between py-[12px] px-[20px] 2md:hidden pt-2  border-t z-[50]">
         <div className="flex items-center w-[720px] mx-auto gap-4">
           <div className="flex justify-center ">
             <div className="flex items-center mx-auto">

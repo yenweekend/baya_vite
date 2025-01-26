@@ -25,6 +25,7 @@ import {
   Contact,
   Blogs,
   BlogDetail,
+  CollectionDetail,
 } from "./containers/pages/ui";
 
 import UserMaster from "./containers/layouts/user/Master";
@@ -47,6 +48,10 @@ function App() {
           <Route element={<Home />} path={paths.HOME}></Route>
           <Route element={<Products />} path={paths.PRODUCTS}></Route>
           <Route element={<PrevidewOrder />} path={paths.PREVIEWORDER}></Route>
+          <Route
+            element={<CollectionDetail />}
+            path={"/collections/:slug"}
+          ></Route>
           <Route
             element={<BlogDetail />}
             path={"/blogs/nguon-cam-hung/:slug"}

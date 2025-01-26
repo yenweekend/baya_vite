@@ -15,27 +15,17 @@ import {
 } from "lucide-react";
 import { Search as SearchDiv } from "@/containers/components";
 import navigationComponents from "@/utils/navigation";
-import {
-  DropdownScreen,
-  DropdownScreenContent,
-  DropdownScreenTrigger,
-} from "@/containers/components/Dropdown/DropdownFullScreen";
+
 import {
   DropdownScreenUT,
   DropdownScreenUTContent,
   DropdownScreenUTTrigger,
 } from "@/containers/components/Dropdown/DropdownFullScreenUT";
-import {
-  Dropdown,
-  DropdownContent,
-  DropdownTrigger,
-} from "@/containers/components/Dropdown/Dropdown";
+
 import { Separator } from "@/components/ui/separator";
 
 import { CartButtonTransition } from "../../components/ButtonTransition/CartButton";
 import { AccountButton } from "../../components/ButtonTransition/AccountButton";
-
-import { LoginBox } from "@/containers/components";
 const Header = () => {
   const [openHamburger, setOpenHamburger] = React.useState(false);
   const [items, setItems] = useState([
@@ -84,16 +74,18 @@ const Header = () => {
   ]);
 
   return (
-    <header className={`min-990:min-h-[204px] min-h-[160px] z-[50]  relative`}>
+    <header
+      className={`2md:min-h-[204px] min-h-[160px] z-[50]  relative 2xl:min-h-[152px]`}
+    >
       <div className="nav-bar z-[60] ">
         <div className="bg-primary ">
-          <div className=" flex items-center justify-between nav min-990:pt-[18px] py-[10px] px-[15px] max-w-[1400px] mx-auto ">
+          <div className=" flex items-center justify-between nav 2md:pt-[18px] py-[10px] px-[15px] max-w-[1400px] mx-auto ">
             <DropdownScreenUT
               open={openHamburger}
               onOpenChange={setOpenHamburger}
             >
               <DropdownScreenUTTrigger
-                className={"w-[30px] h-[30px] block min-990:hidden"}
+                className={"w-[30px] h-[30px] block 2md:hidden"}
               >
                 <X
                   size={30}
@@ -255,9 +247,9 @@ const Header = () => {
             </nav>
 
             <div className="px-[15px] flex items-start justify-between flex-auto  ">
-              <div className="flex-auto hidden flex-col gap-3 max-w-[680px] mx-auto  min-990:flex search-div">
+              <div className="flex-auto hidden flex-col gap-3 max-w-[680px] mx-auto  2md:flex search-div">
                 <SearchDiv />
-                <div className=" items-center gap-5 hidden min-990:flex">
+                <div className=" items-center gap-5 hidden 2md:flex">
                   <div className="flex items-center gap-2">
                     <div className="w-[25px] h-5 overflow-hidden">
                       <img
@@ -310,31 +302,27 @@ const Header = () => {
                     </a>
                   </DropdownTrigger>
                   <DropdownContent className={"py-[15px] px-[24px] w-[400px]"}>
-                    <SearchDiv className={"min-990:min-w-[240px]"} />
+                    <SearchDiv className={"2md:min-w-[240px]"} />
                   </DropdownContent>
                 </Dropdown> */}
                 <Separator
                   orientation="vertical"
-                  className={
-                    "my-auto hidden min-990:block h-[25px] bg-[#ffffff33]"
-                  }
+                  className={"my-auto hidden 2md:block h-[25px] bg-[#ffffff33]"}
                 />
                 <AccountButton />
                 <Separator
                   orientation="vertical"
-                  className={
-                    "my-auto hidden min-990:block h-[25px] bg-[#ffffff33]"
-                  }
+                  className={"my-auto hidden 2md:block h-[25px] bg-[#ffffff33]"}
                 />
                 <CartButtonTransition />
               </div>
             </div>
           </div>
-          <div className="border-t border-solid border-[rgba(255,255,255,0.2)] block min-990:hidden mx-[20px] py-[10px]">
+          <div className="border-t border-solid border-[rgba(255,255,255,0.2)] block 2md:hidden mx-[20px] py-[10px]">
             <SearchDiv />
           </div>
         </div>
-        <div className="px-[15px] bg-[#f2f2f2] nav-menu hidden min-990:block ">
+        <div className="px-[15px] bg-[#f2f2f2] nav-menu hidden 2md:block ">
           <nav>
             <ul className="flex flex-wrap items-center justify-center">
               {navigationComponents.map((nav) => (
