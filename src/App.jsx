@@ -107,8 +107,8 @@ function App() {
               path={"/pages/chinh-sach-bao-mat-thong-tin"}
             ></Route>
           </Route>
-          <Route element={<NotFound />} path="/*"></Route>
         </Route>
+        <Route element={<NotFound />} path="/*"></Route>
       </Routes>
     </>
   );
