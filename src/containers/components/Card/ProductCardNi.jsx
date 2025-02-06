@@ -25,7 +25,7 @@ const ProductCardNi = ({ className, productData }) => {
         <div className="flex items-center w-full">
           <a
             href="/"
-            className="flex-auto w-0 text-[14px] line-clamp-2 mb-[5px]"
+            className="flex-auto w-0 text-[13px] md:text-[14px] line-clamp-2 mb-[5px] "
           >
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
             aut ipsam dicta. Vero provident deserunt voluptatem tempore, sequi
@@ -33,10 +33,10 @@ const ProductCardNi = ({ className, productData }) => {
           </a>
         </div>
         <div className="">
-          <span className=" text-[13px] price  font-bold text-redni">
+          <span className=" text-[12px] md:text-[13px] price  font-bold text-redni">
             291.000đ
           </span>
-          <span className=" text-[13px] price-delete ml-[10px] text-[#878c8f] line-through font-light relative">
+          <span className=" text-[12px] md:text-[13px] price-delete ml-[10px] text-[#878c8f] line-through font-light relative">
             717.000đ
           </span>
           <span className="text-redni border-solid border border-[#f0e8ee] rounded-[3px] px-[4px] py-[1px] text-[10px] font-semibold text-center bg-[#fbf1f1] ml-[10px]">

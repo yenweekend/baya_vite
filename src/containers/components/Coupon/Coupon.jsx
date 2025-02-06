@@ -69,65 +69,7 @@ const Coupon = ({ className, data }) => {
             <p className="text-[12px] font-medium text-inherit">
               Đơn hàng từ 400k
             </p>
-            {/* <HoverCard openDelay={0}>
-              <HoverCardTrigger asChild>
-                <button
-                  variant="link"
-                  className={"absolute right-0 top-0 cursor-pointer"}
-                >
-                  <CircleAlert
-                    size={20}
-                    className="stroke-coupontext"
-                    strokeWidth={1.6}
-                  />
-                </button>
-              </HoverCardTrigger>
-              <HoverCardContent className="max-w-[400px] w-[360px]">
-                <div className="px-8 py-3 bg-[#fafafa] flex items-center">
-                  <span className="text-vendor uppercase text-[12px] basis-1/3">
-                    Mã
-                  </span>
-                  <div className="flex-auto basis-2/3 flex items-center gap-2 pl-[20px]">
-                    <span className="text-[13px] font-bold text-coupontext uppercase">
-                      vouchert1-200k
-                    </span>
-                    <button className="w-6 h-6 rounded-full  bg-[#4ea8cd] bg-opacity-20 flex items-center justify-center">
-                      <Copy
-                        className="stroke-[#4ea8cd]"
-                        size={12}
-                        strokeWidth={1.4}
-                      />
-                    </button>
-                  </div>
-                </div>
-                <div className="px-8 py-3 flex items-center">
-                  <span className="text-vendor font-medium text-[12px] basis-1/3">
-                    Hạn sử dụng
-                  </span>
-                  <span className="text-coupontext uppercase text-[13px] basis-2/3 font-medium pl-[20px]">
-                    31/12/2025
-                  </span>
-                </div>
-                <div className="px-8 py-3 bg-[#fafafa] flex items-center">
-                  <ul className="  list-outside ">
-                    <li className="text-[13px] list-disc marker:text-[#000] text-coupontext font-normal  relative ">
-                      Dành cho đơn hàng từ 400k
-                    </li>
-                    <li className="text-[13px] list-disc marker:text-[#000] text-coupontext font-normal  relative ">
-                      Mã khách hàng được sử dụng tối đa 1 lần
-                    </li>
-                    <li className="text-[13px] list-disc marker:text-[#000] text-coupontext font-normal  relative ">
-                      Sao chép mã và nhập mã khuyến mãi ở trang thanh toán
-                    </li>
-                  </ul>
-                </div>
-                <HoverCardFull.Arrow
-                  width={16}
-                  height={12}
-                  className="fill-white"
-                ></HoverCardFull.Arrow>
-              </HoverCardContent>
-            </HoverCard> */}
+
             <CouponContentButton />
           </div>
           <div className="flex items-center justify-between max-990:gap-2">

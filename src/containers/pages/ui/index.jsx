@@ -1,12 +1,13 @@
 export { default as Home } from "./Home";
 
 export { default as Products } from "./ProductDetail";
+export { default as Category } from "./Category";
 export { default as CartDetail } from "./CartDetail";
 export { default as Ckeditor } from "../../components/Ckeditor";
-export { default as PrevidewOrder } from "./PreviewOrder";
 export { default as CheckOut } from "./CheckOut";
-export { default as Blogs } from "./Blogs";
-export { default as BlogDetail } from "./BlogDetail";
+export { default as BlogMaster } from "./blog/Master";
+export { default as Blogs } from "./blog/Blogs";
+export { default as BlogDetail } from "./blog/BlogDetail";
 export { default as CollectionDetail } from "./CollectionDetail";
 
 export { default as Register } from "./Account/Register";

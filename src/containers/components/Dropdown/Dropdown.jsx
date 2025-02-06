@@ -7,8 +7,14 @@ const Dropdown = React.forwardRef(
     const triggerRef = React.useRef(null);
     const dropdownRef = React.useRef(null);
     // Close dropdown when clicking outside
+    React.useEffect(() => {
+      if (open && document.body.classList.contains("locked-scroll")) {
+        document.body.classList.remove("locked-scroll");
+      }
+    }, [open]);
     useClickAwayScroll(triggerRef, dropdownRef, () => {
       if (open) {
+        console.log("tao nè");
         onOpenChange(false);
       }
     });
@@ -57,7 +63,7 @@ const DropdownTrigger = React.forwardRef(
       <button
         ref={ref}
         className={cn(
-          "items-center justify-center flex  text-sm font-medium px-4",
+          "items-center justify-center flex  text-sm font-medium 2md:px-4 px-1",
           className
         )}
         onClick={(e) => {

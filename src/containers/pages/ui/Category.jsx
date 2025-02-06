@@ -18,8 +18,11 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import { ProductCard } from "@/containers/components";
 import { ArrowDownAZ, Filter, X } from "lucide-react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-
-const CollectionDetail = () => {
+import { useQuery } from "@tanstack/react-query";
+import { getCategory } from "@/apis/category";
+import { useParams } from "react-router-dom";
+const Category = () => {
+  const { slug } = useParams();
   const [open, onOpenChange] = useState(false);
   React.useEffect(() => {
     if (open) {
@@ -29,6 +32,18 @@ const CollectionDetail = () => {
     }
   }, [open]);
   const isDesktop = useMediaQuery("(min-width: 990px)");
+  const { isPending, isError, error, data } = useQuery({
+    queryKey: ["category", slug],
+    queryFn: () => getCategory(slug),
+    enabled: !!slug,
+  });
+  if (isPending) {
+    return "loading";
+  }
+  if (isError) {
+    return error;
+  }
+
   return (
     <div className="flex items-stretch">
       <div
@@ -462,13 +477,13 @@ const CollectionDetail = () => {
               Xóa hết
             </button>
           </div>
-          <div className=" xl:grid-cols-5 mt-[15px] grid  grid-rows-2 gap-y-[6px] 2xl:gap-y-[12px] md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 md:flex-auto  grid-cols-2 ">
-            {Array.from({ length: 14 }).map((_, index) => (
+          <div className=" xl:grid-cols-5 mt-[15px] grid items-stretch grid-rows-2 gap-y-[6px] 2xl:gap-y-[12px] md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 md:flex-auto  grid-cols-2 ">
+            {data.data.products.map((product) => (
               <div
-                className=" flex-shrink-0 flex-grow-0 px-[2px] xl:px-[6px]"
-                key={index}
+                className=" flex-shrink-0 flex-grow-0 px-[2px] xl:px-[6px] "
+                key={product.slug}
               >
-                <ProductCard />
+                <ProductCard productData={product} />
               </div>
             ))}
           </div>
@@ -478,4 +493,4 @@ const CollectionDetail = () => {
   );
 };
 
-export default CollectionDetail;
+export default Category;

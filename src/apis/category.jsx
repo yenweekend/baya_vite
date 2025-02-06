@@ -1,8 +1,8 @@
 import axios from "axios";
 import { apiUrl } from "../configs/apiUrl";
-export const getProductDetail = async (slug) => {
+export const getCategory = async (slug) => {
   const response = await axios.get(
-    `${apiUrl}/api/products/product-detail/${slug}`
+    `${apiUrl}/api/categories/category-detail/${slug}`
   );
   return response;
 };

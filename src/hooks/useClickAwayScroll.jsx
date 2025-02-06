@@ -12,8 +12,14 @@ const useClickAwayScroll = (dropdownRef, targetRef, onClickAway) => {
         onClickAway();
       }
     };
-    const handleScroll = () => {
-      onClickAway();
+    const handleScroll = (event) => {
+      if (document.body.classList.contains("body-resize")) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      } else {
+        onClickAway();
+      }
     };
     document.addEventListener("mousedown", handleClick);
     window.addEventListener("scroll", handleScroll);

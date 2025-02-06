@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import icons from "@/utils/icons";
@@ -32,7 +38,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
+import formatPrice from "@/helpers/formatPrice";
 import {
   Minus,
   Plus,
@@ -42,14 +48,12 @@ import {
   Twitter,
   Link as LinkIcon,
 } from "lucide-react";
-const images = [
-  "https://product.hstatic.net/200000796751/product/2002531.5_70d2def5b3144bac9b5f4c9ac526e5a9_master.jpg",
-  "https://product.hstatic.net/200000796751/product/2002531.2_7e7692a23b814190996c2252338bcf0b_master.jpg",
-  "https://product.hstatic.net/200000796751/product/2002531.2_7e7692a23b814190996c2252338bcf0b_master.jpg",
-  "https://product.hstatic.net/200000796751/product/2002531.3_8ad76c5474d64991b0ee42ebdfd4fd5a_master.jpg",
-];
+
+import ProductDetailSkeleton from "@/containers/components/Skeleton/ProductDetail";
 const ProductDetail = () => {
-  const params = useParams();
+  const { slug } = useParams();
+  const contentRef = useRef();
+  const [descriptionContentHeight, setDescriptionContentHeight] = useState(220);
   const [thumbsSwiper, setThumbsSwiper] = React.useState(null);
   const [selectedGift, setSelectedGift] = React.useState(null);
   const [readMore, setReadMore] = useState(false);
@@ -57,7 +61,6 @@ const ProductDetail = () => {
     setSelectedGift(e.target.value);
   };
   const [attributeAvailable, setAttrbuteAvailable] = useState([]);
-  const [slug, setSlug] = useState(params.slug);
   const [selectedAttributes, setSelectedAttributes] = useState({});
   const [productVariant, setProductVariant] = useState(null);
 
@@ -68,15 +71,27 @@ const ProductDetail = () => {
     }));
   }, []);
 
-  // useEffect(() => {
-  //   setSlug(params.slug);
-  // }, [params]);
-
-  // const { isLoading, error, data } = useQuery({
-  //   queryKey: ["productDetailData", slug],
-  //   queryFn: () => getProductDetail(slug),
-  //   enabled: !!slug,
-  // });
+  const { isPending, isError, error, data } = useQuery({
+    queryKey: ["product-detail", slug],
+    queryFn: () => getProductDetail(slug),
+    enabled: !!slug,
+  });
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
+    if (data && contentRef.current) {
+      setDescriptionContentHeight(
+        contentRef.current.getBoundingClientRect().height
+      );
+    }
+  }, [data, contentRef]);
+  if (isPending) {
+    return <ProductDetailSkeleton />;
+  }
+  if (isError) {
+    return error;
+  }
   // useEffect(() => {
   //   if (data) {
   //     const images = [...data.data.data.productDetail["Images"]];
@@ -158,7 +173,7 @@ const ProductDetail = () => {
                     "  overflow-hidden flex-auto pr-[6px] pl-[12px] py-[6px]"
                   }
                 >
-                  <Swiper
+                  {/* <Swiper
                     style={{
                       "--swiper-navigation-color": "#fff",
                       "--swiper-pagination-color": "#fff",
@@ -191,10 +206,10 @@ const ProductDetail = () => {
                         </a>
                       </SwiperSlide>
                     ))}
-                  </Swiper>
+                  </Swiper> */}
                 </div>
                 <div className="flex-grow-0 2md:w-[80px] pt-3 w-[76px] flex-shrink-0 px-3 ">
-                  <Swiper
+                  {/* <Swiper
                     onSwiper={setThumbsSwiper}
                     loop={false}
                     spaceBetween={10}
@@ -215,10 +230,10 @@ const ProductDetail = () => {
                         <LazyLoadImage src={img} />
                       </SwiperSlide>
                     ))}
-                  </Swiper>
+                  </Swiper> */}
                 </div>
               </div>
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center mb-3">
                 Chia sẻ:
                 <a
                   href="/"
@@ -266,17 +281,19 @@ const ProductDetail = () => {
         <div className="2md:basis-55 w-full">
           <div className=" bg-[#fff]   p-[15px]">
             <div className=" leading-[130%] text-[20px] font-bold  text-redichi">
-              Đệm Trang Trí Vải Cotton Nhiều Màu ROSABELLA
+              {data.data.productDetail.title}
             </div>
             <div className="flex flex-wrap items-center product-origin mb-[15px] gap-2">
               <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
                 thương hiệu
-                <b className="text-[--shop-color-main]"> Hàn Quốc</b>
+                <b className="text-[--shop-color-main]">Student</b>
               </div>
               <div className="devide bg-[rgba(0,0,0,.06)] w-[0.8px] mx-[15px] h-[10px]"></div>
               <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
                 Mã sản phẩm:
-                <b className="text-[--shop-color-main]"> 2022604763</b>
+                <b className="text-[--shop-color-main]">
+                  {data.data.productDetail.sku}
+                </b>
               </div>
               <div className="devide bg-[rgba(0,0,0,.06)] w-[0.8px] mx-[15px] h-[10px]"></div>
 
@@ -291,7 +308,7 @@ const ProductDetail = () => {
                   Giá:
                 </span>
                 <strong className="text-[#ff0000] text-[26px] ml-[40px]">
-                  20.000đ
+                  {formatPrice(data.data.productDetail.price)}
                 </strong>
                 <span className="price-delete ml-[10px] text-[#878c8f] line-through font-light relative text-[13px]">
                   717.000đ
@@ -303,7 +320,7 @@ const ProductDetail = () => {
             </div>
             <div className=" my-[15px]">
               <div className="flex items-center">
-                <div className="text-blacknifont-bold text-[14px] flex-col flex pr-[20px]">
+                <div className="text-blackni font-bold text-[14px] flex-col flex pr-[20px]">
                   <span className="font-bold text-[13px]">Màu sắc :</span>
                   <span className="font-bold text-[13px] text-[#4ea8cd]">
                     Hồng
@@ -520,38 +537,20 @@ const ProductDetail = () => {
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="description" className={" pt-[20px]"}>
-                <div className="">
+                <div
+                  className={` overflow-hidden transition-all ease-linear duration-300 ${
+                    readMore ? "h-auto" : " max-h-[220px]"
+                  }`}
+                >
                   <div
-                    className={` overflow-hidden transition-all ease-linear duration-300 h-[220px] ${
-                      readMore ? "h-auto" : ""
-                    }`}
-                  >
-                    Giường có ngăn kéo, cất đồ gọn gang Đầu giường có lưng tựa
-                    để người tựa vào nghỉ ngơi thoải mái trên giường ----------
-                    Sản phẩm Giường Bộ sưu tập DOMINIK Kích cỡ L200xW160xH80 Màu
-                    sắc Dark-wood-Dark-grey Chất liệu MFC Xuất xứ Việt Nam Đơn
-                    vị PCS ---------- Tránh đặt sản phẩm dưới ánh sáng mặt trời
-                    trực tiếp và những nơi có độ ẩm cao. Lau bụi bằng vải sạch,
-                    mềm, khô, không có xơ. Làm sạch nhẹ nhàng bằng xà phòng nhẹ.
-                    Lau khô ngay bằng vải mềm, tránh ẩm ướt còn sót lại. Làm
-                    sạch vết tràn ngay lập tức bằng cách thấm thay vì lau. Nâng
-                    để di chuyển đồ đạc, tránh xô đẩy Lorem ipsum dolor sit amet
-                    consectetur adipisicing elit. Aliquam repellendus id
-                    laboriosam, dolorem, expedita eligendi blanditiis eos
-                    numquam molestias, possimus et unde! Quis fuga impedit
-                    repudiandae dignissimos consequuntur! Quisquam, magnam
-                    corporis officia atque tempore ipsum commodi facilis
-                    repellendus minus quasi alias incidunt sed quo repellat
-                    ullam. Modi eius sapiente at dolorem exercitationem
-                    perspiciatis harum autem iure placeat! Enim voluptates
-                    blanditiis ipsam et nesciunt quisquam quasi quidem, nostrum
-                    in sint, quae, iusto beatae iure asperiores facere soluta.
-                    Atque facere similique nulla provident mollitia numquam
-                    dolorum eos saepe alias voluptas architecto ipsum
-                    blanditiis, minus sunt ratione itaque dolore? Sed culpa
-                    numquam debitis.
-                    <p>&nbsp;</p>
-                  </div>
+                    className="description-content"
+                    ref={contentRef}
+                    dangerouslySetInnerHTML={{
+                      __html: data.data.productDetail.description,
+                    }}
+                  />
+                </div>
+                {descriptionContentHeight > 220 ? (
                   <div className={`desc-btn ${readMore ? "mt-[30px]" : ""}`}>
                     <button
                       className="border border-solid border-redichi rounded text-redichi text-[13px] capitalize flex items-center py-[6px] px-[15px] mx-auto gap-2"
@@ -570,7 +569,9 @@ const ProductDetail = () => {
                       )}
                     </button>
                   </div>
-                </div>
+                ) : (
+                  ""
+                )}
               </TabsContent>
               <TabsContent value="judgement">đánh giá</TabsContent>
             </Tabs>

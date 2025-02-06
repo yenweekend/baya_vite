@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import {
   Home,
   Products,
-  PrevidewOrder,
   CheckOut,
   Register,
   Identify,
@@ -26,8 +25,10 @@ import {
   Blogs,
   BlogDetail,
   CollectionDetail,
+  BlogMaster,
+  Category,
 } from "./containers/pages/ui";
-
+import NewProducts from "./containers/pages/NewProducts";
 import UserMaster from "./containers/layouts/user/Master";
 import paths from "./utils/paths";
 import { NotFound } from "./containers/components";
@@ -35,6 +36,7 @@ function App() {
   return (
     <>
       <Routes>
+        <Route element={<NewProducts />} path={"/editor"}></Route>
         <Route element={<CheckOut />} path={paths.CHECKOUT}></Route>
 
         <Route
@@ -47,20 +49,21 @@ function App() {
           <Route element={<Identify />} path="/login/identify"></Route>
           <Route element={<Home />} path={paths.HOME}></Route>
           <Route element={<Products />} path={paths.PRODUCTS}></Route>
-          <Route element={<PrevidewOrder />} path={paths.PREVIEWORDER}></Route>
+          <Route element={<Category />} path={"/categories/:slug"}></Route>
           <Route
             element={<CollectionDetail />}
             path={"/collections/:slug"}
           ></Route>
-          <Route
-            element={<BlogDetail />}
-            path={"/blogs/nguon-cam-hung/:slug"}
-          ></Route>
-          <Route element={<Blogs />} path={"/blogs/nguon-cam-hung"}></Route>
+          <Route element={<BlogMaster />} path={"/blogs"}>
+            <Route element={<Blogs />} path={"/blogs/:slug"}></Route>
+            <Route
+              element={<BlogDetail />}
+              path={"/blogs/:blog-slug/:slug"}
+            ></Route>
+          </Route>
           <Route element={<CartDetail />} path={"/cart"}></Route>
           <Route element={<Chain />} path={"/pages/he-thong-cua-hang"}></Route>
           <Route element={<Contact />} path={"/pages/lien-he"}></Route>
-
           <Route element={<PageMaster />} path={"/pages"}>
             <Route element={<AboutUs />} path={"/pages/about-us"}></Route>
             <Route

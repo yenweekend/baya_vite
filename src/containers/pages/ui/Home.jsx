@@ -38,6 +38,7 @@ import {
   CollectionCard,
 } from "../../components";
 import { Carousel as CarouselAntd } from "antd";
+import HomeSkeleton from "@/containers/components/Skeleton/Home";
 const Home = () => {
   const isDesktop = useMediaQuery("(min-width: 990px)");
 
@@ -46,7 +47,7 @@ const Home = () => {
   }, []);
   return (
     <>
-      <HomeStyled>
+      <div>
         <div>
           <section className="banner ">
             <div className=" 2md:px-2 flex-shrink-0 w-full">
@@ -83,24 +84,24 @@ const Home = () => {
             </div>
           </section>
           <div className="flex  items-stretch overflow-y-auto no-scrollbar  mt-[15px] max-768:pl-[15px] ">
-            <div className=" 2md:basis-1/4 w-[70%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
+            <div className=" 2md:basis-1/4 w-[60%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
               <CollectionCard />
             </div>
-            <div className=" 2md:basis-1/4 w-[70%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
+            <div className=" 2md:basis-1/4 w-[60%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
               {" "}
               <CollectionCard />
             </div>
-            <div className=" 2md:basis-1/4 w-[70%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
+            <div className=" 2md:basis-1/4 w-[60%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
               {" "}
               <CollectionCard />
             </div>
-            <div className=" 2md:basis-1/4 w-[70%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
+            <div className=" 2md:basis-1/4 w-[60%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
               {" "}
               <CollectionCard />
             </div>
           </div>
-          <section className="bg-collectionichi home-collection p-[15px] relative">
-            <div className="pr-[100px] flex items-center gap-3">
+          <section className="bg-collectionichi home-collection md:p-[15px] relative">
+            <div className="pr-[100px] flex items-center gap-3 md:pt-0 pt-3 pl-2 md:pl-0">
               <div className="fade-loading relative w-2 h-2 rounded-full bg-init"></div>
               <h2 className="collection-title">Đồ bếp nhập khẩu cao cấp</h2>
             </div>
@@ -113,11 +114,8 @@ const Home = () => {
               >
                 <CarouselContent>
                   {Array.from({ length: 10 }).map((_, index) => (
-                    <CarouselItem
-                      key={index}
-                      className="2lg:basis-1/5 md:basis-1/2 basis-[40%] 2md:basis-1/4"
-                    >
-                      <div className="px-[6px]">
+                    <CarouselItem key={index} className="card-item">
+                      <div className="md:px-[6px] px-[2px]">
                         <Card className={"rounded-none"}>
                           <CardContent className="flex aspect-square items-center justify-center p-0">
                             <ProductCard />
@@ -127,7 +125,7 @@ const Home = () => {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <div className="absolute top-[12px] right-[20px] flex items-center gap-4">
+                <div className="absolute top-2 md:top-[12px] right-[20px] flex items-center gap-4">
                   <CarouselPrevious
                     className={"bg-[#fff] shadow-carousel text-blackni"}
                   />
@@ -174,11 +172,8 @@ const Home = () => {
               >
                 <CarouselContent className={""}>
                   {Array.from({ length: 10 }).map((_, index) => (
-                    <CarouselItem
-                      key={index}
-                      className="2lg:basis-1/5 md:basis-1/2 basis-[40%] 2md:basis-1/4"
-                    >
-                      <div className="px-[6px]">
+                    <CarouselItem key={index} className="card-item">
+                      <div className="md:px-[6px] px-[2px]">
                         <Card className={"rounded-none"}>
                           <CardContent className="flex aspect-square items-center justify-center p-0">
                             <ProductCard />
@@ -209,188 +204,194 @@ const Home = () => {
             </div>
           </div>
           <div className="max-w-[1400px] 2md:px-[15px] home-collection">
-            <div className="2md:py-[15px] 2md:px-5 bg-[url('https://theme.hstatic.net/200000796751/1001266995/14/categorize_img.jpg?v=82')] bg-no-repeat bg-cover relative flex ">
+            <div className="py-[15px] 2md:px-5  bg-[url('https://theme.hstatic.net/200000796751/1001266995/14/categorize_img.jpg?v=82')] bg-no-repeat bg-cover relative flex items-stretch">
               <div className="absolute   bg-[#000] opacity-35 inset-0"></div>
-              <div className="2md:basis-2/12 basis-1/2 md:basis-1/3 px-[15px] flex flex-col relative max-990:justify-center">
-                <h3 className="text-[18px] font-semibold mb-[8px] text-catecolor 2md:text-right  text-center md:text-[20px]">
+              <div className="2md:basis-2/12 basis-1/2 md:basis-1/3 md:px-[15px] flex flex-col relative justify-center px-[6px]">
+                <h3 className="text-[18px] font-semibold mb-[8px] text-catecolor text-left   md:text-[20px]">
                   Xu hướng tìm kiếm
                 </h3>
                 <a
                   href="/collections/all"
-                  className="px-[15px] py-[5px] uppercase text-[13px] text-catecolor bg-ichi font-medium block ml-auto rounded-full max-768:rounded-none mx-auto"
+                  className="px-[15px] py-[5px] uppercase text-[13px] text-catecolor bg-ichi font-medium block mr-auto rounded-full max-768:rounded-none "
                 >
                   Xem ngay
                 </a>
               </div>
-              <div className="2md:basis-10/12 basis-1/2 md:basis-2/3 relative flex max-768:flex-col overflow-y-auto max-768:h-[160px] no-scrollbar md:flex-row md:py-[15px]">
-                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
-                  <div className="w-full px-[10px]">
-                    <a
-                      href="/collections/sofa"
-                      className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
-                    >
-                      <LazyLoadImage
-                        effect="opacity"
-                        src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_1_img.jpg?v=82"
-                        className="w-full h-full "
-                      />
-                    </a>
+              <div className="2md:basis-10/12 md:basis-2/3 basis-1/2 px-[6px]">
+                <div className=" flex flex-row  md:px-[15px]  flex-nowrap overflow-x-auto flex-shrink-0 no-scrollbar">
+                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                      <div className="relative w-full pb-[100%]">
+                        <div className="absolute inset-0">
+                          <a
+                            href="/collections/sofa"
+                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                          >
+                            <LazyLoadImage
+                              effect="opacity"
+                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_1_img.jpg?v=82"
+                              className="w-full h-full "
+                            />
+                          </a>
+                        </div>
+                      </div>
+                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                        Sofa
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:opacity-0">
-                    Sofa
-                  </span>
-                </div>
-                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
-                  <div className="w-full px-[10px]">
-                    <a
-                      href="/collections/sofa"
-                      className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full relative"
-                    >
-                      <LazyLoadImage
-                        effect="opacity"
-                        src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_2_img.jpg?v=82"
-                        className="w-full h-full"
-                      />
-                    </a>
+                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                      <div className="relative w-full pb-[100%]">
+                        <div className="absolute inset-0">
+                          <a
+                            href="/collections/sofa"
+                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                          >
+                            <LazyLoadImage
+                              effect="opacity"
+                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_2_img.jpg?v=82"
+                              className="w-full h-full "
+                            />
+                          </a>
+                        </div>
+                      </div>
+                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                        Bàn
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:opacity-0">
-                    Sofa
-                  </span>
-                </div>
-                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
-                  <div className="w-full px-[10px]">
-                    <a
-                      href="/collections/sofa"
-                      className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full relative"
-                    >
-                      <LazyLoadImage
-                        effect="opacity"
-                        src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_3_img.jpg?v=82"
-                        className="w-full h-full"
-                      />
-                    </a>
+                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                      <div className="relative w-full pb-[100%]">
+                        <div className="absolute inset-0">
+                          <a
+                            href="/collections/sofa"
+                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                          >
+                            <LazyLoadImage
+                              effect="opacity"
+                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_3_img.jpg?v=82"
+                              className="w-full h-full "
+                            />
+                          </a>
+                        </div>
+                      </div>
+                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                        Ghế
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:opacity-0">
-                    Sofa
-                  </span>
-                </div>
-                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
-                  <div className="w-full px-[10px]">
-                    <a
-                      href="/collections/sofa"
-                      className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full relative"
-                    >
-                      <LazyLoadImage
-                        effect="opacity"
-                        src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_4_img.jpg?v=82"
-                        className="w-full h-full"
-                      />
-                    </a>
+                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                      <div className="relative w-full pb-[100%]">
+                        <div className="absolute inset-0">
+                          <a
+                            href="/collections/sofa"
+                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                          >
+                            <LazyLoadImage
+                              effect="opacity"
+                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_4_img.jpg?v=82"
+                              className="w-full h-full "
+                            />
+                          </a>
+                        </div>
+                      </div>
+                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                        Nệm
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:opacity-0">
-                    Sofa
-                  </span>
-                </div>
-                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
-                  <div className="w-full px-[10px]">
-                    <a
-                      href="/collections/sofa"
-                      className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full relative"
-                    >
-                      <LazyLoadImage
-                        effect="opacity"
-                        src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_5_img.jpg?v=82"
-                        className="w-full h-full"
-                      />
-                    </a>
+                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                      <div className="relative w-full pb-[100%]">
+                        <div className="absolute inset-0">
+                          <a
+                            href="/collections/sofa"
+                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                          >
+                            <LazyLoadImage
+                              effect="opacity"
+                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_5_img.jpg?v=82"
+                              className="w-full h-full "
+                            />
+                          </a>
+                        </div>
+                      </div>
+                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                        Giường
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:opacity-0">
-                    Sofa
-                  </span>
-                </div>
-                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
-                  <div className="w-full px-[10px]">
-                    <a
-                      href="/collections/sofa"
-                      className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full relative"
-                    >
-                      <LazyLoadImage
-                        effect="opacity"
-                        src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_6_img.jpg?v=82"
-                        className="w-full h-full"
-                      />
-                    </a>
+                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                      <div className="relative w-full pb-[100%]">
+                        <div className="absolute inset-0">
+                          <a
+                            href="/collections/sofa"
+                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                          >
+                            <LazyLoadImage
+                              effect="opacity"
+                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_6_img.jpg?v=82"
+                              className="w-full h-full "
+                            />
+                          </a>
+                        </div>
+                      </div>
+                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                        Đèn
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:opacity-0">
-                    Sofa
-                  </span>
-                </div>
-                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
-                  <div className="w-full px-[10px]">
-                    <a
-                      href="/collections/sofa"
-                      className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full relative"
-                    >
-                      <LazyLoadImage
-                        effect="opacity"
-                        src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_7_img.jpg?v=82"
-                        className="w-full h-full"
-                      />
-                    </a>
+                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                      <div className="relative w-full pb-[100%]">
+                        <div className="absolute inset-0">
+                          <a
+                            href="/collections/sofa"
+                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                          >
+                            <LazyLoadImage
+                              effect="opacity"
+                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_7_img.jpg?v=82"
+                              className="w-full h-full "
+                            />
+                          </a>
+                        </div>
+                      </div>
+                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                        Lọ Hoa
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:opacity-0">
-                    Sofa
-                  </span>
-                </div>
-                <div className="basis-1/2 px-[15px] flex flex-col 2md:basis-1/8 md:basis-1/3 items-center flex-shrink-0 ">
-                  <div className="w-full px-[10px]">
-                    <a
-                      href="/collections/sofa"
-                      className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full relative"
-                    >
-                      <LazyLoadImage
-                        effect="opacity"
-                        src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_8_img.jpg?v=82"
-                        className="w-full h-full"
-                      />
-                    </a>
+                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                      <div className="relative w-full pb-[100%]">
+                        <div className="absolute inset-0">
+                          <a
+                            href="/collections/sofa"
+                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                          >
+                            <LazyLoadImage
+                              effect="opacity"
+                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_8_img.jpg?v=82"
+                              className="w-full h-full "
+                            />
+                          </a>
+                        </div>
+                      </div>
+                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                        Khung ảnh
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:opacity-0">
-                    Sofa
-                  </span>
                 </div>
               </div>
             </div>
           </div>
-          {/* <section className=" home-collection ">
-            <Carousel
-              opts={{
-                align: "start",
-              }}
-              className="w-full group"
-            >
-              <CarouselContent>
-                {Array.from({ length: 10 }).map((_, index) => (
-                  <CarouselItem
-                    key={index}
-                    className="lg:basis-1/4 xl:basis-1/5 basis-1/4"
-                  >
-                    <div className="p-1">
-                      <Card className={"rounded-none"}>
-                        <CardContent className="flex aspect-square items-center justify-center p-0">
-                          <ProductCard />
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-          </section> */}
         </div>
-
         <section className="home-collection ">
           <div className=" flex items-center gap-3 mb-5 justify-between max-990:flex-col max-990:justify-start max-990:items-start max-990:px-[15px]">
             <h2 className="collection-title capitalize">sản phẩm nổi bật</h2>
@@ -414,7 +415,7 @@ const Home = () => {
             <div className="2md:basis-4/5 xl:grid-cols-5 2md:pl-[14px] grid  grid-rows-2 gap-y-[12px] md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 md:flex-auto w-full grid-cols-2">
               {Array.from({ length: 3 }).map((_, index) => (
                 <div
-                  className=" flex-shrink-0 flex-grow-0 px-[6px]"
+                  className=" flex-shrink-0 flex-grow-0 md:px-[6px] px-[2px]"
                   key={index}
                 >
                   <ProductCard />
@@ -474,7 +475,7 @@ const Home = () => {
                           key={index}
                           className="2lg:basis-1/3 2md:basis-1/2 basis-[80%] md:basis-1/2"
                         >
-                          <div className="px-[6px]">
+                          <div className="md:px-[6px] px-[2px]">
                             <Card className={"rounded-none"}>
                               <CardContent className="flex p-0 flex-col">
                                 {Array.from({ length: 3 }).map((_, index) => (
@@ -529,7 +530,7 @@ const Home = () => {
                     key={index}
                     className="lg:basis-1/5  2md:basis-1/4 basis-[80%] md:basis-1/3"
                   >
-                    <div className="px-[6px]">
+                    <div className="md:px-[6px] px-[2px]">
                       <Card className={"rounded-none"}>
                         <CardContent className="flex aspect-square items-center justify-center p-0">
                           <PostCard />
@@ -550,7 +551,7 @@ const Home = () => {
             </Carousel>
           </div>
         </section>
-        <div className="fixed bottom-0 right-0 left-0 bg-redni text-[#fff] flex items-center justify-between py-[12px] px-[20px] 2md:hidden z-[40]">
+        <div className="fixed bottom-0 right-0 left-0 bg-redni text-[#fff] flex items-center justify-between py-[12px] px-[20px] 2md:hidden z-[99]">
           <span>7 sản phẩm</span>
           <span>2,170,000đ</span>
           <Drawer>
@@ -642,86 +643,9 @@ const Home = () => {
             </DrawerContent>
           </Drawer>
         </div>
-      </HomeStyled>
+      </div>
     </>
   );
 };
-const HomeStyled = styled.div`
-  .brands_slide::-webkit-scrollbar {
-    display: none;
-  }
 
-  .top_sale {
-    display: block !important;
-  }
-  .wrap_content {
-    display: block !important;
-  }
-  .flash_img {
-    flex: 0 0 25%;
-    font-weight: 700;
-    font-size: 25px;
-    line-height: 36px;
-  }
-  .countdown_area {
-    padding: 10px 0px;
-    width: 100%;
-    -webkit-box-pack: center;
-    justify-content: center;
-    background: rgb(255, 255, 255);
-    border-radius: 10px;
-    display: flex;
-  }
-  .countdown_area > div > span {
-    font-size: 24px;
-    color: rgb(0, 104, 210);
-    margin-right: 5px;
-    line-height: 29px;
-    font-weight: 700;
-  }
-  .countdown_area > div {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 20px;
-  }
-  .countdown_area > div::after {
-    content: "";
-    border-left: 1px solid rgba(0, 104, 210, 0.2);
-    position: absolute;
-    height: 20px;
-    left: 0px;
-    top: 16%;
-  }
-  .discover {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    text-align: end;
-    align-self: flex-end;
-    flex: 0 0 25%;
-  }
-  .discover_btn {
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 23px;
-    border-radius: 10px !important;
-    background: rgb(255, 255, 255);
-    color: rgb(0, 104, 210);
-    padding: 12px 20px;
-    height: auto;
-  }
-  .category_image {
-    height: 100%;
-    text-align: center;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-  }
-  .category_item_slide {
-    border: 1px solid rgb(239, 239, 239);
-    border-radius: 10px;
-    padding: 14px 20px 20px;
-  }
-`;
 export default Home;

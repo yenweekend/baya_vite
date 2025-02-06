@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "@/lib/utils"; // Utility for conditional classNames
+import { cn } from "@/lib/utils";
 import useClickAway from "@/hooks/useClickAway";
 const DropdownScreen = React.forwardRef(
   ({ className, open, onOpenChange, children, ...props }, ref) => {
@@ -55,7 +55,7 @@ const DropdownScreenTrigger = React.forwardRef(
       <button
         ref={ref}
         className={cn(
-          " items-center justify-center flex  text-sm font-medium relative px-4 ",
+          "items-center justify-center flex  text-sm font-medium relative 2md:px-4 md:px-3 px-[8px] ",
           className
         )}
         onClick={(e) => {
@@ -67,7 +67,7 @@ const DropdownScreenTrigger = React.forwardRef(
       >
         {children}
         <div
-          className={`absolute flex items-center justify-center z-[61] top-[calc(100%-5px)] w-8 h-8 center-x ${
+          className={`  absolute flex items-center justify-center z-[61] top-[calc(100%-5px)] w-8 h-8 center-x ${
             open ? "opacity-[1] visible " : "opacity-0 invisible "
           }`}
         >
@@ -85,10 +85,11 @@ const DropdownScreenContent = React.forwardRef(
       <div
         ref={ref}
         className={cn(
-          "absolute z-10 mt-2  bg-[#fff] transition-opacity duration-300  shadow-nd right-0 left-0 w-screen h-[80vh] top-[55%]",
-          open
-            ? "opacity-[1] visible scale-100"
-            : "opacity-0 invisible scale-[0.9]",
+          ` main-dropdown absolute z-10 mt-2  bg-[#fff] transition-opacity duration-300  shadow-nd right-0 left-0 w-screen h-[80vh] top-[55%] ${
+            open
+              ? "opacity-[1] visible scale-100"
+              : "opacity-0 invisible scale-[0.9]"
+          }`,
           className
         )}
         {...props}

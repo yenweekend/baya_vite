@@ -17,10 +17,11 @@ import {
 import { LoginBox } from "@/containers/components";
 export function AccountButton() {
   const [open, setOpen] = React.useState(false);
+
   const isDesktop = useMediaQuery("(min-width: 990px)");
   if (isDesktop) {
     return (
-      <Dropdown className={"search-btn "} open={open} onOpenChange={setOpen}>
+      <Dropdown open={open} onOpenChange={setOpen}>
         <DropdownTrigger className={"text-[#fff] mx-[2px]"}>
           <a className="items-center  flex py-[9px]">
             <span className="w-6 h-6">
@@ -88,7 +89,7 @@ export function AccountButton() {
     <DropdownScreen open={open} onOpenChange={setOpen}>
       <DropdownScreenTrigger className={" flex 2md:hidden"}>
         <X
-          size={30}
+          size={20}
           className={`text-[#fff] transition-all center-x absolute ease-linear duration-150   ${
             open
               ? " visible scale-100 opacity-100 "
@@ -97,16 +98,16 @@ export function AccountButton() {
           strokeWidth={1.5}
         />
         <UserRound
-          size={30}
+          size={20}
           className={`text-[#fff] transition-  center-xabsolute ease-linear duration-150   ${
             open
               ? " invisible opacity-0 scale-90  "
               : "visible opacity-1 scale-100 "
           }`}
-          strokeWidth={1}
+          strokeWidth={1.5}
         />
       </DropdownScreenTrigger>
-      <DropdownScreenContent>
+      <DropdownScreenContent className={"top-[calc(100%-72px)]"}>
         <div className="absolute inset-0 ">
           <div className="w-full h-full overflow-y-auto pb-[30px]">
             <div className="w-full h-full py-[15px] px-5">

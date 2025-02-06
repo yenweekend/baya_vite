@@ -54,18 +54,48 @@ import "ckeditor5/ckeditor5.css";
 import "ckeditor5-premium-features/ckeditor5-premium-features.css";
 
 export default function Ckeditor() {
+  const contentRef = useRef(null);
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
-  const [editorData, setEditorData] = useState("");
+  const [editorData, setEditorData] = useState(
+    `<div>Ghế armchair thư giãn Aurora</div><div>- Kích thước:&nbsp;740x800x760mm</div><div>- Chất liệu:&nbsp;Gỗ thông / MDF/ Plywood/ Mút/ Vải bọc/ Chân kim loại sơn tĩnh điện màu đen</div><div>- Nệm mút cao cấp, thoáng khí, đàn hồi</div><div>- Vải bọc được chứng nhận thân thiện với thú cưng, khó bị cào rách</div><div>- Màu: Sand + Sepia và&nbsp;Sepia + Mouse</div><div>- Xuất xứ: Việt Nam</div><div>&nbsp;</div><div><p class="figure-center"><img src="//file.hstatic.net/200000796751/file/aurora.1_c4f8db1cea294966bb3147baf51e7bfb_grande.jpg"></p><p>&nbsp;</p><p class="figure-center"><img src="//file.hstatic.net/200000796751/file/aurora.2_8e55c337f9a348fa89e5ba0903b8a75f_grande.jpg"></p><p>&nbsp;</p></div>`
+  );
 
   useEffect(() => {
     setIsLayoutReady(true);
     return () => setIsLayoutReady(false);
   }, []);
-  //   useEffect(() => {
-  //     console.log(editorData);
-  //   }, [editorData]);
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current
+        .querySelectorAll("h1")
+        .forEach((h1) => h1.classList.add("category-title"));
+      contentRef.current
+        .querySelectorAll("h2")
+        .forEach((h2) => h2.classList.add("category-title"));
+      contentRef.current
+        .querySelectorAll("h3")
+        .forEach((h3) => h3.classList.add("document-title"));
+      contentRef.current
+        .querySelectorAll("h4")
+        .forEach((h4) => h4.classList.add("document-subtitle"));
+      contentRef.current
+        .querySelectorAll("figure")
+        .forEach((h4) => h4.classList.add("figure-center"));
+    }
+  }, [editorData]);
+  // useEffect(() => {
+  //   if (!contentRef.current) return;
+  //   const elements = contentRef.current.querySelectorAll("h3, h4");
+  //   const extractedHeadings = Array.from(elements).map((el) => ({
+  //     id: el.id,
+  //     text: el.innerText,
+  //     level: el.tagName === "H3" ? 3 : 4,
+  //   }));
+
+  //   console.log(extractedHeadings);
+  // }, [contentRef]);
   const editorConfig = {
     toolbar: {
       items: [
@@ -80,8 +110,6 @@ export default function Ckeditor() {
         "fontFamily",
         "fontColor",
         "fontBackgroundColor",
-        "insertImage",
-
         "|",
         "selectAll",
         "|",
@@ -96,6 +124,7 @@ export default function Ckeditor() {
         "style",
 
         "|",
+        "insertImage",
 
         "specialCharacters",
         "link",
@@ -105,7 +134,7 @@ export default function Ckeditor() {
         "|",
         "accessibilityHelp",
       ],
-      shouldNotGroupWhenFull: false,
+      shouldNotGroupWhenFull: true,
     },
     plugins: [
       AccessibilityHelp,
@@ -244,7 +273,7 @@ export default function Ckeditor() {
         options: ["alignBlockLeft", "block", "alignBlockRight"],
       },
     },
-    initialData: '<h2 style="font-size: 14px;">Create detail products🎉</h2>',
+    // initialData: '<h2 style="font-size: 14px;">Create detail products🎉</h2>',
     link: {
       addTargetToExternalLinks: true,
       defaultProtocol: "https://",
@@ -273,18 +302,23 @@ export default function Ckeditor() {
       definitions: [
         {
           name: "Article category",
-          element: "h3",
-          classes: ["category"],
+          element: "h2",
+          classes: ["category-title"],
         },
         {
           name: "Title",
-          element: "h2",
+          element: "h3",
           classes: ["document-title"],
         },
         {
           name: "Subtitle",
-          element: "h3",
+          element: "h4",
           classes: ["document-subtitle"],
+        },
+        {
+          name: "italic",
+          element: "i",
+          classes: ["italic-style"],
         },
         {
           name: "Info box",
@@ -292,36 +326,26 @@ export default function Ckeditor() {
           classes: ["info-box"],
         },
         {
-          name: "Side quote",
-          element: "blockquote",
-          classes: ["side-quote"],
+          name: "Figure (center)",
+          element: "figure",
+          classes: ["figure-center"],
         },
         {
-          name: "Marker",
-          element: "span",
-          classes: ["marker"],
+          name: "Figure (right)",
+          element: "figure",
+          classes: ["figure-right"],
         },
         {
-          name: "Spoiler",
-          element: "span",
-          classes: ["spoiler"],
-        },
-        {
-          name: "Code (dark)",
-          element: "pre",
-          classes: ["fancy-code", "fancy-code-dark"],
-        },
-        {
-          name: "Code (bright)",
-          element: "pre",
-          classes: ["fancy-code", "fancy-code-bright"],
+          name: "Figure (left)",
+          element: "figure",
+          classes: ["figure-left"],
         },
       ],
     },
   };
 
   return (
-    <div>
+    <div className="blog-wrapper">
       <div className="main-container flex ">
         <div
           className="editor-container editor-container_classic-editor editor-container_include-style"
@@ -331,6 +355,7 @@ export default function Ckeditor() {
             <div ref={editorRef}>
               {isLayoutReady && (
                 <CKEditor
+                  data={editorData}
                   editor={ClassicEditor}
                   config={editorConfig}
                   onChange={(event, editor) => {
@@ -343,7 +368,7 @@ export default function Ckeditor() {
           </div>
         </div>
       </div>
-      <div dangerouslySetInnerHTML={{ __html: editorData }} />
+      <div dangerouslySetInnerHTML={{ __html: editorData }} ref={contentRef} />
     </div>
   );
 }

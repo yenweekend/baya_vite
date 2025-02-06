@@ -105,7 +105,7 @@ const Slider = ({ className, imageDatas }) => {
   );
 };
 export { Slider };
-const QuickView = ({ className }) => {
+const QuickView = ({ className, children }) => {
   const [open, setOpen] = React.useState(false);
   const [selectedGift, setSelectedGift] = React.useState(null);
 
@@ -118,15 +118,9 @@ const QuickView = ({ className }) => {
   if (isDesktop) {
     return (
       <>
-        <span
-          onClick={() => setOpen(true)}
-          className={cn(
-            "cursor-pointer text-inherit  flex items-center justify-center  w-[34px] h-[34px] ",
-            className
-          )}
-        >
-          <Eye size={20} className="text-inherit" />
-        </span>
+        <div onClick={() => setOpen(true)} className={cn("", className)}>
+          {children}
+        </div>
         <Modal
           open={open}
           onOk={() => setOpen(false)}
@@ -353,16 +347,8 @@ const QuickView = ({ className }) => {
   }
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger
-        asChild
-        className={cn(
-          "cursor-pointer text-inherit  flex items-center justify-center  w-[34px] h-[34px] ",
-          className
-        )}
-      >
-        <span>
-          <Eye size={20} className="text-inherit" />
-        </span>
+      <DrawerTrigger asChild className={cn("", className)}>
+        {children}
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left rounded-t-[10px]  border-b border-solid border-[#eee] relative">

@@ -88,9 +88,9 @@ const CartDetail = () => {
     });
   }, []);
   return (
-    <div className="max-w-[1400px] px-[15px] mx-auto flex items-stretch">
-      <div className="basis-2/3  shadow-card px-[15px]">
-        <div className="bg-[#fff]">
+    <div className="max-w-[1400px] 2md:px-[15px] mx-auto flex 2md:flex-row flex-col 2md:items-stretch">
+      <div className=" 2md:basis-2/3  2md:px-[15px] flex-shrink-0">
+        <div className="bg-[#fff] shadow-card">
           <h1 className="text-[20px] text-redtitle font-bold px-5 py-3 border-b border-b-shop">
             Giỏ hàng của bạn
           </h1>
@@ -101,7 +101,7 @@ const CartDetail = () => {
             <div className="border-[2px] border-shop rounded-[8px] px-[10px] py-[8px] flex flex-col">
               {items.map((item, index) => (
                 <div
-                  className="py-[15px] px-[10px] flex border-b-shop border-b [&:last-child]:border-b-transparent"
+                  className="py-[15px] 2md:px-[10px] flex border-b-shop border-b [&:last-child]:border-b-transparent"
                   key={index}
                 >
                   <label className="flex items-center checkbox relative mr-[10px]">
@@ -117,7 +117,7 @@ const CartDetail = () => {
                       }}
                     ></input>
                   </label>
-                  <div className="w-[80px] h-[80px] block relative">
+                  <div className="2md:w-[80px] 2md:h-[80px] h-[60px] w-[60px] block relative flex-shrink-0">
                     <a
                       className="w-full h-full"
                       href="/"
@@ -164,16 +164,19 @@ const CartDetail = () => {
                       </AlertDialogContent>
                     </AlertDialog>
                   </div>
-                  <div className="flex-auto px-[18px] flex flex-col">
-                    <a href="" className="text-blackni text-[15px] mb-[10px]">
+                  <div className="flex-auto px-3 2md:px-[18px] flex flex-col">
+                    <a
+                      href=""
+                      className="text-blackni text-[14px] 2md:text-[15px] mb-[10px] max-990:line-clamp-1"
+                    >
                       Bộ 9 Kẹp Miệng Túi Nhựa Xanh Ngọc/ Xám RECIPE
                     </a>
-                    <span className="text-[#8f9bb3] font-semibold text-[14px]">
+                    <span className="text-[#8f9bb3] font-semibold text-[12px] 2md:text-[14px]">
                       59,000đ
                     </span>
                   </div>
                   <div className="ml-auto flex items-end flex-col">
-                    <span className="text-[16px] text-blackni font-semibold mb-2">
+                    <span className=" text-[13px] 2md:text-[16px] text-blackni font-semibold mb-2">
                       59,000đ
                     </span>
                     <div className="flex items-center mx-auto">
@@ -213,8 +216,8 @@ const CartDetail = () => {
           </div>
         </div>
       </div>
-      <div className="basis-1/3 shadow-card  px-[15px] ">
-        <div className="sticky top-0">
+      <div className=" 2md:basis-1/3 2md:max-w-[33.33333%]  2md:px-[15px] flex-grow-0 flex-shrink-0">
+        <div className="sticky top-0 shadow-card">
           <div className="bg-[#fff] p-[15px]">
             <h1 className="text-[20px] text-redtitle font-bold px-5 py-3 border-b border-b-shop">
               Thông tin đơn hàng
@@ -236,8 +239,8 @@ const CartDetail = () => {
               </li>
             </ul>
             <a
-              href="/"
-              className="block text-center uppercase font-bold cursor-pointer text-[#fff] bg-redni py-[8px] px-[10px] mt-3"
+              href="/checkouts"
+              className=" text-center uppercase font-bold cursor-pointer text-[#fff] bg-redni py-[8px] px-[10px] mt-3 2md:block hidden"
             >
               thanh toán
             </a>
@@ -275,6 +278,14 @@ const CartDetail = () => {
             </Carousel>
           </div>
         </div>
+      </div>
+      <div className="fixed px-[10px] py-2 bg-[#fff] z-50 left-0 right-0 bottom-0 shadow-rd 2md:hidden">
+        <a
+          href="/checkouts"
+          className="  text-center uppercase font-bold cursor-pointer text-[#fff] bg-redni py-[8px] px-[10px]  flex-auto block "
+        >
+          thanh toán
+        </a>
       </div>
     </div>
   );

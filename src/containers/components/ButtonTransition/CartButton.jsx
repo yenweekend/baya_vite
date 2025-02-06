@@ -104,18 +104,13 @@ export function CartButtonTransition() {
   }
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild className="cursor-pointer text-[#fff] py-2 pl-4">
-        <a className="items-center  flex relative py-[15px]">
-          <span className="w-6 h-6 ">
-            <ShoppingCart size={24} strokeWidth={1.5} />
-          </span>
-          <span className="box-text ml-[10px] text-left text-[14px] max-990:hidden">
-            Giỏ hàng
-          </span>
-          <span className="badge text-[12px] absolute w-[16px] h-[16px] bg-[#ff0000] rounded-full flex items-center justify-center text-[#fff] top-[-2px] left-[30px]">
+      <DrawerTrigger asChild className="cursor-pointer text-[#fff] py-2 ">
+        <button className="items-center justify-center flex  text-sm font-medium relative 2md:px-4 md:px-3 px-[8px] ">
+          <ShoppingCart strokeWidth={1.5} size={20} />
+          <span className="badge text-[12px] absolute w-[16px] h-[16px] bg-[#ff0000] rounded-full flex items-center justify-center text-[#fff] top-[-2px] left-[18px]">
             2
           </span>
-        </a>
+        </button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left rounded-t-[10px] bg-redni">

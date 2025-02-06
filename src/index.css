@@ -28,12 +28,6 @@
   color: #b15e71;
 }
 
-/* custom image center in ckeditor */
-/* figure {
-  display: block;
-  margin-left: auto !important;
-  margin-right: auto !important;
-} */
 img,
 picture,
 svg,
@@ -49,7 +43,7 @@ textarea {
 }
 button {
   cursor: pointer;
-  background-color: transparent;
+  /* background-color: transparent; */
   outline: none;
   border: 0;
 }
@@ -78,18 +72,30 @@ span,
 p {
   font-family: "Quicksand", sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: inherit;
   line-height: 1.45;
   text-align: left;
 }
-/* * {
-  scroll-behavior: smooth;
-} */
+
+table {
+  border-spacing: 0;
+  width: 100%;
+  border-collapse: collapse;
+}
 table,
 th,
 td {
   border: 1px solid black;
   border-collapse: collapse;
+}
+#product-attribute-specs-table,
+#product-attribute-specs-table > tbody,
+#product-attribute-specs-table th,
+#product-attribute-specs-table td {
+  border: none !important;
+}
+#product-attribute-specs-table th {
+  font-weight: 700;
 }
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 50px white inset; /* Change the color to your own background color */
@@ -790,12 +796,6 @@ input:-webkit-autofill:focus {
   border-radius: 3px;
 }
 
-/* figure {
-  width: 100% !important;
-} */
-figure {
-  margin: 0 auto !important;
-}
 .ck-editor__main .ck-content {
   min-height: 70vh;
   width: 100%;
@@ -983,54 +983,37 @@ figure {
     /* background: #fff; */
   }
 
-  .nav-bar {
-    transition: all 0.4s ease-in-out;
+  #header {
+    transition: all 0.6s ease-in-out;
   }
-  .loadSticky {
-    visibility: hidden;
-    opacity: 0;
+  #header.showSticky .second-menu {
+    display: block !important;
   }
-  .stickyNav {
-    position: fixed;
-    right: 0;
-    left: 0;
+  #header.showSticky .second-menu > ul {
+    display: block !important;
+    text-align: center;
   }
-  .stickyUp {
-    top: 0;
-    visibility: visible;
-    opacity: 1; /* Fully visible */
+  #header.showSticky .second-menu > ul > li {
+    display: inline-block !important;
   }
-  .hSticky {
-    top: -40%;
-    opacity: 0; /* Make it invisible */
-    visibility: hidden;
+  #header.showSticky #banner {
+    display: none !important;
   }
-
-  .nav-bar.loadSticky .nav {
-    padding: 10px 15px;
+  #header.showSticky #main-navMenu {
+    display: none !important;
   }
-  .nav-bar.loadSticky .nav-menu {
+  #header.showSticky .main-search {
     display: none;
   }
-  .nav-bar.loadSticky .second-menu {
-    display: block;
+  #header.showSticky .header-wrapper {
+    padding: 0;
   }
-  .nav-bar.loadSticky .box-text {
+  #header.showSticky .box-text {
     display: none;
   }
-  .nav-bar.loadSticky .search-btn {
+  #header.showSticky .search-box {
     display: flex;
   }
-  .nav-bar.loadSticky .search-div {
-    display: none;
-  }
-  .second-menu {
-    transition: all 0.15s linear;
-  }
-  .nav-bar.loadSticky .hidden-block {
-    display: block;
-  }
-
   .locked-scroll {
     overflow: hidden;
     width: 100%;
@@ -1056,8 +1039,8 @@ figure {
     height: 9px;
     width: 5px;
     position: absolute;
-    top: 7px;
-    left: 8px;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -63%) rotate(45deg);
     opacity: 0;
     visibility: hidden;
@@ -1068,15 +1051,6 @@ figure {
     opacity: 1;
     visibility: visible;
     scale: 1;
-    /* content: " ";
-    border-bottom: 2px solid #fff;
-    border-right: 2px solid #fff;
-    height: 9px;
-    width: 6px;
-    position: absolute;
-    top: 7px;
-    left: 8px;
-    transform: translate(-50%, -63%) rotate(45deg); */
   }
   .checkbox > input:checked {
     background-color: var(--primary-bg);
@@ -1189,7 +1163,7 @@ figure {
     width: 20px;
     height: 10px;
     border: 1px solid rgba(0, 0, 0, 0.08);
-    background-color: var(--shop-color-bg);
+    background-color: #fff;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
     border-top: 0;
@@ -1202,7 +1176,7 @@ figure {
     width: 20px;
     height: 10px;
     border: 1px solid rgba(0, 0, 0, 0.08);
-    background-color: var(--shop-color-bg);
+    background-color: #fff;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     border-bottom: 0;
@@ -1298,15 +1272,20 @@ figure {
 }
 /* responsive */
 @media screen and (max-width: 990px) {
-  .nav-bar.loadSticky .second-menu {
-    display: none;
+  #header.showSticky .second-menu {
+    display: none !important;
   }
-  .nav-bar.loadSticky .search-btn {
-    display: none;
+  #header.showSticky .second-searchDiv {
+    display: none !important;
   }
-  .devide {
-    display: none;
+  #header.showSticky .header-wrapper {
+    height: 85px;
   }
+  #header.showSticky .main-dropdown {
+    height: 81vh;
+    top: calc(100% - 9px);
+  }
+
   .slick-dots {
     bottom: 10px !important;
   }
@@ -1350,4 +1329,56 @@ figure {
 } */
 .filter-footer {
   @apply max-990:flex max-990:items-center hidden gap-3;
+}
+.card-item {
+  @apply 2lg:basis-1/5 md:basis-1/2 basis-[172px] 2md:basis-1/4;
+}
+.skeleton {
+  @apply bg-gray-200 rounded-full;
+}
+/* ckeditor */
+.figure-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.figure-right {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+.figure-left {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.image_resized.figure-left {
+  margin-right: auto !important;
+}
+.image_resized.figure-right {
+  margin-left: auto !important;
+}
+i {
+  font-style: italic;
+}
+.category-title {
+  font-size: 22px;
+  margin-bottom: 13px;
+  color: var(--shop-color-title);
+  line-height: 1.2;
+  font-weight: 700;
+}
+.document-title {
+  font-size: 20px;
+  margin-bottom: 13px;
+  color: var(--shop-color-title);
+  line-height: 1.2;
+  font-weight: 700;
+}
+.document-subtitle {
+  font-size: 18px;
+  margin-bottom: 13px;
+  color: var(--shop-color-title);
+  line-height: 1.2;
+  font-weight: 700;
 }
