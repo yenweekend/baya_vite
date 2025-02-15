@@ -3,18 +3,10 @@ import { cn } from "@/lib/utils"; // Utility for conditional classNames
 import useClickAwayScroll from "@/hooks/useClickAwayScroll"; // Your custom hook
 const Dropdown = React.forwardRef(
   ({ className, open, onOpenChange, children, ...props }, ref) => {
-    // const [showDropdown, setShowDropdown] = React.useState(false);
     const triggerRef = React.useRef(null);
     const dropdownRef = React.useRef(null);
-    // Close dropdown when clicking outside
-    React.useEffect(() => {
-      if (open && document.body.classList.contains("locked-scroll")) {
-        document.body.classList.remove("locked-scroll");
-      }
-    }, [open]);
     useClickAwayScroll(triggerRef, dropdownRef, () => {
       if (open) {
-        console.log("tao nè");
         onOpenChange(false);
       }
     });

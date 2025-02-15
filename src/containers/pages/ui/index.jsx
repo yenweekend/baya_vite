@@ -9,6 +9,7 @@ export { default as BlogMaster } from "./blog/Master";
 export { default as Blogs } from "./blog/Blogs";
 export { default as BlogDetail } from "./blog/BlogDetail";
 export { default as CollectionDetail } from "./CollectionDetail";
+export { default as ProductsSearched } from "./ProductsSearched";
 
 export { default as Register } from "./Account/Register";
 export { default as Identify } from "./Identify";

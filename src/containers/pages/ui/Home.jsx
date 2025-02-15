@@ -1,12 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 import { HoverEffectButton, CouponCard } from "../../components";
-import {
-  category_outstanding,
-  poster_notifications,
-  card,
-  top_keyword,
-} from "../../../utils/scrape_data";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 import {
@@ -34,125 +27,222 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   ProductCardNi,
   ProductCard,
-  PostCard,
+  BlogCard,
   CollectionCard,
 } from "../../components";
 import { Carousel as CarouselAntd } from "antd";
 import HomeSkeleton from "@/containers/components/Skeleton/Home";
+import { useQuery } from "@tanstack/react-query";
+import { getHome } from "@/apis/home";
+import { NotFound } from "../../components";
 const Home = () => {
-  const isDesktop = useMediaQuery("(min-width: 990px)");
-
+  const isDesktop = useMediaQuery("(min-width: 768px)");
   React.useEffect(() => {
     document.title = "Siêu thị nội thất & trang trí Baya";
+    window.scrollTo(0, 0);
   }, []);
+  const { isPending, isError, error, data } = useQuery({
+    queryKey: ["home"],
+    queryFn: getHome,
+    retry: false,
+  });
+  if (isPending) {
+    return <HomeSkeleton />;
+  }
+  if (isError) {
+    return <NotFound />;
+  }
   return (
     <>
       <div>
         <div>
           <section className="banner ">
-            <div className=" 2md:px-2 flex-shrink-0 w-full">
+            <div className=" 2md:px-2 flex-shrink-0 w-full overflow-hidden">
               <CarouselAntd
                 arrows
                 infinite={false}
                 effect={isDesktop ? "fade" : ""}
               >
                 <div>
-                  <a href="/">
-                    <LazyLoadImage
-                      src="https://theme.hstatic.net/200000796751/1001266995/14/slide_3_img.jpg?v=82"
-                      effect="blur"
-                    />
-                  </a>
+                  <Link
+                    to="/categories/phong-tam"
+                    className="rounded overflow-hidden block"
+                  >
+                    <picture>
+                      <source
+                        media="(min-width:768px"
+                        srcSet="https://theme.hstatic.net/200000796751/1001266995/14/slide_3_img.jpg?v=82"
+                      />
+                      <source
+                        media="(max-width:768px)"
+                        srcSet="https://theme.hstatic.net/200000796751/1001266995/14/slide_3_mb.jpg?v=83"
+                      />
+                      <img src="https://theme.hstatic.net/200000796751/1001266995/14/slide_3_img.jpg?v=82" />
+                    </picture>
+                  </Link>
                 </div>
                 <div>
-                  <a href="/">
-                    <LazyLoadImage
-                      src="https://theme.hstatic.net/200000796751/1001266995/14/slide_1_img.jpg?v=82"
-                      effect="blur"
-                    />
-                  </a>
+                  <Link
+                    to="/categories/yep-bep"
+                    className="rounded overflow-hidden block"
+                  >
+                    <picture>
+                      <source
+                        media="(min-width:768px"
+                        srcSet="https://theme.hstatic.net/200000796751/1001266995/14/slide_1_img.jpg?v=82"
+                      />
+                      <source
+                        media="(max-width:768px)"
+                        srcSet="https://theme.hstatic.net/200000796751/1001266995/14/slide_1_mb.jpg?v=83"
+                      />
+                      <img src="https://theme.hstatic.net/200000796751/1001266995/14/slide_1_img.jpg?v=82" />
+                    </picture>
+                  </Link>
                 </div>
                 <div>
-                  <a href="/">
-                    <LazyLoadImage
-                      src="https://theme.hstatic.net/200000796751/1001266995/14/slide_4_img.jpg?v=82"
-                      effect="blur"
-                    />
-                  </a>
+                  <Link
+                    to="/categories/nha-dep"
+                    className="rounded overflow-hidden block"
+                  >
+                    <picture>
+                      <source
+                        media="(min-width:768px"
+                        srcSet="https://theme.hstatic.net/200000796751/1001266995/14/slide_2_img.jpg?v=82"
+                      />
+                      <source
+                        media="(max-width:768px)"
+                        srcSet="https://theme.hstatic.net/200000796751/1001266995/14/slide_2_mb.jpg?v=83"
+                      />
+                      <img src="https://theme.hstatic.net/200000796751/1001266995/14/slide_2_img.jpg?v=82" />
+                    </picture>
+                  </Link>
+                </div>
+                <div>
+                  <Link to="" className="rounded overflow-hidden block">
+                    <picture>
+                      <source
+                        media="(min-width:768px"
+                        srcSet="https://theme.hstatic.net/200000796751/1001266995/14/slide_4_img.jpg?v=82"
+                      />
+                      <source
+                        media="(max-width:768px)"
+                        srcSet="https://theme.hstatic.net/200000796751/1001266995/14/slide_4_mb.jpg?v=83"
+                      />
+                      <img src="https://theme.hstatic.net/200000796751/1001266995/14/slide_4_img.jpg?v=82" />
+                    </picture>
+                  </Link>
                 </div>
               </CarouselAntd>
             </div>
           </section>
           <div className="flex  items-stretch overflow-y-auto no-scrollbar  mt-[15px] max-768:pl-[15px] ">
             <div className=" 2md:basis-1/4 w-[60%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
-              <CollectionCard />
+              <CollectionCard
+                collectionData={{
+                  thumbnail:
+                    "https://theme.hstatic.net/200000796751/1001266995/14/categorybanner_1_img.jpg?v=82",
+                  title: "Phòng khách",
+                  url: "/collections/",
+                }}
+              />
             </div>
             <div className=" 2md:basis-1/4 w-[60%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
               {" "}
-              <CollectionCard />
+              <CollectionCard
+                collectionData={{
+                  thumbnail:
+                    "https://theme.hstatic.net/200000796751/1001266995/14/categorybanner_2_img.jpg?v=82",
+                  title: "Phòng ngủ",
+                  url: "/collections/",
+                }}
+              />
             </div>
             <div className=" 2md:basis-1/4 w-[60%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
               {" "}
-              <CollectionCard />
+              <CollectionCard
+                collectionData={{
+                  thumbnail:
+                    "https://theme.hstatic.net/200000796751/1001266995/14/categorybanner_3_img.jpg?v=82",
+                  title: "Phòng ăn và bếp",
+                  url: "/collections/",
+                }}
+              />
             </div>
             <div className=" 2md:basis-1/4 w-[60%] flex-shrink-0 2md:px-[15px] pr-[15px]  md:w-[40%]">
               {" "}
-              <CollectionCard />
+              <CollectionCard
+                collectionData={{
+                  thumbnail:
+                    "https://theme.hstatic.net/200000796751/1001266995/14/categorybanner_4_img.jpg?v=82",
+                  title: "Phòng làm việc",
+                  url: "/collections/",
+                }}
+              />
             </div>
           </div>
-          <section className="bg-collectionichi home-collection md:p-[15px] relative">
-            <div className="pr-[100px] flex items-center gap-3 md:pt-0 pt-3 pl-2 md:pl-0">
-              <div className="fade-loading relative w-2 h-2 rounded-full bg-init"></div>
-              <h2 className="collection-title">Đồ bếp nhập khẩu cao cấp</h2>
-            </div>
-            <div className="mt-[15px] ">
-              <Carousel
-                opts={{
-                  align: "start",
-                }}
-                className="w-full group "
-              >
-                <CarouselContent>
-                  {Array.from({ length: 10 }).map((_, index) => (
-                    <CarouselItem key={index} className="card-item">
-                      <div className="md:px-[6px] px-[2px]">
-                        <Card className={"rounded-none"}>
-                          <CardContent className="flex aspect-square items-center justify-center p-0">
-                            <ProductCard />
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <div className="absolute top-2 md:top-[12px] right-[20px] flex items-center gap-4">
-                  <CarouselPrevious
-                    className={"bg-[#fff] shadow-carousel text-blackni"}
+          {isPending ? (
+            "loading"
+          ) : (
+            <section className="bg-collectionichi home-collection md:p-[15px] relative">
+              <div className="pr-[100px] flex items-center gap-3 md:pt-0 pt-3 pl-2 md:pl-0">
+                <div className="fade-loading relative w-2 h-2 rounded-full bg-init"></div>
+                <h2 className="collection-title">
+                  <Link to={data.data.data.kitchenCollection.url}>
+                    Đồ bếp nhập khẩu cao cấp
+                  </Link>
+                </h2>
+              </div>
+              <div className="mt-[15px] ">
+                <Carousel
+                  opts={{
+                    align: "start",
+                  }}
+                  className="w-full group "
+                >
+                  <CarouselContent>
+                    {data.data.data.kitchenCollection.products.map(
+                      (product) => (
+                        <CarouselItem key={product.slug} className="card-item">
+                          <div className="md:px-[6px] px-[2px]">
+                            <Card className={"rounded-none"}>
+                              <CardContent className="flex items-center justify-center p-0">
+                                <ProductCard productData={product} />
+                              </CardContent>
+                            </Card>
+                          </div>
+                        </CarouselItem>
+                      )
+                    )}
+                  </CarouselContent>
+                  <div className="absolute top-2 md:top-[12px] right-[20px] flex items-center gap-4">
+                    <CarouselPrevious
+                      className={"bg-[#fff] shadow-carousel text-blackni"}
+                    />
+                    <CarouselNext
+                      className={"bg-[#fff] shadow-carousel text-blackni"}
+                    />
+                  </div>
+                </Carousel>
+              </div>
+              <div className="flex items-center justify-center mt-[15px]">
+                <HoverEffectButton className={"w-[320px] "}>
+                  <CircleChevronRight
+                    size={20}
+                    className="text-inherit inline"
+                    strokeWidth={1}
                   />
-                  <CarouselNext
-                    className={"bg-[#fff] shadow-carousel text-blackni"}
-                  />
-                </div>
-              </Carousel>
-            </div>
-            <div className="flex items-center justify-center mt-[15px]">
-              <HoverEffectButton className={"w-[320px] "}>
-                <CircleChevronRight
-                  size={20}
-                  className="text-inherit inline"
-                  strokeWidth={1}
-                />
-              </HoverEffectButton>
-            </div>
-          </section>
-          <div className=" home-collection flex 2md:items-stretch overflow-x-auto no-scrollbar md:ml-[-15px] max-768:pr-[15px] ">
-            <div className="lg:w-[50%] xl:w-[25%] 2md:w-[50%] w-[90%] flex-shrink-0 2md:px-[15px] pl-[15px] md:w-[80%]  ">
+                </HoverEffectButton>
+              </div>
+            </section>
+          )}
+          <div className=" home-collection flex items-stretch overflow-x-auto no-scrollbar md:ml-[-12px] ">
+            <div className="flex-shrink-0 md:px-[6px] px-3 md:basis-1/2  lg:basis-1/3 xl:basis-1/4 basis-[86%] ">
               <CouponCard />
             </div>
-            <div className="lg:w-[50%] xl:w-[25%] 2md:w-[50%] w-[90%] flex-shrink-0 2md:px-[15px] pl-[15px] md:w-[80%]  ">
+            <div className="flex-shrink-0 md:px-[6px] px-3 md:basis-1/2  lg:basis-1/3 xl:basis-1/4 basis-[86%] ">
               <CouponCard />
             </div>
-            <div className="lg:w-[50%] xl:w-[25%] 2md:w-[50%] w-[90%] flex-shrink-0 2md:px-[15px] pl-[15px] md:w-[80%]  ">
+            <div className="flex-shrink-0 md:px-[6px] px-3 md:basis-1/2  lg:basis-1/3 xl:basis-1/4 basis-[86%] ">
               <CouponCard />
             </div>
           </div>
@@ -171,12 +261,12 @@ const Home = () => {
                 className="w-full group "
               >
                 <CarouselContent className={""}>
-                  {Array.from({ length: 10 }).map((_, index) => (
-                    <CarouselItem key={index} className="card-item">
-                      <div className="md:px-[6px] px-[2px]">
+                  {data.data.data.schoolCollection.products.map((product) => (
+                    <CarouselItem key={product.slug} className="card-item">
+                      <div className="md:px-[6px] px-[2px] h-full">
                         <Card className={"rounded-none"}>
-                          <CardContent className="flex aspect-square items-center justify-center p-0">
-                            <ProductCard />
+                          <CardContent className="flex h-full items-center justify-center p-0">
+                            <ProductCard productData={product} />
                           </CardContent>
                         </Card>
                       </div>
@@ -394,7 +484,9 @@ const Home = () => {
         </div>
         <section className="home-collection ">
           <div className=" flex items-center gap-3 mb-5 justify-between max-990:flex-col max-990:justify-start max-990:items-start max-990:px-[15px]">
-            <h2 className="collection-title capitalize">sản phẩm nổi bật</h2>
+            <h2 className="collection-title capitalize">
+              <Link to={"/collections/san-pham-moi"}>sản phẩm nổi bật</Link>
+            </h2>
             <div className="">
               <button className="px-4 py-2 cursor-pointer rounded-full text-[#fff] font-bold border border-solid border-redichi ml-[20px] capitalize bg-redichi max-990:ml-0 max-990:text-[12px] max-990:px-4 ">
                 sản phẩm mới
@@ -413,12 +505,12 @@ const Home = () => {
               />
             </div>
             <div className="2md:basis-4/5 xl:grid-cols-5 2md:pl-[14px] grid  grid-rows-2 gap-y-[12px] md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 md:flex-auto w-full grid-cols-2">
-              {Array.from({ length: 3 }).map((_, index) => (
+              {data.data.data.latestCollection.products.map((product) => (
                 <div
                   className=" flex-shrink-0 flex-grow-0 md:px-[6px] px-[2px]"
-                  key={index}
+                  key={product.slug}
                 >
-                  <ProductCard />
+                  <ProductCard productData={product} />
                 </div>
               ))}
             </div>
@@ -460,7 +552,9 @@ const Home = () => {
             <div className=" 2md:basis-7/10 bg-[#fff] 2md:pt-[20px] 2md:pr-[20px] flex flex-col justify-end  2md:max-w-[70%] flex-grow-0 relative">
               <div className="">
                 <h2 className="collection-title capitalize pl-[20px] max-990:pl-[15px] mb-[15px] max-990:pt-3">
-                  Chút xinh xắn cho nhà tắm
+                  <Link to={"/categories/phong-tam"}>
+                    Chút xinh xắn cho nhà tắm
+                  </Link>
                 </h2>
                 <div className="">
                   <Carousel
@@ -470,22 +564,34 @@ const Home = () => {
                     className="w-full group "
                   >
                     <CarouselContent>
-                      {Array.from({ length: 3 }).map((_, index) => (
-                        <CarouselItem
-                          key={index}
-                          className="2lg:basis-1/3 2md:basis-1/2 basis-[80%] md:basis-1/2"
-                        >
-                          <div className="md:px-[6px] px-[2px]">
-                            <Card className={"rounded-none"}>
-                              <CardContent className="flex p-0 flex-col">
-                                {Array.from({ length: 3 }).map((_, index) => (
-                                  <ProductCardNi key={index} />
-                                ))}
-                              </CardContent>
-                            </Card>
-                          </div>
-                        </CarouselItem>
-                      ))}
+                      {data.data.data.showerProducts
+                        .reduce((acc, _, i) => {
+                          if (i % 3 === 0) {
+                            acc.push(
+                              data.data.data.showerProducts.slice(i, i + 3)
+                            );
+                          }
+                          return acc;
+                        }, [])
+                        .map((productGroup, index) => (
+                          <CarouselItem
+                            className="2lg:basis-1/3 2md:basis-1/2 basis-[80%] md:basis-1/2"
+                            key={index}
+                          >
+                            <div className="md:px-[6px] px-[2px]">
+                              <Card className={"rounded-none"}>
+                                <CardContent className="flex p-0 flex-col">
+                                  {productGroup.map((product) => (
+                                    <ProductCardNi
+                                      key={product.slug}
+                                      productData={product}
+                                    />
+                                  ))}
+                                </CardContent>
+                              </Card>
+                            </div>
+                          </CarouselItem>
+                        ))}
                     </CarouselContent>
                     <div className="absolute top-[12px] right-[20px] flex items-center gap-4 2lg:hidden max-990:top-[6px] max-990:right-[10px]">
                       <CarouselPrevious
@@ -525,15 +631,15 @@ const Home = () => {
               className="w-full group max-990:px-[15px]"
             >
               <CarouselContent className={""}>
-                {Array.from({ length: 10 }).map((_, index) => (
+                {data.data.data.blogs.map((blog) => (
                   <CarouselItem
-                    key={index}
+                    key={blog.slug}
                     className="lg:basis-1/5  2md:basis-1/4 basis-[80%] md:basis-1/3"
                   >
                     <div className="md:px-[6px] px-[2px]">
                       <Card className={"rounded-none"}>
-                        <CardContent className="flex aspect-square items-center justify-center p-0">
-                          <PostCard />
+                        <CardContent className="flex  items-center justify-center p-0">
+                          <BlogCard postData={blog} />
                         </CardContent>
                       </Card>
                     </div>

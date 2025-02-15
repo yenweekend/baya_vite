@@ -24,9 +24,9 @@ const ProductDetail = () => {
                   }
                 >
                   <div className="absolute inset-0">
-                    <div class="flex items-center justify-center w-full h-full bg-gray-100 rounded-sm ">
+                    <div className="flex items-center justify-center w-full h-full bg-gray-100 rounded-sm ">
                       <svg
-                        class="w-10 h-10 text-gray-300 "
+                        className="w-10 h-10 text-gray-300 "
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -40,7 +40,7 @@ const ProductDetail = () => {
               </div>
               <div className="flex-grow-0 2md:w-[80px] pt-3 w-[76px] flex-shrink-0 px-3 flex-col ">
                 <svg
-                  class="mb-2 text-gray-100 "
+                  className="mb-2 text-gray-100 "
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -49,7 +49,7 @@ const ProductDetail = () => {
                   <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
                 </svg>
                 <svg
-                  class="mb-2 text-gray-100 "
+                  className="mb-2 text-gray-100 "
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -58,7 +58,7 @@ const ProductDetail = () => {
                   <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
                 </svg>
                 <svg
-                  class="mb-2 text-gray-100 "
+                  className="mb-2 text-gray-100 "
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -144,21 +144,21 @@ const ProductDetail = () => {
           </div>
           <div className="warranty flex md:items-center gap-3 mt-[15px] md:flex-row flex-col">
             <div className="basis-1/3 flex items-center gap-2">
-              <div class="size-10 rounded-full bg-gray-200"></div>
+              <div className="size-10 rounded-full bg-gray-200"></div>
               <div className="flex flex-col gap-3 flex-auto">
                 <span className="h-3 skeleton  "></span>
                 <span className="h-3 skeleton w-[50%] "></span>
               </div>
             </div>
             <div className="basis-1/3 flex items-center gap-2">
-              <div class="size-10 rounded-full bg-gray-200"></div>
+              <div className="size-10 rounded-full bg-gray-200"></div>
               <div className="flex flex-col gap-3 flex-auto">
                 <span className="h-3 skeleton  "></span>
                 <span className="h-3 skeleton w-[50%] "></span>
               </div>
             </div>
             <div className="basis-1/3 flex items-center gap-2">
-              <div class="size-10 rounded-full bg-gray-200"></div>
+              <div className="size-10 rounded-full bg-gray-200"></div>
               <div className="flex flex-col gap-3 flex-auto">
                 <span className="h-3 skeleton  "></span>
                 <span className="h-3 skeleton w-[50%] "></span>
@@ -181,7 +181,7 @@ const ProductDetail = () => {
                 <div className="w-full pb-[100%] relative rounded-[12px] overflow-hidden">
                   <div className="absolute inset-0 p-[10px]">
                     <svg
-                      class="w-full h-full text-gray-300 "
+                      className="w-full h-full text-gray-300 "
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -214,7 +214,7 @@ const ProductDetail = () => {
                 <div className="w-full pb-[100%] relative rounded-[12px] overflow-hidden">
                   <div className="absolute inset-0 p-[10px]">
                     <svg
-                      class="w-full h-full text-gray-300 "
+                      className="w-full h-full text-gray-300 "
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -247,7 +247,7 @@ const ProductDetail = () => {
                 <div className="w-full pb-[100%] relative rounded-[12px] overflow-hidden">
                   <div className="absolute inset-0 p-[10px]">
                     <svg
-                      class="w-full h-full text-gray-300 "
+                      className="w-full h-full text-gray-300 "
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"

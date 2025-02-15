@@ -27,16 +27,19 @@ import {
   CollectionDetail,
   BlogMaster,
   Category,
+  ProductsSearched,
 } from "./containers/pages/ui";
 import NewProducts from "./containers/pages/NewProducts";
 import UserMaster from "./containers/layouts/user/Master";
 import paths from "./utils/paths";
 import { NotFound } from "./containers/components";
+import Slick from "./Slick";
 function App() {
   return (
     <>
       <Routes>
         <Route element={<NewProducts />} path={"/editor"}></Route>
+        <Route element={<Slick />} path={"/slick"}></Route>
         <Route element={<CheckOut />} path={paths.CHECKOUT}></Route>
 
         <Route
@@ -49,6 +52,7 @@ function App() {
           <Route element={<Identify />} path="/login/identify"></Route>
           <Route element={<Home />} path={paths.HOME}></Route>
           <Route element={<Products />} path={paths.PRODUCTS}></Route>
+          <Route element={<ProductsSearched />} path={"/search"}></Route>
           <Route element={<Category />} path={"/categories/:slug"}></Route>
           <Route
             element={<CollectionDetail />}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -105,7 +105,7 @@ const Slider = ({ className, imageDatas }) => {
   );
 };
 export { Slider };
-const QuickView = ({ className, children }) => {
+const QuickView = ({ className, children, data }) => {
   const [open, setOpen] = React.useState(false);
   const [selectedGift, setSelectedGift] = React.useState(null);
 
@@ -114,7 +114,6 @@ const QuickView = ({ className, children }) => {
   };
 
   const isDesktop = useMediaQuery("(min-width: 990px)");
-
   if (isDesktop) {
     return (
       <>
@@ -136,16 +135,8 @@ const QuickView = ({ className, children }) => {
                 <CloseButton />
               </div>
               <div className="product_info">
-                <div className="">
-                  <Link
-                    to={`/brand/${productDetail.Brand?.slug}`}
-                    className="text-vendor uppercase no-underline"
-                  >
-                    {productDetail.Brand?.name}
-                  </Link>
-                </div>
                 <div className=" leading-[130%] text-[20px] font-bold my-[5px] text-redichi">
-                  {productDetail.name}
+                  {data?.title}
                 </div>
                 <div className="flex flex-wrap items-center product-origin mb-[15px]">
                   <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
@@ -355,11 +346,7 @@ const QuickView = ({ className, children }) => {
           <DrawerTitle>
             <div className=" max-768:w-[90%] flex items-center">
               <p className="line-clamp-2 text-[15px]  font-medium text-redichi text-center ">
-                Đệm Trang Trí Vải Cotton Nhiều Màu ROSABELLA Lorem ipsum dolor
-                sit amet consectetur adipisicing elit. Voluptates, facilis
-                consequatur molestias vero libero modi. Ea et omnis similique,
-                repudiandae maxime sunt iste aut dolorum sapiente facilis,
-                explicabo pariatur sed!
+                {data?.title}
               </p>
             </div>
           </DrawerTitle>
@@ -379,14 +366,6 @@ const QuickView = ({ className, children }) => {
             </div>
             <div className=" bg-[#fff] px-3">
               <div className="product_info">
-                <div className="text-center mt-[15px]">
-                  <Link
-                    to={`/brand/${productDetail.Brand?.slug}`}
-                    className="text-vendor uppercase no-underline "
-                  >
-                    {productDetail.Brand?.name}
-                  </Link>
-                </div>
                 <div className=" leading-[130%] text-[20px] font-bold my-[5px] text-redichi">
                   {productDetail.name}
                 </div>

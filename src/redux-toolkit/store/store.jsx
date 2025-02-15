@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import variantSlice from "../slice/variantSlice";
+import searchReducer from "../slice/search.slice";
 const store = configureStore({
   reducer: {
-    variant: variantSlice,
+    search: searchReducer,
   },
 });
 export default store;

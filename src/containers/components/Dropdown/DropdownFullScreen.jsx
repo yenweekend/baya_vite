@@ -11,6 +11,7 @@ const DropdownScreen = React.forwardRef(
         onOpenChange(false);
       }
     });
+
     return (
       <div
         ref={ref}
@@ -43,10 +44,8 @@ const DropdownScreenTrigger = React.forwardRef(
   ({ className, children, onOpenChange, open, ...props }, ref) => {
     React.useEffect(() => {
       if (open) {
-        document.body.classList.add("locked-scroll");
         document.body.classList.add("body-showmodal");
       } else {
-        document.body.classList.remove("locked-scroll");
         document.body.classList.remove("body-showmodal");
       }
     }, [open]);
@@ -85,7 +84,7 @@ const DropdownScreenContent = React.forwardRef(
       <div
         ref={ref}
         className={cn(
-          ` main-dropdown absolute z-10 mt-2  bg-[#fff] transition-opacity duration-300  shadow-nd right-0 left-0 w-screen h-[80vh] top-[55%] ${
+          ` main-dropdown absolute z-10   bg-[#fff] transition-opacity duration-300  shadow-nd right-0 left-0 w-screen h-[80vh] top-[55%] ${
             open
               ? "opacity-[1] visible scale-100"
               : "opacity-0 invisible scale-[0.9]"

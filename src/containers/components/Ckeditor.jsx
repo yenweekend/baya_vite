@@ -59,7 +59,7 @@ export default function Ckeditor() {
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
   const [editorData, setEditorData] = useState(
-    `<div>Ghế armchair thư giãn Aurora</div><div>- Kích thước:&nbsp;740x800x760mm</div><div>- Chất liệu:&nbsp;Gỗ thông / MDF/ Plywood/ Mút/ Vải bọc/ Chân kim loại sơn tĩnh điện màu đen</div><div>- Nệm mút cao cấp, thoáng khí, đàn hồi</div><div>- Vải bọc được chứng nhận thân thiện với thú cưng, khó bị cào rách</div><div>- Màu: Sand + Sepia và&nbsp;Sepia + Mouse</div><div>- Xuất xứ: Việt Nam</div><div>&nbsp;</div><div><p class="figure-center"><img src="//file.hstatic.net/200000796751/file/aurora.1_c4f8db1cea294966bb3147baf51e7bfb_grande.jpg"></p><p>&nbsp;</p><p class="figure-center"><img src="//file.hstatic.net/200000796751/file/aurora.2_8e55c337f9a348fa89e5ba0903b8a75f_grande.jpg"></p><p>&nbsp;</p></div>`
+    `<div>Ghế armchair thư giãn Aurora</div><div>- Kích thước:&nbsp;740x800x760mm</div><div>- Chất liệu:&nbsp;Gỗ thông / MDF/ Plywood/ Mút/ Vải bọc/ Chân kim loại sơn tĩnh điện màu đen</div><div>- Nệm mút cao cấp, thoáng khí, đàn hồi</div><div>- Vải bọc được chứng nhận thân thiện với thú cưng, khó bị cào rách</div><div>- Màu: Sand + Sepia và&nbsp;Sepia + Mouse</div><div>- Xuất xứ: Việt Nam</div><div>&nbsp;</div><div><p className="figure-center"><img src="//file.hstatic.net/200000796751/file/aurora.1_c4f8db1cea294966bb3147baf51e7bfb_grande.jpg"></p><p>&nbsp;</p><p className="figure-center"><img src="//file.hstatic.net/200000796751/file/aurora.2_8e55c337f9a348fa89e5ba0903b8a75f_grande.jpg"></p><p>&nbsp;</p></div>`
   );
 
   useEffect(() => {

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useId } from "react";
 import { useForm } from "react-hook-form";
 
 const LoginBox = () => {
+  const uniqueId = useId();
   const {
     register,
     setError,
@@ -50,11 +51,11 @@ const LoginBox = () => {
                   message: "Email không hợp lệ !",
                 },
               })}
-              id="email"
+              id={`${uniqueId}-email`}
               className="peer w-full h-full py-[10px] px-5"
             />
             <label
-              htmlFor="email"
+              htmlFor={`${uniqueId}-email`}
               className={`absolute text-vendor transition-all ease-linear duration-75  bg-[#fff] px-2 h-10 ${
                 dirtyFields.email
                   ? "text-[14px] -top-3 left-2 h-[20px] leading-[20px]"
@@ -97,11 +98,11 @@ const LoginBox = () => {
                   message: "Mật khẩu phải có ít nhất 1 ký tự in hoa, chữ số !",
                 },
               })}
-              id="password"
+              id={`${uniqueId}-password`}
               className="peer w-full h-full py-[10px] px-5"
             />
             <label
-              htmlFor="password"
+              htmlFor={`${uniqueId}-password`}
               className={`absolute text-vendor transition-all ease-linear duration-75  bg-[#fff] px-2 h-10 ${
                 dirtyFields.password
                   ? "text-[14px] -top-3 left-2 h-[20px] leading-[20px]"

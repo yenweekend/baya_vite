@@ -3,6 +3,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { Search as SearchDiv } from "@/containers/components";
+import { cn } from "@/lib/utils";
 import {
   Dropdown,
   DropdownContent,
@@ -14,9 +15,22 @@ import {
   DropdownScreenContent,
   DropdownScreenTrigger,
 } from "@/containers/components/Dropdown/DropdownFullScreen";
-export function SearchButton() {
+export function SearchButton({ className }) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 990px)");
+  React.useEffect(() => {
+    if (open) {
+      if (isDesktop) {
+        if (document.body.classList.contains("locked-scroll")) {
+          document.body.classList.remove("locked-scroll");
+        }
+      } else {
+        document.body.classList.add("locked-scroll");
+      }
+    } else {
+      document.body.classList.remove("locked-scroll");
+    }
+  }, [isDesktop, open]);
   if (isDesktop) {
     return (
       <Dropdown open={open} onOpenChange={setOpen}>
@@ -55,7 +69,7 @@ export function SearchButton() {
           strokeWidth={1.5}
         />
       </DropdownScreenTrigger>
-      <DropdownScreenContent className={"top-[calc(100%-72px)]"}>
+      <DropdownScreenContent className={cn("top-[calc(100%-72px)]", className)}>
         <div className="absolute inset-0 ">
           <div className="w-full h-full overflow-y-auto pb-[30px]">
             <div className="w-full h-[300px] bg-blue-500"></div>

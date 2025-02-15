@@ -1,11 +1,11 @@
-const a =
-  "àáäâãåăæąçćčđďèéěėëêęğǵḧìíïîįłḿǹńňñòóöôœøṕŕřßşśšșťțùúüûǘůűūųẃẍÿýźžż·/_,:;";
-const b =
-  "aaaaaaaaacccddeeeeeeegghiiiiilmnnnnooooooprrsssssttuuuuuuuuuwxyyzzz------";
-const p = new RegExp(a.split("").join("|"), "g");
-
-function slugify(str) {
-  return str
+function slugify(string) {
+  const a =
+    "àáäâãåăæąçćčđďèéěėëêęğǵḧìíïîįłḿǹńňñòóöôœøṕŕřßşśšșťțùúüûǘůűūųẃẍÿýźžż·/_,:;";
+  const b =
+    "aaaaaaaaacccddeeeeeeegghiiiiilmnnnnooooooprrsssssttuuuuuuuuuwxyyzzz------";
+  const p = new RegExp(a.split("").join("|"), "g");
+  return string
+    .toString()
     .toLowerCase()
     .replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, "a")
     .replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, "e")
@@ -14,12 +14,13 @@ function slugify(str) {
     .replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, "u")
     .replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, "y")
     .replace(/đ/gi, "d")
-    .replace(/\s+/g, " ")
+    .replace(/\s+/g, "-")
     .replace(p, (c) => b.charAt(a.indexOf(c)))
     .replace(/&/g, "-and-")
-    .replace(/[^\w\s\-]+/g, "")
+    .replace(/[^\w\-]+/g, "")
     .replace(/\-\-+/g, "-")
     .replace(/^-+/, "")
     .replace(/-+$/, "");
 }
+
 export default slugify;

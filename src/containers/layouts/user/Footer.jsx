@@ -58,7 +58,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="pt-[30px]  max-w-[1400px] mx-auto border-b border-solid border-b[rgba(51,51,51,0.04)]">
-        <div className="flex items-stretch text-footertext  px-[15px] -mx-[15px] max-990:hidden">
+        <div className="flex items-stretch text-footertext  px-[15px]  max-990:hidden">
           <div className="basis-1/4 px-[15px] text-inherit flex flex-col">
             <h4 className="text-[18px] font-bold text-inherit pt-[15px] pb-[12px]">
               CÔNG TY CỔ PHẦN NỘI THẤT BAYA

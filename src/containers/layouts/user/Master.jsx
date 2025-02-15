@@ -9,9 +9,9 @@ let prevScrollpos = window.pageYOffset;
 let resizeTimeout;
 
 const Master = () => {
-  const [showBanner, setShowBanner] = useState(true);
-  const [marginTop, setMarginTop] = useState(null);
   const handleScroll = (event) => {
+    let currentScrollPos = document.documentElement.scrollTop;
+
     if (
       document.body.classList.contains("locked-scroll") ||
       document.body.classList.contains("body-showmodal") ||
@@ -19,42 +19,16 @@ const Master = () => {
     ) {
       event.preventDefault();
       event.stopPropagation();
+      prevScrollpos = currentScrollPos;
       return;
     }
-    let currentScrollPos = document.documentElement.scrollTop;
-    if (currentScrollPos < 252) {
-      document.getElementById("header").classList.remove("showSticky");
-      document.getElementById("header").style.top = "0";
-      document.getElementById("header").style.opacity = 1;
-      document.getElementById("header").style.visibility = "visible";
+    if (currentScrollPos > 250 && currentScrollPos < prevScrollpos) {
+      document.getElementById("extra-header").classList.add("show");
     } else {
-      if (currentScrollPos > 780) {
-        document.getElementById("header").classList.add("showSticky");
-        if (prevScrollpos < currentScrollPos) {
-          // scroll down
-          document.getElementById("header").style.top = "-10%";
-          document.getElementById("header").style.opacity = 0;
-          document.getElementById("header").style.visibility = "hidden";
-        } else {
-          document.getElementById("header").style.top = "0";
-          document.getElementById("header").style.opacity = 1;
-          document.getElementById("header").style.visibility = "visible";
-        }
-      } else {
-        document.getElementById("header").style.top = "-60%";
-        document.getElementById("header").style.opacity = 0;
-        document.getElementById("header").style.visibility = "hidden";
-      }
+      document.getElementById("extra-header").classList.remove("show");
     }
     prevScrollpos = currentScrollPos;
   };
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -64,8 +38,11 @@ const Master = () => {
         document.body.classList.remove("body-resize");
       }, 1000); // 1000ms delay after resize stops
     };
+    // window.scrollTo(0, 0);
+    window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", handleResize);
     return () => {
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
       clearTimeout(resizeTimeout);
     };
@@ -74,17 +51,8 @@ const Master = () => {
   return (
     <>
       <div className="baya-container max-990:overflow-x-hidden pb-[60px]">
-        <Header
-          setMarginTop={setMarginTop}
-          setShowBanner={setShowBanner}
-          showBanner={showBanner}
-        />
-        <div
-          className={` pb-[30px]  mx-auto 2md:max-w-[1366px] relative w-[90%]  md:max-w-[720px]  max-990:w-[100%] xl:w-[100%] min-1350:max-w-[1366px] xl:px-[15px]`}
-          style={{
-            marginTop: `${marginTop}px`,
-          }}
-        >
+        <Header />
+        <div className={`baya-collection `}>
           <Outlet />
         </div>
         <Footer />

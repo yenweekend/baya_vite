@@ -89,7 +89,7 @@ const navigationComponents = [
   },
   {
     title: "Nhà bếp",
-    link: "/categories/phu-kien-nha-bep-1",
+    link: "/categories/nha-bep",
     subNav: [
       { title: "Tô - Chén - Đĩa", link: "/categories/to-chen-dia" },
       { title: "Cốc & Ly", link: "/categories/coc-ly" },
@@ -109,7 +109,7 @@ const navigationComponents = [
     subNav: [
       { title: "Thảm phòng tắm", link: "/categories/tham-phong-tam" },
       { title: "Rèm tắm", link: "/categories/rem-tam" },
-      { title: "Vật dụng phòng tắm", link: "/categories/dung-cu-phong-tam" },
+      { title: "Vật dụng phòng tắm", link: "/categories/vat-dung-phong-tam" },
     ],
   },
 ];
