@@ -33,13 +33,11 @@ import NewProducts from "./containers/pages/NewProducts";
 import UserMaster from "./containers/layouts/user/Master";
 import paths from "./utils/paths";
 import { NotFound } from "./containers/components";
-import Slick from "./Slick";
 function App() {
   return (
     <>
       <Routes>
         <Route element={<NewProducts />} path={"/editor"}></Route>
-        <Route element={<Slick />} path={"/slick"}></Route>
         <Route element={<CheckOut />} path={paths.CHECKOUT}></Route>
 
         <Route
