@@ -578,13 +578,8 @@ const Category = () => {
                   Nhà cung cấp:{" "}
                 </span>
                 <strong className="text-[#5d5d5d] text-[13px] pl-2">
-                  {selectVendors.map((vendor, index) => {
-                    if ((index = selectVendors.length - 1)) {
-                      return vendor;
-                    } else {
-                      return vendor + ",";
-                    }
-                  })}
+                  {Array.isArray(selectVendors) &&
+                    selectVendors.map((vendor) => vendor.title).join(", ")}
                 </strong>
                 <span className="absolute right-2 cursor-pointer">
                   <X size={20} className="stroke-blackni" strokeWidth={1.2} />
@@ -597,19 +592,14 @@ const Category = () => {
                   Giá
                 </span>
                 <strong className="text-[#5d5d5d] text-[13px] pl-2">
-                  {selectPrices.map((price, index) => {
-                    if ((index = selectPrices.length - 1)) {
-                      return price.title;
-                    } else {
-                      return price.title + ",";
-                    }
-                  })}
+                  {selectPrices?.map((price) => price.title).join(", ")}
                 </strong>
                 <span className="absolute right-2 cursor-pointer">
                   <X size={20} className="stroke-blackni" strokeWidth={1.2} />
                 </span>
               </div>
             )}
+
             {selectPrices.length > 0 || selectVendors.length > 0 ? (
               <button className="text-[13px] px-3 cursor-pointer text-center  border-solid border border-shop rounded-full relative py-[2px] bg-[#fff] text-redtitle underline">
                 Xóa hết

@@ -261,7 +261,7 @@ const Header = () => {
           <SearchDiv />
         </div>
       </div>
-      {/* <div
+      <div
         className="px-[15px] bg-[#f2f2f2]  hidden 2md:block "
         id="main-navMenu"
       >
@@ -298,7 +298,7 @@ const Header = () => {
             ))}
           </ul>
         </nav>
-      </div> */}
+      </div>
       <div
         className="bg-primary fixed  w-full z-50 invisible opacity-0 top-0 py-[10px] 2md:py-0"
         id="extra-header"

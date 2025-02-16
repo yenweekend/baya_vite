@@ -105,7 +105,7 @@ const navigationComponents = [
   },
   {
     title: "Phòng tắm",
-    link: "/categories/phu-kien-phong-tam",
+    link: "/categories/phong-tam",
     subNav: [
       { title: "Thảm phòng tắm", link: "/categories/tham-phong-tam" },
       { title: "Rèm tắm", link: "/categories/rem-tam" },
