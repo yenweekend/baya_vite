@@ -1,4 +1,1 @@
-export const apiUrl =
-  process.env.NODE_ENV != "production"
-    ? "http://localhost:3001"
-    : "https://baya-server-urzh.onrender.com";
+export const apiUrl = import.meta.env.VITE_API_URL;
