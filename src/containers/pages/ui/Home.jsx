@@ -57,9 +57,9 @@ const Home = () => {
   const newArrivalProducts = useMemo(() => {
     if (data) {
       if (!sofaNewArrival) {
-        return data.data.data.latestCollection?.products || [];
+        return data?.data?.data?.latestCollection?.products || [];
       } else {
-        return data.data.data.sofaProducts;
+        return data?.data?.data?.sofaProducts;
       }
     } else {
       return [];
