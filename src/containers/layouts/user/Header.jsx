@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { Search as SearchDiv } from "@/containers/components";
 import navigationComponents from "@/utils/navigation";
-
 import {
   DropdownScreenUT,
   DropdownScreenUTContent,
@@ -61,7 +60,7 @@ const Header = () => {
                 strokeWidth={1.5}
               />
             </DropdownScreenUTTrigger>
-            <DropdownScreenUTContent className={"top-[80px] h-[81vh]"}>
+            <DropdownScreenUTContent className={"top-[80px] h-[81vh] z-[99]"}>
               <div className="absolute inset-0 overflow-hidden">
                 <div className="w-full h-full overflow-y-auto pb-[30px]">
                   <ul className="flex flex-col items-start ">
@@ -75,7 +74,6 @@ const Header = () => {
                           if (exist) {
                             exist.classList.remove("menu-open");
                           }
-                          console.log("22");
                           const id =
                             e.currentTarget.getAttribute("data-root-menu");
                           const element = document.getElementById(
@@ -84,12 +82,9 @@ const Header = () => {
                           element.classList.add("menu-open");
                         }}
                       >
-                        <Link
-                          to={nav.link}
-                          className="p-[15px]  flex items-center text-inherit uppercase font-bold text-[14px] "
-                        >
+                        <span className="p-[15px]  flex items-center text-inherit uppercase font-bold text-[14px] ">
                           {nav.title}
-                        </Link>
+                        </span>
                         <ChevronRight
                           className="text-inherit "
                           size={18}
@@ -122,9 +117,10 @@ const Header = () => {
                   <div
                     className="list-child absolute inset-0 bg-[#fff] p-[15px] transition-transform ease-linear duration-150 translate-x-[100%]"
                     id={`subNav-${index}`}
+                    key={`subnav-${index}`}
                   >
                     <div
-                      className="uppercase text-blackniborder-b border-solid border-[#eee] flex items-center py-[15px] pl-[6px] cursor-pointer"
+                      className="uppercase text-blackni border-b border-solid border-[#eee] flex items-center py-[15px] pl-[6px] cursor-pointer"
                       onClick={() => {
                         const parent = document.getElementById(
                           `subNav-${index}`
@@ -137,9 +133,13 @@ const Header = () => {
                       </span>
                       quay về
                     </div>
-                    <a className="text-blacknifont-bold text-[13px] border-b border-solid border-[#eee] py-[15px] block pl-[10px] hover:text-redichi cursor-pointer">
+                    <Link
+                      onClick={() => setOpenHamburger(false)}
+                      to={nav.link}
+                      className="text-blackni font-bold text-[13px] border-b border-solid border-[#eee] py-[15px] block pl-[10px] hover:text-redichi cursor-pointer"
+                    >
                       Xem tất cả "{nav.title}"
-                    </a>
+                    </Link>
                     <ul>
                       {nav.subNav.map((sub) => (
                         <li
@@ -147,8 +147,15 @@ const Header = () => {
                           key={sub.title}
                         >
                           <Link
-                            href={sub.link}
-                            className="text-blacknifont-normal text-[13px] group-hover:text-redichi"
+                            onClick={() => {
+                              setOpenHamburger(false);
+                              const parent = document.getElementById(
+                                `subNav-${index}`
+                              );
+                              parent.classList.remove("menu-open");
+                            }}
+                            to={sub.link}
+                            className="text-blackni font-normal text-[13px] group-hover:text-redichi hhh"
                           >
                             - {sub.title}
                           </Link>
@@ -161,8 +168,8 @@ const Header = () => {
             </DropdownScreenUTContent>
           </DropdownScreenUT>
           <div className="px-[15px]">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="text-[#fff] md:w-[99px] md:h-[70px] w-[84px] overflow-hidden block"
             >
               <img
@@ -170,41 +177,9 @@ const Header = () => {
                 alt="BAYA"
                 className="w-full h-full object-cover"
               />
-            </a>
+            </Link>
           </div>
-          <nav className=" second-menu hidden ">
-            <ul className="flex flex-wrap items-center justify-center">
-              {navigationComponents.map((nav) => (
-                <li
-                  className="mx-[15px] uppercase has-submenu relative group "
-                  key={nav.link}
-                >
-                  <Link
-                    to={nav.link}
-                    className="py-[25px] px-[4px]  flex items-center text-[#fff] normal-case opacity-85 "
-                  >
-                    {nav.title}
-                    <ChevronDown
-                      className="text-[#fff] group-hover:rotate-180 transition-transform duration-100 ease-linear"
-                      size={16}
-                    />
-                  </Link>
-                  <ul className="absolute submenu z-[99] shadow-st min-w-[220px] bg-[#fff] invisible opacity-0 transition-all ease-linear duration-300 top-[150%]  group-hover:visible group-hover:opacity-100 group-hover:top-[100%]">
-                    {nav.subNav.map((subnav) => (
-                      <li key={subnav.link}>
-                        <Link
-                          to={subnav.link}
-                          className="text-blackniopacity-[0.85] text-left text-[14px] px-[18px] py-[9px] border-b border-solid border-[--shop-color-border] block w-full normal-case font-normal hover:text-redichi"
-                        >
-                          {subnav.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </nav>
+
           <div className="md:px-[15px] px-2 flex items-start justify-between flex-auto ">
             <div className="flex-auto hidden flex-col gap-3 max-w-[680px] mx-auto  2md:flex search-div  main-search">
               <SearchDiv />
@@ -303,7 +278,7 @@ const Header = () => {
         className="bg-primary fixed  w-full z-50 invisible opacity-0 top-0 py-[10px] 2md:py-0"
         id="extra-header"
       >
-        <div className=" flex items-center justify-between  2md:py-[10px] md:px-[15px] max-w-[1400px] mx-auto header-wrapper px-[6px]">
+        <div className=" flex items-center justify-between  2md:py-[10px] md:px-[15px] max-w-[1400px] mx-auto header-wrapper px-[6px] t 2 ne ">
           <DropdownScreenUT
             open={openHamburgerExtra}
             onOpenChange={setOpenHamburgerExtra}
@@ -331,7 +306,7 @@ const Header = () => {
               />
             </DropdownScreenUTTrigger>
             <DropdownScreenUTContent
-              className={"top-[calc(100%-1px)] h-[82vh]"}
+              className={"top-[calc(100%-1px)] h-[82vh] z-[99]"}
             >
               <div className="absolute inset-0 ">
                 <div className="w-full h-full overflow-y-auto pb-[30px]">
@@ -352,12 +327,9 @@ const Header = () => {
                           element.classList.add("menu-open");
                         }}
                       >
-                        <Link
-                          to={nav.link}
-                          className="p-[15px]  flex items-center text-inherit uppercase font-bold text-[14px] "
-                        >
+                        <span className="p-[15px]  flex items-center text-inherit uppercase font-bold text-[14px] ">
                           {nav.title}
-                        </Link>
+                        </span>
                         <ChevronRight
                           className="text-inherit "
                           size={18}
@@ -390,6 +362,7 @@ const Header = () => {
                   <div
                     className="list-child absolute inset-0 bg-[#fff] p-[15px] transition-transform ease-linear duration-150 translate-x-[100%]"
                     id={index}
+                    key={`nav-2-${index}`}
                   >
                     <div
                       className="uppercase text-blackniborder-b border-solid border-[#eee] flex items-center py-[15px] pl-[6px] cursor-pointer"
@@ -403,9 +376,13 @@ const Header = () => {
                       </span>
                       quay về
                     </div>
-                    <a className="text-blacknifont-bold text-[13px] border-b border-solid border-[#eee] py-[15px] block pl-[10px] hover:text-redichi cursor-pointer">
+                    <Link
+                      onClick={() => setOpenHamburgerExtra(false)}
+                      to={nav.link}
+                      className="text-blackni font-bold text-[13px] border-b border-solid border-[#eee] py-[15px] block pl-[10px] hover:text-redichi cursor-pointer"
+                    >
                       Xem tất cả "{nav.title}"
-                    </a>
+                    </Link>
                     <ul>
                       {nav.subNav.map((sub) => (
                         <li
@@ -413,8 +390,13 @@ const Header = () => {
                           key={sub.title}
                         >
                           <Link
-                            href={sub.link}
-                            className="text-blacknifont-normal text-[13px] group-hover:text-redichi"
+                            onClick={() => {
+                              setOpenHamburger(false);
+                              const parent = document.getElementById(index);
+                              parent.classList.remove("menu-open");
+                            }}
+                            to={sub.link}
+                            className="text-blackni font-normal text-[13px] group-hover:text-redichi"
                           >
                             - {sub.title}
                           </Link>
@@ -427,8 +409,8 @@ const Header = () => {
             </DropdownScreenUTContent>
           </DropdownScreenUT>
           <div className="px-[15px]">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="text-[#fff] md:w-[99px] md:h-[70px] w-[84px] overflow-hidden block"
             >
               <img
@@ -436,9 +418,9 @@ const Header = () => {
                 alt="BAYA"
                 className="w-full h-full object-cover"
               />
-            </a>
+            </Link>
           </div>
-          <nav className=" second-menu  max-990:hidden ">
+          <nav className=" second-menu desktop max-990:hidden ">
             <ul className="flex flex-wrap items-center justify-center">
               {navigationComponents.map((nav) => (
                 <li
@@ -447,7 +429,7 @@ const Header = () => {
                 >
                   <Link
                     to={nav.link}
-                    className="py-[25px] px-[4px]  flex items-center text-[#fff] normal-case opacity-85 "
+                    className="py-[25px] px-[4px]  flex items-center text-[#fff] normal-case opacity-85 text-[13px]"
                   >
                     {nav.title}
                     <ChevronDown

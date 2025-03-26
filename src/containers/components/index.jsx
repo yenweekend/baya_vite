@@ -1,4 +1,3 @@
-export { default as BreadCrumb } from "./BreadCrumb";
 export { default as CkEditor } from "./Ckeditor";
 export { default as Search } from "./Search";
 export { default as ProductCard } from "./Card/ProductCard";

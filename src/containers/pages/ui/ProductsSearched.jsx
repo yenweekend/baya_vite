@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -46,6 +46,12 @@ const ProductsSearched = () => {
 
     retry: false,
   });
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [data]);
   if (isError) {
     return <NotFound />;
   }

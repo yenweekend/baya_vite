@@ -4,7 +4,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import Header from "./Header";
 import Footer from "./Footer";
-import { useSelector } from "react-redux";
+
 let prevScrollpos = window.pageYOffset;
 let resizeTimeout;
 
@@ -29,7 +29,6 @@ const Master = () => {
     }
     prevScrollpos = currentScrollPos;
   };
-
   useEffect(() => {
     const handleResize = () => {
       document.body.classList.add("body-resize");
@@ -38,7 +37,6 @@ const Master = () => {
         document.body.classList.remove("body-resize");
       }, 1000); // 1000ms delay after resize stops
     };
-    // window.scrollTo(0, 0);
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", handleResize);
     return () => {

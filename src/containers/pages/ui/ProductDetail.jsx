@@ -8,12 +8,15 @@ import React, {
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import icons from "@/utils/icons";
-import { product_images_slide } from "../../../utils/scrape_data";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { HoverEffectBox, CouponCard } from "../../components";
+import { HoverEffectBox, CouponCard, NotFound } from "../../components";
 import { useQuery } from "@tanstack/react-query";
-import { getProductDetail } from "../../../apis/product.api";
+import {
+  getProductDetail,
+  getViewdProduct,
+  giveFeedBack,
+} from "../../../apis/product.api";
 import FancyBoxWrapper from "@/helpers/fancybox";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -22,11 +25,12 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import {
   Drawer,
   DrawerClose,
@@ -39,6 +43,8 @@ import {
 } from "@/components/ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import formatPrice from "@/helpers/formatPrice";
+import CartItem from "@/containers/components/Items/CartItem";
+import moment from "moment";
 import {
   Minus,
   Plus,
@@ -46,26 +52,63 @@ import {
   X,
   Facebook,
   Twitter,
+  CircleChevronRight,
   Link as LinkIcon,
+  ShoppingCart,
+  Loader2,
+  Upload as UploadIcon,
+  UserRound,
 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Rate, Upload } from "antd";
 import slugify from "@/helpers/slugify";
 import _ from "lodash";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { deleteItem, updateQuantity } from "@/apis/cart";
+import { cn } from "@/lib/utils";
+import { debounce } from "lodash";
 import { motion } from "motion/react";
-
+import { HoverEffectButton, ProductCard } from "../../components";
+import { Card, CardContent } from "@/components/ui/card";
 import ProductDetailSkeleton from "@/containers/components/Skeleton/ProductDetail";
-const images = [
-  "https://product.hstatic.net/200000796751/product/2002531.5_70d2def5b3144bac9b5f4c9ac526e5a9_master.jpg",
-  "https://product.hstatic.net/200000796751/product/2002531.2_7e7692a23b814190996c2252338bcf0b_master.jpg",
-  "https://product.hstatic.net/200000796751/product/z6192936196928_5b74d6b043ae5037aa3360d13da83cf9_2ef26af446854e86b3cd24df07d7ee89_large.jpg",
-  "https://product.hstatic.net/200000796751/product/2002531.3_8ad76c5474d64991b0ee42ebdfd4fd5a_master.jpg",
-  "https://product.hstatic.net/200000796751/product/2002527.2_acffaf6d910445b1b29e0593ff392ba5_large.jpg",
-  "https://product.hstatic.net/200000796751/product/2002594.1_28576b72d7804b78b9313b3615ac8000_large.png",
-  "https://product.hstatic.net/200000796751/product/2002532.2_55e3a75b8ebd475a834b313a76afa437_large.jpg",
-  "https://product.hstatic.net/200000796751/product/inspire_1_6aa84a7e4479464e83f5dfa859f385fb_large.jpg",
-  "https://product.hstatic.net/200000796751/product/inspire_13_bb588c2be67b45dc963a70157cef55a9_large.png",
-];
+import {
+  saveViewedProduct,
+  getViewedProductSlugs,
+} from "@/helpers/localstorage";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useSelector } from "react-redux";
+import { add } from "@/apis/cart";
+import { Button } from "@/components/ui/button";
+import toast from "@/containers/components/Toaster";
+import { updateCheckoutItems } from "@/helpers/localstorage";
+import useMessage from "@/hooks/useMessage";
+import { Controller, useForm } from "react-hook-form";
+import ImageUploader from "@/containers/components/ImageUploader";
 const ProductDetail = () => {
+  const {
+    setError,
+    clearErrors,
+    handleSubmit,
+    reset,
+    setValue,
+    control,
+    formState: { dirtyFields, errors },
+  } = useForm({
+    defaultValues: {
+      feedback: "",
+      rate: "",
+      imageData: [],
+    },
+  });
+  const messageApi = useMessage();
+
+  const navigate = useNavigate();
+  const cartData = useSelector((state) => state.cart.cart);
+  const location = useLocation();
+  const isDesktop = useMediaQuery("(min-width: 990px)");
+  const [open, setOpen] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const swipeRef = useRef(null);
   const thumbVerticalRef = useRef(null);
   const thumbHoriRef = useRef(null);
@@ -83,13 +126,14 @@ const ProductDetail = () => {
         imageHorWidth * number
       }px)`;
     }
-    swipeRef.current?.swiper.slideTo(number, 200);
+    swipeRef.current?.swiper.slideTo(number, 400);
   };
-
   const { slug } = useParams();
   const contentRef = useRef();
   const [descriptionContentHeight, setDescriptionContentHeight] = useState(220);
+  const [slugs, setSlugs] = React.useState(null);
   const [selectedGift, setSelectedGift] = React.useState(null);
+  const [images, setImages] = useState(null);
   const [productVariant, setProductVariant] = useState(null);
   const [attribute, setAttribute] = React.useState({});
   const [readMore, setReadMore] = useState(false);
@@ -101,31 +145,222 @@ const ProductDetail = () => {
       return { ...prev, [attributeName]: e.target.value };
     });
   }, []);
+  const queryClient = useQueryClient();
+  const { mutate, isSuccess, ...mutateElement } = useMutation({
+    mutationFn: add,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast({
+        title: "Thêm vào giỏ hàng thành cônng",
+        type: "success",
+        data: {
+          thumbnail: data.data.productDetail.thumbnail,
+          price: data.data.productDetail.price,
+          title: data.data.productDetail.title,
+        },
+      });
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: "error",
+        content:
+          error.response.data.msg || "Thêm sản phẩm vào giỏ hàng thất bại!",
+        className: "custom-class",
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      });
+    },
+  });
+  const mutatePurchaseNowMethods = useMutation({
+    mutationFn: add,
+    onSuccess: (response) => {
+      updateCheckoutItems([data.data.productDetail.id]);
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      navigate("/");
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: "error",
+        content:
+          error.response.data.msg ||
+          "Không thể mua sản phẩm, vui lòng thử lại!",
+        className: "custom-class",
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      });
+    },
+  });
+  const mutateFeedBack = useMutation({
+    mutationFn: giveFeedBack,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["product-detail"] });
+      setValue("imageData", []);
+      reset();
+      messageApi.open({
+        type: "success",
+        content: "Thêm đánh giá thành công",
+        className: "custom-class",
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      });
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: "error",
+        content: error.response.data.msg || "Không thể gửi đánh giá",
+        className: "custom-class",
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      });
+    },
+  });
+  const {
+    mutate: mutateUpdate,
+    isPending: isPendingUpdate,
+    isError: isErrorUpdate,
+  } = useMutation({
+    mutationFn: updateQuantity,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: "error",
+        content: error.response.data.msg || "Cập nhật giỏ hàng thất bại!",
+        className: "custom-class",
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      });
+    },
+  });
+
+  const debouncedUpdateQuantity = React.useCallback(
+    debounce((newQuantity) => {
+      mutateUpdate({ productId: id, quantity: newQuantity });
+    }, 1000), // Delay API request by 400ms
+    []
+  );
+  const handleIncrease = () => {
+    setQuantity((prev) => {
+      const newQuantity = prev + 1;
+      if (productVariant.stock - newQuantity < 0) {
+        alert("Số lượng sản phẩm trong kho không đủ!");
+        return prev;
+      }
+      // debouncedUpdateQuantity(newQuantity);
+      return newQuantity;
+    });
+  };
+  // Decrease quantity (prevent going below 1)
+  const handleDecrease = () => {
+    setQuantity((prev) => {
+      if (prev === 1) {
+        alert("Số lượng phải lớn hơn 0");
+        return prev;
+      }
+      const newQuantity = prev - 1;
+      // debouncedUpdateQuantity(newQuantity);
+      return newQuantity;
+    });
+  };
+
   const { isPending, isError, error, data } = useQuery({
     queryKey: ["product-detail", slug],
     queryFn: () => getProductDetail(slug),
     enabled: !!slug,
   });
+  const {
+    isPending: isViewedPending,
+    isError: isViewedError,
+    error: viewedError,
+    data: viewedData,
+  } = useQuery({
+    queryKey: ["product-viewd", slugs],
+    queryFn: () => getViewdProduct(slugs),
+    enabled: !!slugs,
+  });
+  useEffect(() => {
+    setSlugs(getViewedProductSlugs());
+  }, [location.pathname]);
   useEffect(() => {
     if (data) {
       if (!data.data.productDetail.single) {
-        setAttribute(
-          data.data.variants.find((product) => product.stock > 0).attributes
+        // if product has variant
+        const outOfStock = data.data.variants.every(
+          (product) => product.stock === 0
         );
+        if (outOfStock) {
+          setAttribute(data.data.variants[0].attributes);
+        } else {
+          setAttribute(
+            data.data.variants.find((product) => product.stock > 0).attributes
+          );
+        }
+        //   {
+        //     "Kích thước": "D45xR45",
+        //     "Màu sắc": "Họa tiết hoa lá Mint"
+        // }
+        const rs = data.data.variants.map((vr) => {
+          const variantImages = vr.Images.map((item) => item.img_url);
+          return [vr.thumbnail, ...variantImages];
+        });
+        setImages(rs.flat());
+      } else {
+        // product is single
+        if (!data.data.productDetail.thumbnailM) {
+          // if product do have thumbnailM
+          setImages([
+            data.data.productDetail.thumbnail, // other images of product in image tables
+          ]);
+        } else {
+          setImages([
+            data.data.productDetail.thumbnail,
+            data.data.productDetail.thumbnailM,
+          ]);
+        }
       }
     }
   }, [data]);
+  useEffect(() => {
+    if (data) {
+      saveViewedProduct(data.data.productDetail.slug);
+    }
+  }, [location.pathname, data]);
 
   useEffect(() => {
-    if (data && attribute && !data.data.productDetail.single) {
-      const variantMatches = data.data["variants"].find((variant) =>
-        Object.entries(attribute).every(
-          ([key, value]) => variant.attributes[key] === value
-        )
-      );
-      setProductVariant(variantMatches);
+    if (data && data.data.productDetail.single) {
+      // if product do not have variant
+      setProductVariant(data.data.productDetail);
+    } else {
+      if (data && attribute && images) {
+        const variantMatches = data.data["variants"].find((variant) =>
+          Object.entries(attribute).every(
+            ([key, value]) => variant.attributes[key] === value
+          )
+        );
+        const idx = images.findIndex((img) => img === variantMatches.thumbnail);
+        setCurrentIdx(idx);
+
+        swipeRef?.current?.swiper.slideTo(idx, 400);
+        setProductVariant(variantMatches);
+      }
     }
-  }, [data, attribute]);
+  }, [data, attribute, images]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -138,13 +373,40 @@ const ProductDetail = () => {
     }
   }, [data, contentRef]);
 
-  if (isPending) {
+  if (isPending || isViewedPending) {
     return <ProductDetailSkeleton />;
   }
-  if (isError) {
-    return error;
+  if (isError || isViewedError) {
+    return <NotFound />;
   }
-
+  if (isViewedError) {
+    messageApi.open({
+      type: "error",
+      content: "Đã xảy ra lỗi lấy dữ liệu sản phẩm đã xem",
+      className: "custom-class",
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+    });
+  }
+  const handleAddToCart = (data) => {
+    mutate(data);
+  };
+  const onSubmit = (fData) => {
+    const formData = new FormData();
+    formData.append("rating", fData.rate);
+    formData.append("feedback", fData.feedback);
+    formData.append("productId", data.data.productDetail.id);
+    fData.imageData.forEach((file) => {
+      formData.append("images", file.originFileObj); // `originFileObj` contains the actual file
+    });
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+    mutateFeedBack.mutate(formData);
+  };
   return (
     <div className="mt-[30px] mb-[55px] pb-[30px]">
       <FancyBoxWrapper
@@ -155,7 +417,6 @@ const ProductDetail = () => {
           Images: {
             zoom: true,
           },
-          // Custom CSS transition on opening
           showClass: "f-fadeIn",
         }}
       ></FancyBoxWrapper>
@@ -163,32 +424,34 @@ const ProductDetail = () => {
         <div className="2md:basis-45 flex-grow-0 w-full">
           <div className="flex flex-col bg-[#fff] ">
             <div className=" sticky top-0 flex items-stretch">
-              <div className="flex-grow-0 2md:w-[80px] pt-3 w-[76px] flex-shrink-0 px-3 relative overflow-hidden 2md:block hidden">
-                <div className="absolute inset-0  px-3 overflow-y-auto no-scrollbar my-3">
-                  <div
-                    className=" flex flex-col transition-all ease-linear duration-300 "
-                    ref={thumbVerticalRef}
-                  >
-                    {images.map((img, idx) => (
-                      <div
-                        className={`${
-                          currentIdx === idx
-                            ? "border-redichi"
-                            : "border-[#eee]"
-                        } [&:not(last-child)]:mb-4 border border-solid  transition-all ease-linear duration-150 cursor-pointer`}
-                        key={idx}
-                        onClick={() => toSlide(idx)}
-                      >
-                        <img
-                          src={img}
-                          alt=""
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    ))}
+              {data.data.productDetail.thumbnailM && (
+                <div className="flex-grow-0 2md:w-[80px] pt-3 w-[76px] flex-shrink-0 px-3 relative overflow-hidden 2md:block hidden">
+                  <div className="absolute inset-0  px-3 overflow-y-auto no-scrollbar my-3">
+                    <div
+                      className=" flex flex-col transition-all ease-linear duration-300 "
+                      ref={thumbVerticalRef}
+                    >
+                      {images?.map((img, idx) => (
+                        <div
+                          className={`${
+                            currentIdx === idx
+                              ? "border-redichi"
+                              : "border-[#eee]"
+                          } [&:not(last-child)]:mb-4 border border-solid  transition-all ease-linear duration-150 cursor-pointer`}
+                          key={idx}
+                          onClick={() => toSlide(idx)}
+                        >
+                          <img
+                            src={img}
+                            alt=""
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
               <div className="w-full">
                 <div className=" pb-[100%] w-full relative ">
                   <div className="absolute w-full h-full ">
@@ -234,7 +497,7 @@ const ProductDetail = () => {
                             }
                           }}
                         >
-                          {images.map((img) => (
+                          {images?.map((img) => (
                             <SwiperSlide
                               style={{
                                 width: "100%",
@@ -265,7 +528,7 @@ const ProductDetail = () => {
                     className=" flex transition-all ease-linear duration-300 "
                     ref={thumbHoriRef}
                   >
-                    {images.map((img, idx) => (
+                    {images?.map((img, idx) => (
                       <div
                         className={`${
                           currentIdx === idx
@@ -328,6 +591,53 @@ const ProductDetail = () => {
               </button>
             </div>
           </div>
+          <div className="w-full bg-[#fff] py-5 px-3 mt-[15px]">
+            <div className="flex flex-col">
+              {data.data.feedback.length > 0 &&
+                data.data.feedback.map((fb) => (
+                  <div
+                    key={fb.id}
+                    className="border-b border-b-solid border-b-[rgba(0,0,0,0.09)] pb-[12px] pl-2 flex items-start gap-3"
+                  >
+                    <div className="thumb w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
+                      <UserRound stroke="#fff" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[12px] font-normal">
+                        nguyenvanyen
+                      </span>
+                      <Rate
+                        disabled
+                        defaultValue={2}
+                        starColor="#fff"
+                        className="ant-rate-custom-v1 ant-rate-custom "
+                      />
+                      <p className="text-[12px] text-[#0000008A] mb-3">
+                        <span>
+                          {moment(fb.createdAt)
+                            .locale("vi")
+                            .format("DD [tháng] MM, YYYY hh:mm A")}
+                        </span>
+                      </p>
+                      <p className="text-[14px] text-[#333] font-medium pb-3">
+                        {fb.comment}
+                      </p>
+                      <div className="flex items-center">
+                        {fb.ReviewImages.map((img) => (
+                          <div className="w-[60px] h-[60px]" key={img.id}>
+                            <img
+                              src={img.img_url}
+                              className="w-full h-full object-cover"
+                              alt="Ảnh feedback"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
         </div>
         <div className="2md:basis-55 w-full">
           <div className=" bg-[#fff]   p-[15px]">
@@ -337,7 +647,9 @@ const ProductDetail = () => {
             <div className="flex flex-wrap items-center product-origin mb-[15px] gap-2">
               <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
                 thương hiệu&nbsp;
-                <b className="text-[--shop-color-main]">ABC</b>
+                <b className="text-[--shop-color-main]">
+                  {data.data.productDetail?.Vendor?.title}
+                </b>
               </div>
               <div className="devide bg-[rgba(0,0,0,.06)] w-[0.8px] mx-[15px] h-[10px]"></div>
               <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
@@ -523,28 +835,89 @@ const ProductDetail = () => {
                 </AccordionItem>
               </Accordion>
             </div> */}
-            <div className="flex items-center mt-[15px]">
+            <div className=" items-center mt-[15px] 2md:flex hidden">
               <span className="text-[--shop-color-text] font-bold text-[14px] mr-[100px]">
                 Số lượng:
               </span>
               <div className="flex items-center  w-[120px]  ">
-                <div className=" flex items-center justify-center  border border-solid border-[#f3f4f4] w-8 h-8 bg-[#f3f4f4] cursor-pointer group">
+                <div
+                  className=" flex items-center justify-center  border border-solid border-[#f3f4f4] w-8 h-8 bg-[#f3f4f4] cursor-pointer group"
+                  onClick={handleDecrease}
+                >
                   <Minus
                     size={16}
                     strokeWidth={3}
                     className="stroke-[#a4aaaf] group-hover:stroke-blacknitransition-all ease-linear duration-150"
                   />
                 </div>
-                <div className="border border-solid border-[#f3f4f4] w-8 h-8 flex items-center justify-center text-[14px] font-bold">
-                  1
-                </div>
-                <div className=" flex items-center justify-center border border-solid border-[#f3f4f4] w-8 h-8 bg-[#f3f4f4] cursor-pointer group">
+                <input
+                  value={quantity}
+                  readOnly
+                  type="text"
+                  className="border border-solid border-[#f3f4f4] w-8 h-8 text-center text-[14px] font-bold"
+                />
+
+                <div
+                  className=" flex items-center justify-center border border-solid border-[#f3f4f4] w-8 h-8 bg-[#f3f4f4] cursor-pointer group"
+                  onClick={handleIncrease}
+                >
                   <Plus
                     size={16}
                     strokeWidth={3}
                     className="stroke-[#a4aaaf] group-hover:stroke-blacknitransition-all ease-linear duration-150"
                   />
                 </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center mt-[15px] gap-[30px]">
+              <div
+                className="basis-1/2 2md:block hidden"
+                onClick={() =>
+                  handleAddToCart({
+                    id: data.data.productDetail.id,
+                    payload: quantity,
+                  })
+                }
+              >
+                {mutateElement.isPending ? (
+                  <Button disabled className={"rounded flex-auto w-full"}>
+                    <Loader2 className="animate-spin" />
+                    <span className="text-inheirt text-[14px] font-bold uppercase">
+                      Thêm vào giỏ
+                    </span>
+                  </Button>
+                ) : (
+                  <HoverEffectBox className={"w-full rounded"}>
+                    <span className="text-inheirt text-[14px] font-bold uppercase">
+                      Thêm vào giỏ
+                    </span>
+                  </HoverEffectBox>
+                )}
+              </div>
+              <div className="basis-1/2 ">
+                {mutatePurchaseNowMethods.isPending ? (
+                  <Button disabled className={"rounded flex-auto w-full"}>
+                    <Loader2 className="animate-spin" />
+                    <span className="text-inheirt text-[14px] font-bold uppercase">
+                      Mua ngay
+                    </span>
+                  </Button>
+                ) : (
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="text-[14px] text-[#fff] font-bold bg-redni w-full px-[25px] py-[10px] rounded uppercase"
+                    onClick={() => {
+                      mutatePurchaseNowMethods.mutate({
+                        id: data.data.productDetail.id,
+                        payload: quantity,
+                      });
+                    }}
+                  >
+                    Mua ngay
+                  </motion.button>
+                )}
               </div>
             </div>
             <div className="warranty flex md:items-center gap-3 mt-[15px] md:flex-row flex-col">
@@ -581,28 +954,14 @@ const ProductDetail = () => {
                 </span>
               </div>
             </div>
-            <div className="flex items-center justify-center mt-[15px] gap-3">
-              <div className="basis-1/2 2md:block hidden">
-                <HoverEffectBox className={"w-full rounded"}>
-                  <span className="text-inheirt text-[14px] font-bold uppercase">
-                    Thêm vào giỏ
-                  </span>
-                </HoverEffectBox>
-              </div>
-              <div className="basis-1/2 ">
-                <button className="text-[14px] text-[#fff] font-bold bg-redni w-full px-[25px] py-[10px] rounded uppercase">
-                  Mua ngay
-                </button>
-              </div>
-            </div>
           </div>
-          <div className="bg-[#fff] mt-[15px] p-[15px]">
+          {/* <div className="bg-[#fff] mt-[15px] p-[15px]">
             <div className="grid max-768:auto-cols-[85%]  md:auto-cols-[60%] max-1280:grid-flow-col max-1280:gap-4 max-1280:overflow-x-auto max-1280:no-scrollbar xl:grid-cols-2 xl:gap-[15px]">
               <CouponCard />
               <CouponCard />
               <CouponCard />
             </div>
-          </div>
+          </div> */}
           <div className="bg-[#fff] mt-[15px] p-[15px]">
             <Tabs defaultValue="description" className="w-full">
               <TabsList className="bg-none w-full flex justify-start border-b-[2px] border-[#ededed]">
@@ -624,25 +983,32 @@ const ProductDetail = () => {
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="description" className={" pt-[20px]"}>
-                <motion.div
-                  className={` overflow-hidden`}
-                  initial={{ height: 220 }}
-                  animate={{
-                    height: readMore ? "auto" : 220,
-                  }}
-                  transition={{
-                    duration: 0.2,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <div
-                    className="description-content"
-                    ref={contentRef}
-                    dangerouslySetInnerHTML={{
-                      __html: data.data.productDetail.description,
+                {data.data.productDetail.description ? (
+                  <motion.div
+                    className={` overflow-hidden`}
+                    initial={{ height: 220 }}
+                    animate={{
+                      height: readMore ? "auto" : 220,
                     }}
-                  />
-                </motion.div>
+                    transition={{
+                      duration: 0.2,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <div
+                      className="description-content"
+                      ref={contentRef}
+                      dangerouslySetInnerHTML={{
+                        __html: data.data.productDetail.description,
+                      }}
+                    />
+                  </motion.div>
+                ) : (
+                  <div className="text-[14px] text-center">
+                    Chưa có mô tả cho sản phẩm này
+                  </div>
+                )}
+
                 {descriptionContentHeight > 220 ? (
                   <div className={`desc-btn ${readMore ? "mt-[30px]" : ""}`}>
                     <button
@@ -666,27 +1032,216 @@ const ProductDetail = () => {
                   ""
                 )}
               </TabsContent>
-              <TabsContent value="judgement">đánh giá</TabsContent>
+              <TabsContent value="judgement">
+                <div className="comments"></div>
+                <p className="text-[14px] font-medium mb-[15px]">
+                  Chưa có đánh giá cho sản phẩm này
+                </p>
+                <form className="judge-form p-5 border border-solid border-[#ededed] rounded-sm">
+                  <h2 className="text-[20px] font-bold">Thêm đánh giá</h2>
+                  <div className="flex items-start justify-between">
+                    <div className="basis-1/3">
+                      <p className="text-[14px] text-[#333]  mt-[15px] font-medium">
+                        Đánh giá chung
+                      </p>
+                      <Controller
+                        name="rate"
+                        control={control}
+                        rules={{
+                          required: "Vui lòng đánh giá trước khi gửi feedback",
+                        }}
+                        render={({ field }) => (
+                          <Rate {...field} className="ant-rate-custom " />
+                        )}
+                      />
+                      {errors?.rate && (
+                        <p className="text-redichi text-[13px] mt-[4px]">
+                          {errors.rate.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="basis-2/3 flex justify-end flex-auto">
+                      <Controller
+                        name="imageData"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <>
+                            <ImageUploader
+                              onChange={field.onChange}
+                              setError={setError}
+                              clearErrors={clearErrors}
+                            />
+                            {fieldState.error && (
+                              <p style={{ color: "red" }}>
+                                {fieldState.error.message}
+                              </p>
+                            )}
+                          </>
+                        )}
+                      />
+                      {errors?.imageData && (
+                        <p className="text-redichi text-[13px] mt-[4px]">
+                          {errors.imageData.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-[15px]">
+                    <label
+                      htmlFor="judge"
+                      className="text-blackni  text-[14px] font-bold"
+                    >
+                      Chi tiết đánh giá
+                    </label>
+                    <Controller
+                      name="feedback"
+                      control={control}
+                      rules={{
+                        required: "Vui lòng điền đánh giá chi tiết",
+                      }}
+                      render={({ field }) => (
+                        <Textarea
+                          placeholder="Type your message here."
+                          id="judge"
+                          {...field}
+                        />
+                      )}
+                    />
+                    {errors?.feedback && (
+                      <p className="text-redichi text-[13px] mt-[4px]">
+                        {errors.feedback.message}
+                      </p>
+                    )}
+                  </div>
+                  {mutateFeedBack.isPending ? (
+                    <Button disabled className={"rounded mt-[15px]"}>
+                      <Loader2 className="animate-spin" />
+                      <span className="text-inheirt text-[14px] font-bold uppercase">
+                        Đang xử lí
+                      </span>
+                    </Button>
+                  ) : (
+                    <Button
+                      className={"mt-[15px]"}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSubmit(onSubmit)();
+                      }}
+                    >
+                      Gửi ngay
+                    </Button>
+                  )}
+                </form>
+              </TabsContent>
             </Tabs>
           </div>
         </div>
         ;
       </div>
+      {data.data.productRelevant.length > 0 && (
+        <div className=" home-collection md:p-[15px] relative md:px-0">
+          <div className="pr-[100px] flex items-center gap-3">
+            <h2 className="collection-title capitalize max-768:pl-[15px]">
+              Xem thêm sản phẩm cùng loại
+            </h2>
+          </div>
+          <div className="mt-[15px] ">
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full group "
+            >
+              <CarouselContent className={""}>
+                {data.data.productRelevant.map((product) => (
+                  <CarouselItem key={product.slug} className="card-item">
+                    <div className="md:px-[6px] px-[2px] h-full">
+                      <Card className={"rounded-none"}>
+                        <CardContent className="flex h-full items-center justify-center p-0">
+                          <ProductCard productData={product} />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <div className="absolute top-[12px] max-768:top-[-6px] right-[20px] flex items-center gap-4">
+                <CarouselPrevious
+                  className={"bg-[#fff] shadow-carousel text-blackni"}
+                />
+                <CarouselNext
+                  className={"bg-[#fff] shadow-carousel text-blackni"}
+                />
+              </div>
+            </Carousel>
+          </div>
+        </div>
+      )}
+      {viewedData.data.viewedProducts.length > 0 && (
+        <div className=" home-collection md:p-[15px] relative md:px-0">
+          <div className="pr-[100px] flex items-center gap-3">
+            <h2 className="collection-title capitalize max-768:pl-[15px]">
+              Các sản phẩm đã xem
+            </h2>
+          </div>
+          <div className="mt-[15px] ">
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full group "
+            >
+              <CarouselContent className={""}>
+                {viewedData.data.viewedProducts.map((product) => (
+                  <CarouselItem key={product.slug} className="card-item">
+                    <div className="md:px-[6px] px-[2px] h-full">
+                      <Card className={"rounded-none"}>
+                        <CardContent className="flex h-full items-center justify-center p-0">
+                          <ProductCard productData={product} />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <div className="absolute top-[12px] max-768:top-[-6px] right-[20px] flex items-center gap-4">
+                <CarouselPrevious
+                  className={"bg-[#fff] shadow-carousel text-blackni"}
+                />
+                <CarouselNext
+                  className={"bg-[#fff] shadow-carousel text-blackni"}
+                />
+              </div>
+            </Carousel>
+          </div>
+        </div>
+      )}
       <div className="fixed bottom-0 right-0 left-0  text-[#fff] bg-[#fff] flex items-center justify-between py-[12px] px-[20px] 2md:hidden pt-2  border-t z-[50]">
         <div className="flex items-center w-[720px] mx-auto gap-4">
           <div className="flex justify-center ">
             <div className="flex items-center mx-auto">
-              <div className=" flex items-center justify-center  border border-solid border-[#f3f4f4] w-10 h-10 bg-[#f3f4f4] cursor-pointer group">
+              <div
+                className=" flex items-center justify-center  border border-solid border-[#f3f4f4] w-10 h-10 bg-[#f3f4f4] cursor-pointer group"
+                onClick={handleDecrease}
+              >
                 <Minus
                   size={16}
                   strokeWidth={3}
                   className="stroke-[#a4aaaf] group-hover:stroke-blacknitransition-all ease-linear duration-150"
                 />
               </div>
-              <div className="border border-solid border-[#f3f4f4] w-10 h-10 flex items-center justify-center text-[14px] font-bold text-[#000]">
-                1
-              </div>
-              <div className=" flex items-center justify-center border border-solid border-[#f3f4f4] w-10 h-10 bg-[#f3f4f4] cursor-pointer group">
+              <input
+                readOnly
+                type="text"
+                value={quantity}
+                className="border border-solid border-[#f3f4f4] w-10 h-10 text-center text-[14px] font-bold text-[#000]"
+              />
+
+              <div
+                className=" flex items-center justify-center border border-solid border-[#f3f4f4] w-10 h-10 bg-[#f3f4f4] cursor-pointer group"
+                onClick={handleIncrease}
+              >
                 <Plus
                   size={16}
                   strokeWidth={3}
@@ -695,99 +1250,100 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
-
-          <Drawer>
-            <DrawerTrigger
-              asChild
-              className="cursor-pointer text-[#fff] py-2 pl-4"
-            >
-              <button className="block p-[10px] flex-auto bg-redni text-[#fff] text-[13px] font-medium cursor-pointe text-center uppercase rounded cursor-pointer">
-                <span>Thêm vào giỏ</span>
-              </button>
-            </DrawerTrigger>
-            <DrawerContent>
-              <DrawerHeader className="text-left rounded-t-[10px] bg-redni">
-                <DrawerTitle>
-                  <div className="text-[15px]  font-medium text-[#fff] flex items-center justify-between">
-                    <span className="text-[14px] font-normal basis-1/3">
-                      7 sản phẩm
-                    </span>
-                    <span className="font-bold basis-1/3 text-center">
-                      2,170,000đ
-                    </span>
-                    <DrawerClose className="text-[#fff] basis-1/3 text-right">
-                      <X size={20} className="ml-auto" />
-                    </DrawerClose>
-                  </div>
-                </DrawerTitle>
-                <DrawerDescription className={"hidden"}>
-                  Thông tin giỏ hàng
-                </DrawerDescription>
-              </DrawerHeader>
-              <div className="py-[15px] ">
-                <div className="max-h-[360px] overflow-y-scroll cart-view-scroll">
-                  <ul className=" ">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <li
-                        className="flex px-[12px] border-b border-solid border-shop py-[20px]"
-                        key={index}
-                      >
-                        <div className="w-[75px] h-[75px] overflow-hidden border border-solid cart-item mr-[15px] flex-shrink-0">
-                          <img
-                            src="https://product.hstatic.net/200000796751/product/2002535_5b3eede60829490499619fabe5dbd0a9_small.jpg"
-                            alt=""
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="flex-auto">
-                          <div className="font-semibold text-[14px] pr-[28px] text-[#000] relative">
-                            Bát ăn snack gốm sứ ANNE màu ngẫu nhiên H6.5xD11.5
-                            <div className="absolute right-0 top-0 center-y cursor-pointer">
-                              <X className="text-blackni" size={16} />
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between ">
-                            <div className="flex items-center mt-2">
-                              <button className="bg-[#f9f9f9] border border-solid border-[#f3f4f4] rounded-[3px] text-center h-[28px] w-[28px] flex items-center justify-center cursor-pointer">
-                                <Minus className="text-blackni" size={16} />
-                              </button>
-                              <span className="text-[14px] font-bold text-[#252a2b] border border-solid border-[#f3f4f4] text-center h-[28px] w-[38px] bg-[#fff] flex items-center justify-center">
-                                1
-                              </span>
-                              <button className="bg-[#f9f9f9] border border-solid border-[#f3f4f4] rounded-[3px] text-center h-[28px] w-[28px] flex items-center justify-center cursor-pointer">
-                                <Plus className="text-blackni" size={16} />
-                              </button>
-                            </div>
-                            <span className="text-blacknitext-[14px] font-bold">
-                              29.000đ
-                            </span>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="  mb-[20px] flex justify-between items-center py-[10px] px-[12px] leading-6">
-                  <span className="text-blackni uppercase text-[14px]">
-                    Tổng tiền :
-                  </span>
-                  <span className="text-redni font-bold text-[16px] ">
-                    29.000đ
-                  </span>
-                </div>
-              </div>
-              <DrawerFooter className="pt-2">
-                <DrawerClose
-                  asChild
-                  className="block p-[10px] mt-[5px] w-full bg-redni text-[#fff] text-[13px] font-medium cursor-pointe text-center uppercase"
+          {!isDesktop && (
+            <Drawer open={open} onOpenChange={setOpen} modal={true}>
+              <DrawerTrigger className="cursor-pointer text-[#fff] py-2 pl-4 flex-auto w-full">
+                <div
+                  className="block p-[10px] flex-auto bg-redni text-[#fff] text-[13px] font-medium cursor-pointe text-center uppercase rounded cursor-pointer"
+                  onClick={() =>
+                    handleAddToCart({
+                      id: data.data.productDetail.id,
+                      payload: quantity,
+                    })
+                  }
                 >
-                  <Link to={"/"}>Xem giỏ hàng</Link>
-                </DrawerClose>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+                  <span>Thêm vào giỏ</span>
+                </div>
+              </DrawerTrigger>
+              <DrawerContent>
+                <DrawerHeader className="text-left rounded-t-[10px] bg-redni ">
+                  <DrawerTitle>
+                    <div className="text-[15px]  font-medium text-[#fff] flex items-center justify-between">
+                      <span className=" basis-1/3 text-[14px] font-normal">
+                        {cartData?.length} sản phẩm
+                      </span>
+                      <span className=" basis-1/3  text-center font-bold ">
+                        {formatPrice(
+                          cartData?.reduce((initial, result) => {
+                            return initial + parseInt(result.price);
+                          }, 0)
+                        )}
+                      </span>
+                      <div className="basis-1/3 flex justify-end">
+                        <DrawerClose className="text-[#fff]">
+                          <X stroke="#fff" size={20} />
+                        </DrawerClose>
+                      </div>
+                    </div>
+                  </DrawerTitle>
+                  <DrawerDescription className={"hidden"}>
+                    Thông tin giỏ hàng
+                  </DrawerDescription>
+                </DrawerHeader>
+                <div className="py-[15px] ">
+                  {cartData?.length > 0 ? (
+                    <div className="max-h-[360px] overflow-y-scroll cart-view-scroll">
+                      <ul className=" ">
+                        {cartData?.map((product) => (
+                          <CartItem product={product} key={product.id} />
+                        ))}
+                      </ul>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center flex-col gap-3 py-4  border-b border-solid border-shop">
+                      <ShoppingCart
+                        size={30}
+                        strokeWidth={1.4}
+                        className="text-redichi"
+                      />
+                      <span className="text-[13px] text-vendor">
+                        Chưa có sản phẩm nào trong giỏ hàng{" "}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="  mb-[20px] flex justify-between items-center py-[10px] leading-6 px-[12px]">
+                    <span className="text-blackni uppercase text-[14px]">
+                      Tổng tiền :
+                    </span>
+                    <span className="text-redni font-bold text-[16px] ">
+                      {formatPrice(
+                        cartData?.reduce((initial, result) => {
+                          return (
+                            initial +
+                            parseInt(result.price) * parseInt(result.quantity)
+                          );
+                        }, 0)
+                      )}
+                    </span>
+                  </div>
+                </div>
+                <DrawerFooter className="pt-2">
+                  <DrawerClose
+                    asChild
+                    className="block p-[10px] mt-[5px] w-full bg-redni text-[#fff] text-[13px] font-medium cursor-pointe text-center uppercase"
+                  >
+                    <Link to={"/cart"}>Xem giỏ hàng</Link>
+                  </DrawerClose>
+                </DrawerFooter>
+              </DrawerContent>
+            </Drawer>
+          )}
         </div>
       </div>
+      {mutateFeedBack.isPending && (
+        <div className="fixed  inset-0 z-[999] bg-transparent"></div>
+      )}
     </div>
   );
 };

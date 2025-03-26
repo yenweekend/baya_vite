@@ -1,219 +1,329 @@
-  const formRef = useRef();
-  const [payment, setPayment] = useState("cod");
-  const [orderCity, setOrderCity] = useState();
-  const [orderDistrict, setOrderDistrict] = useState();
-  const [orderWard, setOrderWard] = useState();
-  const [province, setProvince] = useState(null);
-  const [district, setDistrict] = useState(null);
-  const [ward, setWard] = useState(null);
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await axios.get(`${apiUrl}api/getprovince`);
-        if (response?.data?.success) {
-          setProvince(response?.data?.data);
-          return;
-        }
-        console.log(response?.data?.success);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
-  const handleChange = async (value, objectValues) => {
-    if (!objectValues.id) {
-      setOrderWard(objectValues);
-      return 1;
-    }
-    if (objectValues.id == 1) {
-      setOrderCity(objectValues);
-      setOrderDistrict(null);
-      setOrderWard(null);
-    } else if (objectValues.id == 2) {
-      setOrderDistrict(objectValues);
-      setOrderWard(null);
-    }
-    try {
-      const response = await axios.post(`${apiUrl}api/address`, objectValues);
-      if (response?.data?.success) {
-        if (!response?.data?.type) {
-          setWard(response?.data?.data);
-          return;
-        }
-        setDistrict(response?.data?.data);
-        return 1;
-      }
-      console.log(response?.data?.message);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const data = {
-      city: orderCity.label,
-      district: orderDistrict.label,
-      ward: orderWard.label,
-      payment,
-    };
-    console.log(data);
-  };
-  const handleChangeRadio = (e) => {
-    setPayment(e.target.value);
-  };
-   <form onSubmit={handleSubmit}>
-        <div className="flex items-start gap-[20px]">
-          <div className="flex_625 ">
-            <h3 className="font-medium text-[18px] mb-4">
-              Thông tin người mua hàng
-            </h3>
-            <div>
-              <div className="flex items-center gap-[10px] flex-wrap">
-                <div className="flex-auto w-[calc((100%/2)-10px)] ">
-                  <input
-                    className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
-                    type="text"
-                    name="firstname"
-                  ></input>
-                </div>
-                <div className="flex-auto w-[calc((100%/2)-10px)]">
-                  <input
-                    className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
-                    type="text"
-                    name="lastname"
-                  ></input>
-                </div>
-              </div>
-              <div>
-                <div className="py-3">
-                  <label className="flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="hidden input_checkbox"
-                      onChange={(e) => {
-                        if (e.target.checked && formRef && formRef?.current) {
-                          formRef.current.classList.remove("hidden");
-                          formRef.current.classList.add("block");
-                          return;
-                        }
-                        formRef.current.classList.add("hidden");
-                        formRef.current.classList.remove("block");
-                      }}
-                      name="recipent"
-                    ></input>
-                    <div className="input_filter relative mr-2">
-                      <div className="absolute "></div>
+ {/* <div className="basis-[60%] pt-[56px] 2md:pr-[66px]   2md:border-[#eee] 2md:border-r-[2px]">
+          <h1 className="">
+            <a
+              href="/"
+              className="text-[28px]  text-blackni"
+              style={{
+                fontFamily: " Helvetica Neue, sans-serif",
+              }}
+            >
+              Baya
+            </a>
+          </h1>
+          <div className="2md:hidden">
+            <Accordion
+              type="single"
+              collapsible
+              className="w-full border-none"
+              defaultValue="item-1"
+            >
+              <AccordionItem value="item-1">
+                <AccordionTrigger
+                  className={
+                    " py-[10px]  text-[13px] font-bold text-[#338dbc] border-y  border-[#eee] pl-2 pr-[80px] border-none relative"
+                  }
+                >
+                  <div className="flex items-center gap-2 ">
+                    <ShoppingCart size={20} stroke="#338dbc" />
+                    Hiển thị thông tin đơn hàng
+                    <span className="absolute right-2 center-y text-[#333]">
+                      68.000đ
+                    </span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className={"p-[10px] border-none"}>
+                  <div className="flex flex-col border-b border-b-solid border-b-[#d9d9d9]">
+                    {productInCheckOut.map((product) => (
+                      <>
+                        <div className="flex pb-[15px]" key={product.id}>
+                          <div className="w-[60px] h-[60px] block relative flex-shrink-0">
+                            <img
+                              src={product.thumbnail}
+                              alt={product.title}
+                              className="h-full w-full object-cover border border-solid border-shop flex-shrink-0"
+                            />
+
+                            <div
+                              className="absolute w-5 h-5 bg-[#8f9bb3] text-[#fff] flex items-center justify-center text-[12px] rounded-full top-[-7px] right-[-10px] cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                            >
+                              {product.quantity}
+                            </div>
+                          </div>
+                          <div className=" px-[18px] flex flex-col w-[60%]">
+                            <p className="text-blackni text-[14px] line-clamp-2">
+                              {product.title}
+                            </p>
+                            <span className="text-[#8f9bb3]  text-[14px]">
+                              {formatPrice(parseInt(product.price))}
+                            </span>
+                          </div>
+                          <div className="ml-auto flex items-center justify-center">
+                            <span className="text-[14px] text-[#4b4b4b]  mb-2">
+                              {formatPrice(
+                                parseInt(product.price) *
+                                  parseInt(product.quantity)
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                      </>
+                    ))}
+                  </div>
+                  <div className="border-b border-b-solid border-b-[#d9d9d9] py-[15px] flex items-stretch gap-2">
+                    <div className="form-group">
+                      <div
+                        className="relative h-10"
+                        style={{
+                          boxShadow: "0 0 0 1px #d9d9d9",
+                        }}
+                      >
+                        <input
+                          type="text"
+                          autoComplete="off"
+                          id="coupon-field"
+                          name="coupon-field"
+                          onChange={(event) =>
+                            setCouponValue(event.target.value)
+                          }
+                          className="peer w-full h-full py-[10px] px-5"
+                        />
+                        <label
+                          htmlFor="coupon-field"
+                          className={`absolute text-vendor transition-all ease-linear duration-75  bg-[#fff] px-2 h-10 
+                    ${
+                      couponValue.trim().length > 0
+                        ? "left-2 -top-3 text-[14px] h-[20px] leading-[20px]"
+                        : "text-[16px] top-0 left-3 peer-focus:left-2  peer-focus:-top-3 peer-focus:text-[14px]  peer-focus:h-[20px] peer-focus:leading-[20px] leading-[40px]"
+                    }
+                `}
+                        >
+                          Mã giảm giá
+                        </label>
+                      </div>
                     </div>
-                    Người nhận là người khác
-                  </label>
-                </div>
-                <div className="hidden" ref={formRef}>
-                  <div className="flex items-center gap-[10px] flex-wrap ">
-                    <div className=" w-[calc((100%/2)-10px)]">
-                      <input
-                        className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
-                        type="text"
-                        placeholder="Tên"
-                        name="recipent_firstname"
-                      ></input>
+                    <button
+                      onClick={handleSubmitCoupon}
+                      type="button"
+                      className="bg-[#338dbc] px-5 whitespace-nowrap text-[#fff] font-medium"
+                    >
+                      Sử dụng
+                    </button>
+                  </div>
+                  <div className="border-b border-b-solid border-b-[#d9d9d9] py-[15px]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[14px] text-[#8f9bb3]">
+                        Tạm tính
+                      </span>
+                      <span className="text-[14px] text-[#8f9bb3]">
+                        {formatPrice(
+                          productInCheckOut.reduce((initial, result) => {
+                            return (
+                              initial +
+                              parseInt(result.price) * parseInt(result.quantity)
+                            );
+                          }, 0)
+                        )}{" "}
+                      </span>
                     </div>
-                    <div className=" w-[calc((100%/2)-10px)]">
-                      <input
-                        className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
-                        type="text"
-                        placeholder="Họ"
-                        name="recipent_lastname"
-                      ></input>
-                    </div>
-                    <div className=" w-[calc((100%/2)-10px)]">
-                      <input
-                        className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
-                        type="text"
-                        placeholder="+84"
-                        name="recipent_phone"
-                      ></input>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[14px] text-[#8f9bb3]">
+                        Phí vận chuyển
+                      </span>
+                      <span className="text-[14px] text-[#8f9bb3]">0đ</span>
                     </div>
                   </div>
-                </div>
+                  <div className="border-b border-b-solid py-[15px]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[14px] text-[#8f9bb3]">
+                        Tổng cộng
+                      </span>
+                      <span className=" text-blackni text-[20px]">
+                        <span className="text-[14px] uppercase text-vendor mr-3">
+                          VND
+                        </span>
+                        {formatPrice(
+                          productInCheckOut.reduce((initial, result) => {
+                            return (
+                              initial +
+                              parseInt(result.price) * parseInt(result.quantity)
+                            );
+                          }, 0)
+                        )}{" "}
+                      </span>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+          <ul className="mt-[15px]  items-center mb-[15px] 2md:flex hidden">
+            <li className=" [&:first-child]:pl-0 px-[15px] relative flex items-center">
+              <div className="absolute -right-[9px] center-y">
+                <ChevronRight size={14} className="stroke-vendor " />
               </div>
-            </div>
-            <h3 className="font-medium text-[18px] mb-4">
-              Thông tin người nhận hàng
-            </h3>
-            <div>
-              <div className="flex items-center gap-[10px] flex-wrap">
-                <div className="flex-auto w-full ">
-                  <Select
-                    showSearch
-                    style={{
-                      width: "100%",
-                      height: "50px",
-                    }}
-                    placeholder="Tỉnh/Thành phố"
-                    options={province}
-                    virtual={false}
-                    optionFilterProp="label"
-                    filterOption={(input, option) =>
-                      (slugify(option?.label) ?? "").includes(slugify(input))
-                    }
-                    onChange={handleChange}
-                    value={orderCity?.value}
-                  />
-                </div>
-                <div className="flex-auto w-[calc((100%/2)-10px)] relative">
-                  <Select
-                    showSearch
-                    style={{
-                      width: "100%",
-                      height: "50px",
-                    }}
-                    placeholder="Quận/huyện"
-                    options={district}
-                    virtual={false}
-                    onChange={handleChange}
-                    optionFilterProp="label"
-                    filterOption={(input, option) =>
-                      (slugify(option?.label) ?? "").includes(slugify(input))
-                    }
-                    value={orderDistrict?.value}
-                  />
-                </div>
-                <div className="flex-auto w-[calc((100%/2)-10px)] relative">
-                  <Select
-                    showSearch
-                    style={{
-                      width: "100%",
-                      height: "50px",
-                    }}
-                    placeholder="Phường/xã"
-                    options={ward}
-                    virtual={false}
-                    optionFilterProp="label"
-                    onChange={handleChange}
-                    filterOption={(input, option) =>
-                      (slugify(option?.label) ?? "").includes(slugify(input))
-                    }
-                    value={orderWard?.value}
-                  />
-                </div>
-                <div className="flex-auto w-full">
-                  <input
-                    className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
-                    type="text"
-                    placeholder="Tòa nhà, số nhà, tên đường"
-                    name="addressline1"
-                  ></input>
-                </div>
-                <div className="flex-auto w-full">
-                  <input
-                    className="outline-none border-solid border h-[50px] pl-5 rounded-[8px] border-[#686D76] inline-block w-full"
-                    type="text"
-                    placeholder="Tên địa chỉ (Vd: văn phòng, nhà ...)"
-                    name="addressline2"
-                  ></input>
-                </div>
+              <Link to="/cart" className=" text-[12px] font-light">
+                Giỏ hàng
+              </Link>
+            </li>
+            <li className=" [&:first-child]:pl-0 px-[15px] text-[12px] relative font-light">
+              <div className="absolute -right-[9px] center-y">
+                <ChevronRight size={14} className="stroke-vendor " />
               </div>
+              Thông tin giao hàng
+            </li>
+            <li className=" [&:first-child]:pl-0 px-[15px] text-[12px] relative font-light text-vendor">
+              Phương thức thanh toán
+            </li>
+          </ul>
+          <div className=" ">
+            <h1 className="text-[20px] font-semibold text-blackni mb-5">
+              Phương thức vận chuyển
+            </h1>
+            <div className="p-[18px] border border-solid border-[#d9d9d9]">
+              <label
+                htmlFor="delivery-method"
+                className="checkbox-payment  flex items-center cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="delivery-method"
+                  name="delivery-method"
+                  value={"delivery-method"}
+                  checked={true}
+                  className="appearance-none outline-none p-[9px] relative "
+                />
+                <span className=" text-[14px] text-[#737373] ml-[10px]">
+                  Phí vận chuyển báo sau
+                </span>
+              </label>
             </div>
           </div>
-        </div>
-      </form>
+          <div className=" ">
+            <h1 className="text-[20px] font-semibold text-blackni mb-5">
+              Phương thức thanh toán
+            </h1>
+            <div className="flex flex-col">
+              <div className="p-[18px] border  [&:nth-child(-n+2)]:border-b-transparent  border-solid border-[#d9d9d9]">
+                <label
+                  htmlFor="code"
+                  className="checkbox-payment  flex items-center cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    id="code"
+                    {...register("payment", {
+                      required: {
+                        value: true,
+                        message: "Vui lòng chọn phương thức thanh toán",
+                      },
+                    })}
+                    value={"code"}
+                    className="appearance-none relative outline-none p-[9px]   "
+                  />
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 overflow-hidden flex-shrink-0 flex ml-[10px]">
+                      <img
+                        src="	https://hstatic.net/0/0/global/design/seller/image/payment/cod.svg?v=6"
+                        alt=""
+                        className="w-full h-ful object-cover border border-solid border-[#d9d9d9] rounded"
+                      />
+                    </div>
+                    <span className=" text-[14px] text-[#737373] ml-[10px]">
+                      Thanh toán khi giao hàng (COD)
+                    </span>
+                  </div>
+                </label>
+              </div>
+              <div className="p-[18px] border  [&:nth-child(-n+2)]:border-b-transparent  border-solid border-[#d9d9d9]">
+                <label
+                  htmlFor="momo"
+                  className="checkbox-payment  flex items-center cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    id="momo"
+                    {...register("payment", {
+                      required: {
+                        value: true,
+                        message: "Vui lòng chọn phương thức thanh toán",
+                      },
+                    })}
+                    value={"momo"}
+                    className="appearance-none relative outline-none p-[9px]  "
+                  />
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 overflow-hidden flex-shrink-0 flex ml-[10px]">
+                      <img
+                        src="	https://hstatic.net/0/0/global/design/seller/image/payment/momo.svg?v=6"
+                        alt=""
+                        className="w-full h-ful object-cover border border-solid border-[#d9d9d9] rounded"
+                      />
+                    </div>
+                    <span className=" text-[14px] text-[#737373] ml-[10px]">
+                      Ví MOMO
+                    </span>
+                  </div>
+                </label>
+              </div>
+              <div className="p-[18px] border  [&:nth-child(-n+2)]:border-b-transparent  border-solid border-[#d9d9d9]">
+                <label
+                  htmlFor="vnpay"
+                  className="checkbox-payment  flex items-center cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    id="vnpay"
+                    {...register("payment", {
+                      required: {
+                        value: true,
+                        message: "Vui lòng chọn phương thức thanh toán",
+                      },
+                    })}
+                    value={"vnpay"}
+                    className="appearance-none relative outline-none p-[9px]  "
+                  />
+                  <div className="flex items-center ">
+                    <div className="w-10 h-10 overflow-hidden flex-shrink-0 flex ml-[10px]">
+                      <img
+                        src="https://hstatic.net/0/0/global/design/seller/image/payment/vnpay_new.svg?v=6"
+                        alt=""
+                        className="w-full h-ful object-cover border border-solid border-[#d9d9d9] rounded"
+                      />
+                    </div>
+                    <div className=" ml-[10px]">
+                      <span className=" text-[14px] text-[#737373] ">
+                        Thẻ ATM/Visa/Master/JCB/QR Pay qua cổng VNPAY
+                      </span>
+                      <img
+                        src="https://hstatic.net/0/0/global/design/seller/image/payment/atm_visa_master_jcb.svg?v=6"
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+            {errors.payment && (
+              <p className="text-[13px] text-redni font-medium mt-2">
+                {errors.payment.message}
+              </p>
+            )}
+          </div>
+          <div className="flex items-center justify-between mt-[30px]">
+            <a
+              href="/"
+              className="py-5 px-6 text-[14px] font-medium bg-redichi text-[#fff] text-center"
+            >
+              Giỏ hàng
+            </a>
+            <button
+              onClick={handleSubmit(onSubmit)}
+              className="text-[#fff] text-center py-5 px-6 text-[14px] font-medium bg-[#338dbc]"
+            >
+              Hoàn tất thanh toán
+            </button>
+          </div>
+        </div> */}

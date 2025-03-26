@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -16,10 +16,43 @@ import {
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { ProductCard } from "@/containers/components";
-import { ArrowDownAZ, Filter, X } from "lucide-react";
+import {
+  ArrowDownAZ,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  X,
+} from "lucide-react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-
+import { useQuery } from "@tanstack/react-query";
+import { getCollection } from "@/apis/category";
+import { useParams } from "react-router-dom";
+import { NotFound } from "@/containers/components";
+import { Pagination } from "antd";
+import CategorySkeleton from "@/containers/components/Skeleton/Category";
+const itemRender = (_, type, originalElement) => {
+  if (type === "prev") {
+    return (
+      <a className=" w-full h-full flex items-center justify-center">
+        <ChevronLeft size={20} stroke="#333" />
+      </a>
+    );
+  }
+  if (type === "next") {
+    return (
+      <a className=" w-full h-full flex items-center justify-center">
+        <ChevronRight size={20} stroke="#333" />
+      </a>
+    );
+  }
+  return originalElement;
+};
 const CollectionDetail = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectVendors, setSelectVendors] = useState([]);
+  const [selectPrices, setSelectPrices] = useState([]);
+  const [sort, setSort] = useState(null);
+  const { slug } = useParams();
   const [open, onOpenChange] = useState(false);
   React.useEffect(() => {
     if (open) {
@@ -28,7 +61,54 @@ const CollectionDetail = () => {
       document.body.classList.remove("locked-scroll");
     }
   }, [open]);
+  const handleVendorChange = React.useCallback((event, vendor) => {
+    setSelectVendors((state) => {
+      if (event.target.checked) {
+        return [...state, vendor];
+      } else {
+        return state.filter((item) => item.id !== vendor.id);
+      }
+    });
+  }, []);
+  const handlePriceChange = React.useCallback((event, price) => {
+    setSelectPrices((state) => {
+      if (event.target.checked) {
+        return [...state, price];
+      } else {
+        return state.filter((item) => item.value !== price.value);
+      }
+    });
+  }, []);
+  const prices = useMemo(() => {
+    return selectPrices.map((vendor) => vendor.value);
+  }, [selectPrices]);
+  const vendors = useMemo(() => {
+    return selectVendors.map((vendor) => vendor.title);
+  }, [selectVendors]);
   const isDesktop = useMediaQuery("(min-width: 990px)");
+  const { isPending, isError, error, data } = useQuery({
+    queryKey: ["collection", slug, currentPage, sort, vendors, prices],
+    queryFn: () => getCollection(slug, currentPage, sort, vendors, prices),
+    enabled: !!slug,
+    refetchOnWindowFocus: false,
+    keepPreviousData: true,
+    placeholderData: (prevData) => prevData, // Giữ dữ liệu cũ khi fetch
+
+    retry: false,
+  });
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [data]);
+  if (isPending) {
+    return <CategorySkeleton />;
+  }
+
+  if (isError) {
+    return <NotFound />;
+  }
   return (
     <div className="flex items-stretch">
       <div
@@ -48,7 +128,7 @@ const CollectionDetail = () => {
             <X stroke="#fff" size={20} />
           </button>
         </div>
-        <div className="max-990:overflow-y-auto h-[calc(100vh-110px)]  2md:sticky 2md:top-[30px]">
+        <div className="  2md:sticky 2md:top-[30px]">
           <div className="flex flex-col  2md:px-0 px-[15px] ">
             <div className=" bg-[#fff] 2md:shadow-card">
               <Accordion
@@ -215,60 +295,58 @@ const CollectionDetail = () => {
                 </AccordionItem>
               </Accordion>
             </div>
-            <div className="bg-[#fff] 2md:shadow-card mt-[15px] ">
-              <Accordion
-                type="single"
-                collapsible
-                className="w-full"
-                defaultValue="filter-1"
-              >
-                <AccordionItem value="filter-1">
-                  <AccordionTrigger
-                    className={
-                      " text-[16px] font-bold  py-[10px] px-[15px] border-b border-b-[#e9e9e9] border-solid"
-                    }
-                  >
-                    Nhà cung cấp
-                  </AccordionTrigger>
-                  <AccordionContent
-                    className={" border-b border-b-shop 2md:border-none"}
-                  >
-                    <ul className="pl-4 mt-[15px]">
-                      <li className="text-[15px]    hover:text-redichi  mb-3     transition-all ease-linear duration-150 ">
-                        <label
-                          htmlFor="brand-1"
-                          className="checkbox flex items-center gap-3 cursor-pointer group"
-                        >
-                          <input
-                            type="checkbox"
-                            id="brand-1"
-                            className="appearance-none outline-none p-2 relative"
-                          />
-                          <span className="text-[14px] text-blackni font-normal group-hover:text-redichi uppercase">
-                            WIN
-                          </span>
-                        </label>
-                      </li>
-                      <li className="text-[15px]    hover:text-redichi  mb-3     transition-all ease-linear duration-150 ">
-                        <label
-                          htmlFor="brand-2"
-                          className="checkbox flex items-center gap-3 cursor-pointer group"
-                        >
-                          <input
-                            type="checkbox"
-                            id="brand-2"
-                            className="appearance-none outline-none p-2 relative"
-                          />
-                          <span className="text-[14px] text-blackni font-normal group-hover:text-redichi uppercase">
-                            Chufa
-                          </span>
-                        </label>
-                      </li>
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
+            {data.data.vendors.length > 0 && (
+              <div className="bg-[#fff] 2md:shadow-card mt-[15px] ">
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="w-full"
+                  defaultValue="filter-1"
+                >
+                  <AccordionItem value="filter-1">
+                    <AccordionTrigger
+                      className={
+                        " text-[16px] font-bold  py-[10px] px-[15px] border-b border-b-[#e9e9e9] border-solid"
+                      }
+                    >
+                      Nhà cung cấp
+                    </AccordionTrigger>
+                    <AccordionContent
+                      className={" border-b border-b-shop 2md:border-none"}
+                    >
+                      <ul className="pl-4 mt-[15px]">
+                        {data.data.vendors.map((vendor) => (
+                          <li
+                            className="text-[15px]    hover:text-redichi  mb-3     transition-all ease-linear duration-150 "
+                            key={vendor.id}
+                          >
+                            <label
+                              htmlFor={vendor.slug}
+                              className="checkbox flex items-center gap-3 cursor-pointer group"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectVendors.some(
+                                  (v) => v.id === vendor.id
+                                )}
+                                id={vendor.slug}
+                                className="appearance-none outline-none p-2 relative"
+                                onChange={(event) => {
+                                  handleVendorChange(event, vendor);
+                                }}
+                              />
+                              <span className="text-[14px] text-blackni font-normal group-hover:text-redichi uppercase">
+                                {vendor.title}
+                              </span>
+                            </label>
+                          </li>
+                        ))}
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            )}
             <div className="bg-[#fff] 2md:shadow-card mt-[15px] ">
               <Accordion
                 type="single"
@@ -297,12 +375,22 @@ const CollectionDetail = () => {
                             type="checkbox"
                             id="p1"
                             className="appearance-none outline-none p-2 relative"
+                            checked={selectPrices.some(
+                              (price) => price.value === "lte_1000000"
+                            )}
+                            onChange={(event) => {
+                              handlePriceChange(event, {
+                                title: "Dưới 1.000.000₫",
+                                value: "lte_1000000",
+                              });
+                            }}
                           />
                           <span className="text-[14px] text-blackni font-normal group-hover:text-redichi uppercase">
                             Dưới 1.000.000₫
                           </span>
                         </label>
                       </li>
+
                       <li className="text-[15px]    hover:text-redichi  mb-3     transition-all ease-linear duration-150 ">
                         <label
                           htmlFor="p2"
@@ -312,12 +400,23 @@ const CollectionDetail = () => {
                             type="checkbox"
                             id="p2"
                             className="appearance-none outline-none p-2 relative"
+                            checked={selectPrices.some(
+                              (price) =>
+                                price.value === "between_1000000_2000000"
+                            )}
+                            onChange={(event) => {
+                              handlePriceChange(event, {
+                                title: "1.000.000₫ - 2.000.000₫",
+                                value: "between_1000000_2000000",
+                              });
+                            }}
                           />
                           <span className="text-[14px] text-blackni font-normal group-hover:text-redichi uppercase">
                             1.000.000₫ - 2.000.000₫
                           </span>
                         </label>
                       </li>
+
                       <li className="text-[15px]    hover:text-redichi  mb-3     transition-all ease-linear duration-150 ">
                         <label
                           htmlFor="p3"
@@ -327,12 +426,23 @@ const CollectionDetail = () => {
                             type="checkbox"
                             id="p3"
                             className="appearance-none outline-none p-2 relative"
+                            checked={selectPrices.some(
+                              (price) =>
+                                price.value === "between_2000000_3000000"
+                            )}
+                            onChange={(event) => {
+                              handlePriceChange(event, {
+                                title: "2.000.000₫ - 3.000.000₫",
+                                value: "between_2000000_3000000",
+                              });
+                            }}
                           />
                           <span className="text-[14px] text-blackni font-normal group-hover:text-redichi uppercase">
                             2.000.000₫ - 3.000.000₫
                           </span>
                         </label>
                       </li>
+
                       <li className="text-[15px]    hover:text-redichi  mb-3     transition-all ease-linear duration-150 ">
                         <label
                           htmlFor="p4"
@@ -342,12 +452,23 @@ const CollectionDetail = () => {
                             type="checkbox"
                             id="p4"
                             className="appearance-none outline-none p-2 relative"
+                            checked={selectPrices.some(
+                              (price) =>
+                                price.value === "between_3000000_4000000"
+                            )}
+                            onChange={(event) => {
+                              handlePriceChange(event, {
+                                title: "3.000.000₫ - 4.000.000₫",
+                                value: "between_3000000_4000000",
+                              });
+                            }}
                           />
                           <span className="text-[14px] text-blackni font-normal group-hover:text-redichi uppercase">
                             3.000.000₫ - 4.000.000₫
                           </span>
                         </label>
                       </li>
+
                       <li className="text-[15px]    hover:text-redichi  mb-3     transition-all ease-linear duration-150 ">
                         <label
                           htmlFor="p5"
@@ -357,6 +478,15 @@ const CollectionDetail = () => {
                             type="checkbox"
                             id="p5"
                             className="appearance-none outline-none p-2 relative"
+                            checked={selectPrices.some(
+                              (price) => price.value === "gte_4000000"
+                            )}
+                            onChange={(event) => {
+                              handlePriceChange(event, {
+                                title: "Trên 4.000.000₫",
+                                value: "gte_4000000",
+                              });
+                            }}
                           />
                           <span className="text-[14px] text-blackni font-normal group-hover:text-redichi uppercase">
                             Trên 4.000.000₫
@@ -394,11 +524,17 @@ const CollectionDetail = () => {
             </h2>
             <div className="flex items-center justify-between flex-auto md:mb-0 mb-[15px]">
               <span className="md:pl-[30px] text-[14px] font-normal">
-                <strong className="text-[14px]">21 </strong>
+                <strong className="text-[14px]">
+                  {data.data.products.length}{" "}
+                </strong>
                 sản phẩm
               </span>
               <div className="2md:block hidden">
-                <Select>
+                <Select
+                  onValueChange={(value) => {
+                    setSort(value);
+                  }}
+                >
                   <SelectTrigger className="w-[200px] bg-[#fff] border border-solid border-shop font-bold relative pl-[40px] ">
                     <div className="absolute left-3">
                       <ArrowDownAZ
@@ -411,11 +547,12 @@ const CollectionDetail = () => {
                   </SelectTrigger>
                   <SelectContent className={"bg-[#fff] shadow-card"}>
                     <SelectGroup>
-                      <SelectItem value="apple"> Apple</SelectItem>
-                      <SelectItem value="banana"> Banana</SelectItem>
-                      <SelectItem value="blueberry"> Blueberry</SelectItem>
-                      <SelectItem value="grapes"> Grapes</SelectItem>
-                      <SelectItem value="pineapple"> Pineapple</SelectItem>
+                      <SelectItem value="price_asc"> Giá: Tăng dần</SelectItem>
+                      <SelectItem value="price_desc"> Giá: Giảm dần</SelectItem>
+                      <SelectItem value="title_asc"> Tên: A-Z</SelectItem>
+                      <SelectItem value="title_desc"> Tên : Z-A</SelectItem>
+                      <SelectItem value="createdAt_asc"> Cũ nhất</SelectItem>
+                      <SelectItem value="createdAt_desc"> Mới nhất</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -438,39 +575,81 @@ const CollectionDetail = () => {
             </div>
           </div>
           <div className="flex items-center flex-wrap gap-3 md:mx-0 mx-[15px]">
-            <div className="flex items-center pl-[10px] pr-8 border-solid border border-shop rounded-full relative py-[2px] bg-[#fff]">
-              <span className="text-blackni text-[13px] font-normal">
-                Nhà cung cấp:{" "}
-              </span>
-              <strong className="text-[#5d5d5d] text-[13px] pl-2">
-                Chufo,wind
-              </strong>
-              <span className="absolute right-2 cursor-pointer">
-                <X size={20} className="stroke-blackni" strokeWidth={1.2} />
-              </span>
-            </div>
-            <div className="flex items-center pl-[10px] pr-8 border-solid border border-shop rounded-full relative py-[2px] bg-[#fff]">
-              <span className="text-blackni text-[13px] font-normal">Giá</span>
-              <strong className="text-[#5d5d5d] text-[13px] pl-2">
-                Trên 1.000.000đ
-              </strong>
-              <span className="absolute right-2 cursor-pointer">
-                <X size={20} className="stroke-blackni" strokeWidth={1.2} />
-              </span>
-            </div>
-            <button className=" px-3 cursor-pointer text-center  border-solid border border-shop rounded-full relative py-[2px] bg-[#fff] text-redtitle underline">
-              Xóa hết
-            </button>
-          </div>
-          <div className=" xl:grid-cols-5 mt-[15px] grid  grid-rows-2 gap-y-[6px] 2xl:gap-y-[12px] md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 md:flex-auto  grid-cols-2 ">
-            {Array.from({ length: 14 }).map((_, index) => (
-              <div
-                className=" flex-shrink-0 flex-grow-0 px-[2px] xl:px-[6px]"
-                key={index}
+            {selectVendors.length > 0 && (
+              <div className="flex items-center pl-[10px] pr-8 border-solid border border-shop rounded-full relative py-[2px] bg-[#fff]">
+                <span className="text-blackni text-[13px] font-normal">
+                  Nhà cung cấp:{" "}
+                </span>
+                <strong className="text-[#5d5d5d] text-[13px] pl-2">
+                  {Array.isArray(selectVendors) &&
+                    selectVendors.map((vendor) => vendor.title).join(", ")}
+                </strong>
+                <span
+                  className="absolute right-2 cursor-pointer"
+                  onClick={() => {
+                    setSelectVendors([]);
+                  }}
+                >
+                  <X size={20} className="stroke-blackni" strokeWidth={1.2} />
+                </span>
+              </div>
+            )}
+            {selectPrices.length > 0 && (
+              <div className="flex items-center pl-[10px] pr-8 border-solid border border-shop rounded-full relative py-[2px] bg-[#fff]">
+                <span className="text-blackni text-[13px] font-normal">
+                  Giá
+                </span>
+                <strong className="text-[#5d5d5d] text-[13px] pl-2">
+                  {selectPrices?.map((price) => price.title).join(", ")}
+                </strong>
+                <span
+                  className="absolute right-2 cursor-pointer"
+                  onClick={() => {
+                    setSelectPrices([]);
+                  }}
+                >
+                  <X size={20} className="stroke-blackni" strokeWidth={1.2} />
+                </span>
+              </div>
+            )}
+
+            {selectPrices.length > 0 || selectVendors.length > 0 ? (
+              <button
+                className="text-[13px] px-3 cursor-pointer text-center  border-solid border border-shop rounded-full relative py-[2px] bg-[#fff] text-redtitle underline"
+                onClick={() => {
+                  setSelectVendors([]);
+                  setSelectPrices([]);
+                }}
               >
-                <ProductCard />
+                Xóa hết
+              </button>
+            ) : (
+              ""
+            )}
+          </div>
+          <div className=" xl:grid-cols-5 mt-[15px] grid items-stretch grid-rows-2 gap-y-[6px] 2xl:gap-y-[12px] md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 md:flex-auto  grid-cols-2 ">
+            {data.data.products.map((product) => (
+              <div
+                className=" flex-shrink-0 flex-grow-0 px-[2px] xl:px-[6px] "
+                key={product.slug}
+              >
+                <ProductCard productData={product} />
               </div>
             ))}
+          </div>
+          <div className="pagination flex items-center justify-center mt-[15px]">
+            <Pagination
+              showSizeChanger={false}
+              total={data.data.count}
+              defaultPageSize={30}
+              current={currentPage}
+              defaultCurrent={1}
+              hideOnSinglePage
+              itemRender={itemRender}
+              onChange={(page, pageSize) => {
+                setCurrentPage(page);
+              }}
+            />
           </div>
         </div>
       </div>

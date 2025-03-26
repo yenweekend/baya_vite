@@ -55,7 +55,7 @@ const DropdownTrigger = React.forwardRef(
       <button
         ref={ref}
         className={cn(
-          "items-center justify-center flex  text-sm font-medium 2md:px-4 px-1",
+          "items-center justify-center flex  text-sm font-medium  px-1",
           className
         )}
         onClick={(e) => {
@@ -71,7 +71,7 @@ const DropdownTrigger = React.forwardRef(
 DropdownTrigger.displayName = "DropdownTrigger";
 
 const DropdownContent = React.forwardRef(
-  ({ className, children, open, ...props }, ref) => (
+  ({ className, children, open, arrow = true, ...props }, ref) => (
     <>
       <div
         ref={ref}
@@ -86,13 +86,15 @@ const DropdownContent = React.forwardRef(
       >
         {children}
       </div>
-      <div
-        className={`absolute z-[61] right-[20px] bottom-[-20px] ${
-          open ? "opacity-[1] visible top-[100%]" : "opacity-0 invisible "
-        }`}
-      >
-        <span className="w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[15px] border-b-[#fff]"></span>
-      </div>
+      {arrow && (
+        <div
+          className={`absolute z-[61] right-[20px] bottom-[-20px] ${
+            open ? "opacity-[1] visible top-[100%]" : "opacity-0 invisible "
+          }`}
+        >
+          <span className="w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[15px] border-b-[#fff]"></span>
+        </div>
+      )}
     </>
   )
 );

@@ -54,6 +54,10 @@ const Category = () => {
   const [sort, setSort] = useState(null);
   const { slug } = useParams();
   const [open, onOpenChange] = useState(false);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [slug]);
+
   React.useEffect(() => {
     if (open) {
       document.body.classList.add("locked-scroll");
@@ -92,9 +96,10 @@ const Category = () => {
     enabled: !!slug,
     keepPreviousData: true,
     placeholderData: (prevData) => prevData, // Giữ dữ liệu cũ khi fetch
-
     retry: false,
+    refetchOnWindowFocus: false,
   });
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -127,7 +132,7 @@ const Category = () => {
             <X stroke="#fff" size={20} />
           </button>
         </div>
-        <div className="max-990:overflow-y-auto h-[calc(100vh-110px)]  2md:sticky 2md:top-[30px]">
+        <div className="  2md:sticky 2md:top-[30px] max-h-screen overflow-y-auto">
           <div className="flex flex-col  2md:px-0 px-[15px] ">
             <div className=" bg-[#fff] 2md:shadow-card">
               <Accordion
@@ -294,56 +299,58 @@ const Category = () => {
                 </AccordionItem>
               </Accordion>
             </div>
-            <div className="bg-[#fff] 2md:shadow-card mt-[15px] ">
-              <Accordion
-                type="single"
-                collapsible
-                className="w-full"
-                defaultValue="filter-1"
-              >
-                <AccordionItem value="filter-1">
-                  <AccordionTrigger
-                    className={
-                      " text-[16px] font-bold  py-[10px] px-[15px] border-b border-b-[#e9e9e9] border-solid"
-                    }
-                  >
-                    Nhà cung cấp
-                  </AccordionTrigger>
-                  <AccordionContent
-                    className={" border-b border-b-shop 2md:border-none"}
-                  >
-                    <ul className="pl-4 mt-[15px]">
-                      {data.data.vendors.map((vendor) => (
-                        <li
-                          className="text-[15px]    hover:text-redichi  mb-3     transition-all ease-linear duration-150 "
-                          key={vendor.id}
-                        >
-                          <label
-                            htmlFor={vendor.slug}
-                            className="checkbox flex items-center gap-3 cursor-pointer group"
+            {data.data.vendors.length > 0 && (
+              <div className="bg-[#fff] 2md:shadow-card mt-[15px] ">
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="w-full"
+                  defaultValue="filter-1"
+                >
+                  <AccordionItem value="filter-1">
+                    <AccordionTrigger
+                      className={
+                        " text-[16px] font-bold  py-[10px] px-[15px] border-b border-b-[#e9e9e9] border-solid"
+                      }
+                    >
+                      Nhà cung cấp
+                    </AccordionTrigger>
+                    <AccordionContent
+                      className={" border-b border-b-shop 2md:border-none"}
+                    >
+                      <ul className="pl-4 mt-[15px]">
+                        {data.data.vendors.map((vendor) => (
+                          <li
+                            className="text-[15px]    hover:text-redichi  mb-3     transition-all ease-linear duration-150 "
+                            key={vendor.id}
                           >
-                            <input
-                              type="checkbox"
-                              checked={selectVendors.some(
-                                (v) => v.id === vendor.id
-                              )}
-                              id={vendor.slug}
-                              className="appearance-none outline-none p-2 relative"
-                              onChange={(event) => {
-                                handleVendorChange(event, vendor);
-                              }}
-                            />
-                            <span className="text-[14px] text-blackni font-normal group-hover:text-redichi uppercase">
-                              {vendor.title}
-                            </span>
-                          </label>
-                        </li>
-                      ))}
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
+                            <label
+                              htmlFor={vendor.slug}
+                              className="checkbox flex items-center gap-3 cursor-pointer group"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectVendors.some(
+                                  (v) => v.id === vendor.id
+                                )}
+                                id={vendor.slug}
+                                className="appearance-none outline-none p-2 relative"
+                                onChange={(event) => {
+                                  handleVendorChange(event, vendor);
+                                }}
+                              />
+                              <span className="text-[14px] text-blackni font-normal group-hover:text-redichi uppercase">
+                                {vendor.title}
+                              </span>
+                            </label>
+                          </li>
+                        ))}
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            )}
             <div className="bg-[#fff] 2md:shadow-card mt-[15px] ">
               <Accordion
                 type="single"
@@ -581,7 +588,12 @@ const Category = () => {
                   {Array.isArray(selectVendors) &&
                     selectVendors.map((vendor) => vendor.title).join(", ")}
                 </strong>
-                <span className="absolute right-2 cursor-pointer">
+                <span
+                  className="absolute right-2 cursor-pointer"
+                  onClick={() => {
+                    setSelectVendors([]);
+                  }}
+                >
                   <X size={20} className="stroke-blackni" strokeWidth={1.2} />
                 </span>
               </div>
@@ -594,14 +606,25 @@ const Category = () => {
                 <strong className="text-[#5d5d5d] text-[13px] pl-2">
                   {selectPrices?.map((price) => price.title).join(", ")}
                 </strong>
-                <span className="absolute right-2 cursor-pointer">
+                <span
+                  className="absolute right-2 cursor-pointer"
+                  onClick={() => {
+                    setSelectPrices([]);
+                  }}
+                >
                   <X size={20} className="stroke-blackni" strokeWidth={1.2} />
                 </span>
               </div>
             )}
 
             {selectPrices.length > 0 || selectVendors.length > 0 ? (
-              <button className="text-[13px] px-3 cursor-pointer text-center  border-solid border border-shop rounded-full relative py-[2px] bg-[#fff] text-redtitle underline">
+              <button
+                className="text-[13px] px-3 cursor-pointer text-center  border-solid border border-shop rounded-full relative py-[2px] bg-[#fff] text-redtitle underline"
+                onClick={() => {
+                  setSelectVendors([]);
+                  setSelectPrices([]);
+                }}
+              >
                 Xóa hết
               </button>
             ) : (

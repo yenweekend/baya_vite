@@ -4,11 +4,12 @@ import { message } from "antd";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { CouponContentButton } from "../ButtonTransition/CouponContentButton";
-
+import formatPrice from "@/helpers/formatPrice";
+import moment from "moment";
+import useMessage from "@/hooks/useMessage";
 const Coupon = ({ className, data }) => {
   const [copied, setCopied] = React.useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
-
+  const messageApi = useMessage();
   const handleCopy = (code) => {
     if (!copied) {
       navigator.clipboard
@@ -42,8 +43,6 @@ const Coupon = ({ className, data }) => {
   };
   return (
     <>
-      {contextHolder}
-
       <div
         className={cn(
           "bg-coupon  w-full border border-solid border-[rgba(0,0,0,0.08)] rounded-[15px] flex ",
@@ -64,30 +63,30 @@ const Coupon = ({ className, data }) => {
         <div className="basis-7/10 text-coupontext flex justify-between flex-col p-[10px]">
           <div className="relative">
             <h3 className="text-inherit text-[14px] mb-[2px] font-bold">
-              Giảm từ 200.000đ
+              Giảm từ {formatPrice(data?.discount_value)}
             </h3>
             <p className="text-[12px] font-medium text-inherit">
-              Đơn hàng từ 400k
+              Đơn hàng từ {formatPrice(data?.condition)}
             </p>
 
-            <CouponContentButton />
+            <CouponContentButton data={data} />
           </div>
           <div className="flex items-center justify-between max-990:gap-2">
             <div className="text-coupontext ">
               <span className="text-[10px]  font-normal text-inherit  block">
                 Mã:{" "}
                 <strong className="text-inherit text-[11px] font-bold uppercase">
-                  vouchert1-50k
+                  {data?.code}
                 </strong>
               </span>
               <span className="text-[10px] text-inherit font-normal block">
-                HSD: 31/01/2025
+                HSD: {moment(data?.expire_date).format("DD/MM/YYYY")}
               </span>
             </div>
             <button
               className="bg-redbtn px-[12px]  py-[3px] cursor-pointer text-[12px] text-[#fff] rounded-full flex-shrink-0"
               onClick={() => {
-                handleCopy("abc");
+                handleCopy(data?.code);
               }}
             >
               {copied ? "Đã sao chép" : " Sao chép mã"}

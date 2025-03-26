@@ -34,7 +34,7 @@ export function SearchButton({ className }) {
   if (isDesktop) {
     return (
       <Dropdown open={open} onOpenChange={setOpen}>
-        <DropdownTrigger className={"text-[#fff] mx-[2px]"}>
+        <DropdownTrigger className={"text-[#fff] mx-[2px] 2md:px-4"}>
           <a className="items-center  flex py-[9px] ">
             <span className="w-6 h-6">
               <Search size={24} strokeWidth={1.5} />

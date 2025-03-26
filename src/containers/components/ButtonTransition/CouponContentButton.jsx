@@ -2,11 +2,7 @@ import React from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+
 import * as HoverCardFull from "@radix-ui/react-hover-card";
 import { message, Popover } from "antd";
 
@@ -21,8 +17,9 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { CircleAlert, Copy } from "lucide-react";
-
-export function CouponContentButton() {
+import moment from "moment";
+import formatPrice from "@/helpers/formatPrice";
+export function CouponContentButton({ data }) {
   const [copied, setCopied] = React.useState(false);
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -73,7 +70,7 @@ export function CouponContentButton() {
               </span>
               <div className="flex-auto basis-2/3 flex items-center gap-2 pl-[20px]">
                 <span className="text-[13px] font-bold text-coupontext uppercase">
-                  vouchert1-200k
+                  {data?.code}{" "}
                 </span>
                 <button className="w-6 h-6 rounded-full  bg-[#4ea8cd] bg-opacity-20 flex items-center justify-center">
                   <Copy
@@ -89,13 +86,13 @@ export function CouponContentButton() {
                 Hạn sử dụng
               </span>
               <span className="text-coupontext uppercase text-[13px] basis-2/3 font-medium pl-[20px]">
-                31/12/2025
+                {moment(data?.expire_date).format("DD/MM/YYYY")}{" "}
               </span>
             </div>
             <div className="px-8 py-3 bg-[#fafafa] flex items-center">
               <ul className="  list-outside ">
                 <li className="text-[13px] list-disc marker:text-[#000] text-coupontext font-normal  relative ">
-                  Dành cho đơn hàng từ 400k
+                  Dành cho đơn hàng từ {formatPrice(data?.condition)}
                 </li>
                 <li className="text-[13px] list-disc marker:text-[#000] text-coupontext font-normal  relative ">
                   Mã khách hàng được sử dụng tối đa 1 lần

@@ -135,9 +135,9 @@ const ProductDetail = () => {
               <div className="col-span-1 h-8 bg-gray-200 rounded-full"></div>
             </div>
           </div>
-          <div className="h-10 bg-gray-200 w-full flex items-center pr-5">
+          {/* <div className="h-10 bg-gray-200 w-full flex items-center pr-5">
             <Gift className="stroke-gray-400 ml-auto" />
-          </div>
+          </div> */}
           <div className="flex items-center mt-[15px]">
             <span className="skeleton h-3  mr-3 w-[100px]"></span>
             <div className="skeleton h-8  w-[120px]  "></div>

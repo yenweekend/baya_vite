@@ -7,23 +7,24 @@ import { setSearchInput, setResult } from "@/redux-toolkit/slice/search.slice";
 let timeout;
 import { useMutation } from "@tanstack/react-query";
 import { getSearch } from "@/apis/home";
-import vnUnaccent from "@/helpers/vnUnaccent";
 import formatPrice from "@/helpers/formatPrice";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import NotFound from "./NotFound";
+import useMessage from "@/hooks/useMessage";
+import vnUnaccent from "@/helpers/vnUnaccent";
 const Search = ({ className }) => {
+  const location = useLocation();
+  const [open, onOpenChange] = useState(false);
+  const messageApi = useMessage();
   const input = useSelector((state) => state.search.input);
   const result = useSelector((state) => state.search.result);
   const dispatch = useDispatch();
-  const { mutate, isPending, isError } = useMutation({
+  const { mutate, isPending, isError, error } = useMutation({
     mutationFn: getSearch,
     onSuccess: (response) => {
       dispatch(setResult(response.data));
-    },
-    onError: (error) => {
-      console.log(error);
     },
   });
   useEffect(() => {
@@ -31,18 +32,32 @@ const Search = ({ className }) => {
       dispatch(setResult(null));
     }
   }, [input]);
+  useEffect(() => {
+    onOpenChange(false);
+    document.activeElement.blur();
+  }, [location]);
   if (isError) {
-    return <NotFound />;
+    dispatch(setResult(null));
+    messageApi.open({
+      type: "error",
+      content: error.response.data.msg || "Tìm kiếm thất bại!",
+      className: "custom-class",
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+    });
   }
-  const handleChange = useCallback((e) => {
+  const handleChange = (e) => {
     dispatch(setSearchInput(e.target.value));
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       if (e.target.value.trim().length > 0) {
         mutate(vnUnaccent(e.target.value));
       }
-    }, 1000);
-  }, []);
+    }, 600);
+  };
 
   return (
     <form
@@ -56,12 +71,23 @@ const Search = ({ className }) => {
         onChange={handleChange}
         placeholder="Tìm kiếm sản phẩm"
         className="pl-4 top-[50%] translate-y-[-50%] absolute w-full pr-[80px] leading-[1.5715] text-[14px] monserat_font peer"
+        onFocus={() => {
+          onOpenChange(true);
+        }}
+        onBlur={() => {
+          onOpenChange(false);
+        }}
       ></input>
       <div className="bg-redichi absolute right-[2px] top-[2px] bottom-[2px]  cursor-pointer px-3 flex items-center justify-center w-[70px]  ">
         <SearchIcon className="text-[#fff]" width={20} height={20} />
       </div>
       <div
-        className="absolute  shadow-nd bg-[#fff] left-0 right-0 px-[20px] z-[99] top-[120%] opacity-0 invisible  peer-focus:opacity-100  peer-focus:visible  peer-focus:top-[102%] transition-all ease-linear duration-150"
+        // className="absolute  shadow-nd bg-[#fff] left-0 right-0 px-[20px] z-[99] top-[120%] opacity-0 invisible  peer-focus:opacity-100  peer-focus:visible  peer-focus:top-[102%] transition-all ease-linear duration-150"
+        className={`absolute  shadow-nd bg-[#fff] left-0 right-0 px-[20px] z-[99]   transition-all ease-linear duration-150 ${
+          open
+            ? " opacity-100  visible  top-[102%] "
+            : "top-[120%] opacity-0 invisible"
+        }`}
         onMouseDown={(e) => e.preventDefault()}
       >
         <div className="border-b border-solid border-shop  py-[10px]">
@@ -94,35 +120,64 @@ const Search = ({ className }) => {
                 Xu hướng tìm kiếm
               </h2>
               <ul className="">
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <li className="py-3" key={index}>
-                    <a
-                      href=""
-                      className="flex items-center text-blacknihover:text-redichi"
-                    >
-                      <TrendingUp
-                        className="text-inherit"
-                        width={12}
-                        height={12}
-                      />
-                      <span className="text-inherit text-[13px] font-nornal pl-[12px]">
-                        Đũa nhôm
-                      </span>
-                    </a>
-                  </li>
-                ))}
+                <li className="py-3">
+                  <Link
+                    to={`/search?q=${encodeURIComponent(vnUnaccent("bát"))}`}
+                    className="flex items-center text-blackni hover:text-redichi "
+                  >
+                    <TrendingUp
+                      className="text-inherit  transition-all ease-linear duration-300"
+                      width={12}
+                      height={12}
+                    />
+                    <span className="text-inherit text-[13px] font-nornal pl-[12px]">
+                      Bát đũa cho gia đình
+                    </span>
+                  </Link>
+                </li>
+                <li className="py-3">
+                  <Link
+                    to={`/search?q=${encodeURIComponent(vnUnaccent("tắm"))}`}
+                    className="flex items-center text-blackni hover:text-redichi "
+                  >
+                    <TrendingUp
+                      className="text-inherit  transition-all ease-linear duration-300"
+                      width={12}
+                      height={12}
+                    />
+                    <span className="text-inherit text-[13px] font-nornal pl-[12px]">
+                      Dụng cụ phòng tắm
+                    </span>
+                  </Link>
+                </li>
+                <li className="py-3">
+                  <Link
+                    to={`/search?q=${encodeURIComponent(
+                      vnUnaccent("tranh trí")
+                    )}`}
+                    className="flex items-center text-blackni hover:text-redichi "
+                  >
+                    <TrendingUp
+                      className="text-inherit  transition-all ease-linear duration-300"
+                      width={12}
+                      height={12}
+                    />
+                    <span className="text-inherit text-[13px] font-nornal pl-[12px]">
+                      Vật dụng trang trí cho không gian nhà đẹp
+                    </span>
+                  </Link>
+                </li>
               </ul>
             </div>
             <div className="border-b border-solid border-shop">
               <h2 className="text-[14px]  font-bold text-redichi py-[10px]">
                 Tìm kiếm gần đây
               </h2>
-              <ul className="">
-                {Array.from({ length: 4 }).map((_, index) => (
+              {/* <ul className="">
                   <li className="py-3" key={index}>
-                    <a
-                      href=""
-                      className="flex items-center text-blacknihover:text-redichi relative"
+                    <Link
+                        to={`/search?q=${encodeURIComponent(input)}`}
+                      className="flex items-center text-blackni hover:text-redichi relative"
                     >
                       <History
                         className="text-inherit"
@@ -132,17 +187,16 @@ const Search = ({ className }) => {
                       <span className="text-inherit text-[13px] font-nornal pl-[12px]">
                         Đũa nhôm
                       </span>
-                      <div className="absolute cursor-pointer text-blacknihover:text-redichi center-y right-0">
+                      <div className="absolute cursor-pointer text-blackni hover:text-redichi center-y right-0">
                         <X className="text-inherit" size={16} strokeWidth={1} />
                       </div>
-                    </a>
+                    </Link>
                   </li>
-                ))}
-              </ul>
+              </ul> */}
             </div>
           </>
         )}
-        {result && !isPending ? (
+        {result?.rows?.length > 0 && !isPending ? (
           <>
             <ul>
               {result.rows.slice(0, 4).map((rs) => (
@@ -171,17 +225,19 @@ const Search = ({ className }) => {
                 </li>
               ))}
             </ul>
-            {result.count > 4 && (
+            {result?.count > 4 && (
               <Link
                 to={`/search?q=${encodeURIComponent(input)}`}
                 className="block py-[10px] text-[13px] text-center hover:text-redichi"
               >
-                Xem thêm {result.count - 4} sản phẩm
+                Xem thêm {result?.count - 4} sản phẩm
               </Link>
             )}
           </>
         ) : (
-          ""
+          <div className="text-center text-[14px] font-medium p-5">
+            Không có sản phẩm nào
+          </div>
         )}
       </div>
     </form>

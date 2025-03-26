@@ -1,4 +1,10 @@
-import React, { useEffect } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  forwardRef,
+  useRef,
+} from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -29,89 +35,132 @@ import { cn } from "@/lib/utils";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { CloseButton } from "..";
-const productDetail = {
-  slug: "abc",
-  Images: [
-    {
-      img_url:
-        "https://product.hstatic.net/200000796751/product/rosabella_seat_cushion_baya_2001472_1_2e09cb893a7b4f05ae8c81557217dc29_large.jpg",
-    },
-    {
-      img_url:
-        "https://product.hstatic.net/200000796751/product/337399379_681684177064513_1057752549673553224_n_0f39ace7e84447019db75b9d2a7dbe98_large.jpg",
-    },
-  ],
-  Brand: {
-    name: "FACE SHOP",
-  },
-  name: "Sofa hai chỗ PORTLAND 1m6",
-};
-const images = [
-  "https://product.hstatic.net/200000796751/product/2002531.5_70d2def5b3144bac9b5f4c9ac526e5a9_master.jpg",
-  "https://product.hstatic.net/200000796751/product/2002531.2_7e7692a23b814190996c2252338bcf0b_master.jpg",
-  "https://product.hstatic.net/200000796751/product/2002531.2_7e7692a23b814190996c2252338bcf0b_master.jpg",
-  "https://product.hstatic.net/200000796751/product/2002531.3_8ad76c5474d64991b0ee42ebdfd4fd5a_master.jpg",
-];
-const Slider = ({ className, imageDatas }) => {
-  const [thumbsSwiper, setThumbsSwiper] = React.useState(null);
+import formatPrice from "@/helpers/formatPrice";
+import _ from "lodash";
+import slugify from "@/helpers/slugify";
 
-  return (
-    <>
-      <div className={cn("p-3 ", className)}>
-        <Swiper
-          style={{
-            "--swiper-navigation-color": "#fff",
-            "--swiper-pagination-color": "#fff",
-            position: "relative",
-            paddingBottom: "100%",
-          }}
-          loop={false}
-          spaceBetween={10}
-          navigation={true}
-          thumbs={{ swiper: thumbsSwiper }}
-          modules={[FreeMode, Navigation, Thumbs]}
-          className="mySwiperBig"
-        >
-          {images.map((img) => (
-            <SwiperSlide>
-              <LazyLoadImage
-                effect="opacity"
-                src={img}
-                className={"h-full w-full object-cover absolute inset-0"}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-      <div className="mt-6 px-4">
-        <Swiper
-          onSwiper={setThumbsSwiper}
-          loop={false}
-          spaceBetween={10}
-          slidesPerView={6}
-          freeMode={true}
-          watchSlidesProgress={true}
-          modules={[FreeMode, Navigation, Thumbs]}
-          className="mySwiper"
-        >
-          {images.map((img) => (
-            <SwiperSlide>
-              <LazyLoadImage src={img} effect="opacity" />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-    </>
-  );
-};
+const Slider = forwardRef(
+  ({ className, images, setCurrentIdx, currentIdx }, ref) => {
+    const [thumbsSwiper, setThumbsSwiper] = React.useState(null);
+    return (
+      <>
+        <div className="mb-[30px]">
+          <div className={cn("py-3 ", className)}>
+            <Swiper
+              ref={ref}
+              style={{
+                "--swiper-navigation-color": "#fff",
+                "--swiper-pagination-color": "#fff",
+                position: "relative",
+                paddingBottom: "100%",
+              }}
+              loop={false}
+              spaceBetween={10}
+              navigation={true}
+              thumbs={{ swiper: thumbsSwiper }}
+              modules={[FreeMode, Navigation, Thumbs]}
+              className="mySwiperBig"
+              onSlideChange={(swiper) => {
+                setCurrentIdx(swiper.activeIndex);
+              }}
+            >
+              {images?.map((img, idx) => (
+                <SwiperSlide key={`abc-${idx}`}>
+                  <LazyLoadImage
+                    effect="opacity"
+                    src={img}
+                    className={"h-full w-full object-cover absolute inset-0"}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+          <div className="mt-6 px-4">
+            <Swiper
+              onSwiper={setThumbsSwiper}
+              loop={false}
+              spaceBetween={10}
+              slidesPerView={6}
+              freeMode={true}
+              watchSlidesProgress={true}
+              modules={[FreeMode, Navigation, Thumbs]}
+              className="mySwiper"
+            >
+              {images?.map((img, idx) => (
+                <SwiperSlide key={`sff-${idx}`}>
+                  <LazyLoadImage src={img} effect="opacity" />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        </div>
+      </>
+    );
+  }
+);
 export { Slider };
 const QuickView = ({ className, children, data }) => {
+  const swiperRef = useRef(null);
+  const [currentIdx, setCurrentIdx] = useState(0);
+
   const [open, setOpen] = React.useState(false);
   const [selectedGift, setSelectedGift] = React.useState(null);
-
   const handleGiftChange = (e) => {
     setSelectedGift(e.target.value);
   };
+  const [images, setImages] = useState(null);
+  const [productVariant, setProductVariant] = useState(null);
+  const [attribute, setAttribute] = React.useState({});
+  const handleAttributeChange = useCallback((e, attributeName) => {
+    setAttribute((prev) => {
+      return { ...prev, [attributeName]: e.target.value };
+    });
+  }, []);
+  useEffect(() => {
+    if (data) {
+      if (!data.single) {
+        setAttribute(
+          data.variants.find((product) => product.stock > 0).attributes
+        );
+        const rs = data.variants.map((vr) => {
+          const variantImages = vr.Images.map((item) => item.img_url);
+          return [vr.thumbnail, ...variantImages];
+        });
+        setImages(rs.flat());
+      } else {
+        if (!data.thumbnailM) {
+          // if product do have thumbnailM
+          setImages([
+            data.thumbnail, // other images of product in image tables
+          ]);
+        } else {
+          setImages([data.thumbnail, data.thumbnailM]);
+        }
+      }
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (data) {
+      if (data.single) {
+        setProductVariant(data);
+      } else {
+        if (attribute && images) {
+          const variantMatches = data.variants.find((variant) =>
+            Object.entries(attribute).every(
+              ([key, value]) => variant.attributes[key] === value
+            )
+          );
+          const idx = images.findIndex(
+            (img) => img === variantMatches.thumbnail
+          );
+          setCurrentIdx(idx);
+          swiperRef?.current?.swiper.slideTo(idx, 400);
+          setProductVariant(variantMatches);
+        }
+      }
+    }
+  }, [data, attribute, images]);
 
   const isDesktop = useMediaQuery("(min-width: 990px)");
   if (isDesktop) {
@@ -128,86 +177,134 @@ const QuickView = ({ className, children, data }) => {
         >
           <div className="p-3 flex  ">
             <div className="basis-1/2 pr-[12px] flex-grow-0 overflow-hidden px-3 pt-3 flex flex-col ">
-              <Slider className={"border-none"} />
+              <Slider
+                className={"border border-solid border-[#f4f4f4]"}
+                images={images}
+                ref={swiperRef}
+                setCurrentIdx={setCurrentIdx}
+                currentIdx={currentIdx}
+              />
             </div>
             <div className="basis-1/2 bg-[#fff] px-3">
               <div className="flex justify-end " onClick={() => setOpen(false)}>
                 <CloseButton />
               </div>
-              <div className="product_info">
+              <div className="">
                 <div className=" leading-[130%] text-[20px] font-bold my-[5px] text-redichi">
-                  {data?.title}
+                  {productVariant?.title}
                 </div>
-                <div className="flex flex-wrap items-center product-origin mb-[15px]">
-                  <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
-                    thương hiệu
-                    <b className="text-[--shop-color-main]"> Hàn Quốc</b>
-                  </div>
+                <div className="flex flex-wrap items-center product-origin mb-[15px] gap-y-1">
+                  {productVariant?.Vendor?.title && (
+                    <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
+                      thương hiệu
+                      <b className="text-[--shop-color-main]">
+                        {productVariant?.Vendor?.title}
+                      </b>
+                    </div>
+                  )}
                   <div className="devide bg-[rgba(0,0,0,.06)] w-[0.8px] mx-[15px] h-[10px]"></div>
                   <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
                     Mã sản phẩm:
-                    <b className="text-[--shop-color-main]"> 2022604763</b>
+                    <b className="text-[--shop-color-main]">
+                      {productVariant?.sku}
+                    </b>
                   </div>
                   <div className="devide bg-[rgba(0,0,0,.06)] w-[0.8px] mx-[15px] h-[10px]"></div>
 
                   <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
-                    Tình trạng:
-                    <b className="text-[--shop-color-main]"> Còn hàng</b>
+                    Tình trạng:&nbsp;
+                    <b className="text-[--shop-color-main]">
+                      {productVariant?.stock > 0 ? "Còn hàng" : "Hết hàng"}
+                    </b>
                   </div>
                 </div>
                 <div className="h-[60px] w-full bg-[#fafafa]  flex items-center p-8">
                   <span className="text-[--shop-color-text]   font-bold">
                     Giá:
                     <strong className="text-[#ff0000] text-[18px] ml-[40px]">
-                      20.000đ
+                      {formatPrice(productVariant?.price)}
                     </strong>
                   </span>
                   <span className="price-delete ml-[10px] text-[#878c8f] line-through font-light relative text-[13px]">
-                    717.000đ
+                    {formatPrice(productVariant?.price_original)}
                   </span>
                   <span className="sale-percent  w-10 rounded-sm px-[5px] bg-redni text-[#fff] block ml-auto">
                     -5%
                   </span>
                 </div>
                 <div className=" my-[15px]">
-                  <div className="flex items-center">
-                    <div className="text-blacknifont-bold text-[14px] flex-col flex pr-[20px]">
-                      <span className="font-bold text-[13px]">Màu sắc :</span>
-                      <span className="font-bold text-[13px] text-[#4ea8cd]">
-                        Hồng
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <label
-                        htmlFor="slug"
-                        className="radio-attr py-[7px] px-[10px] border border-solid  bg-[#fff] text-redichi cursor-pointer relative"
-                      >
-                        <input
-                          type="radio"
-                          name="slug"
-                          id="slug"
-                          value={"slug"}
-                          className={"appearance-none	"}
-                        />
-                        Xanh
-                      </label>
-                      <label
-                        htmlFor="slug-2"
-                        className="radio-attr py-[7px] px-[10px] border border-solid  bg-[#fff] text-redichi cursor-pointer relative"
-                      >
-                        <input
-                          type="radio"
-                          name="slug"
-                          id="slug-2"
-                          value={"slug-2"}
-                          className={"appearance-none	"}
-                        />
-                        Hồng
-                      </label>
-                    </div>
-                  </div>
+                  {!data?.single &&
+                    data?.attributes &&
+                    Object.keys(data?.attributes).map((attr) => (
+                      <div className=" my-[15px]" key={`attr-${slugify(attr)}`}>
+                        <div className="flex items-center">
+                          <div className="text-blackni font-bold text-[14px] flex-col flex pr-[20px] basis-[30%]">
+                            <span className="font-bold text-[13px]">
+                              {attr} :
+                            </span>
+                            <span className="font-bold text-[13px] text-[#4ea8cd]">
+                              {attribute && attribute[attr]}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-[12px] basis-[70%] flex-wrap">
+                            {data?.attributes[attr].map((value) => {
+                              const obj1 = { ...attribute, [attr]: value };
+                              const isExist = data?.variants.some((product) => {
+                                return _.isEqual(obj1, product.attributes);
+                              });
+                              return isExist ? (
+                                <label
+                                  key={`label-${value}`}
+                                  className="radio-attr py-[7px] px-[10px] border border-solid  bg-[#fff] text-redichi cursor-pointer relative whitespace-nowrap overflow-hidden"
+                                >
+                                  <input
+                                    type="radio"
+                                    name={`attr-value-${slugify(attr)}`}
+                                    value={value ?? ""}
+                                    className={"appearance-none"}
+                                    onChange={(event) =>
+                                      handleAttributeChange(event, attr)
+                                    }
+                                    checked={Boolean(
+                                      attribute &&
+                                        Object.entries(attribute).some(
+                                          ([k, v]) => v === value
+                                        )
+                                    )}
+                                  />
+                                  {value}
+                                </label>
+                              ) : (
+                                <label
+                                  className="radio-attr py-[7px] px-[10px] border border-solid  bg-[#fff] text-redichi cursor-pointer relative sold-out whitespace-nowrap overflow-hidden opacity-50"
+                                  key={`label-${value}`}
+                                  onClick={(event) => {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    return 1;
+                                  }}
+                                >
+                                  <input
+                                    type="radio"
+                                    className={"appearance-none"}
+                                    name={`attr-value-${slugify(attr)}`}
+                                    value={value ?? ""}
+                                    onChange={(event) => {
+                                      event.preventDefault();
+                                      event.stopPropagation();
+                                      return 1;
+                                    }}
+                                  />
+                                  {value}
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                 </div>
-                <div className="">
+                {/* <div className="">
                   <Accordion
                     type="single"
                     collapsible
@@ -287,7 +384,7 @@ const QuickView = ({ className, children, data }) => {
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
-                </div>
+                </div> */}
                 <div className="flex items-center mt-[15px]">
                   <span className="text-[--shop-color-text] font-bold text-[14px] mr-[100px]">
                     Số lượng:
@@ -318,8 +415,8 @@ const QuickView = ({ className, children, data }) => {
                   </span>
                   <span className="text-[16px]">Thêm vào giỏ hàng</span>
                 </div>
-                <a
-                  href="/"
+                <Link
+                  to={data?.url}
                   className="text-blacknitext-[14px]  flex items-center cursor-pointer mt-[15px] hover:text-redni group underline"
                 >
                   Xem chi tiết sản phẩm
@@ -328,7 +425,7 @@ const QuickView = ({ className, children, data }) => {
                     className="stroke-blacknigroup-hover:stroke-redni pt-[2px]"
                     strokeWidth={2}
                   />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -344,9 +441,9 @@ const QuickView = ({ className, children, data }) => {
       <DrawerContent>
         <DrawerHeader className="text-left rounded-t-[10px]  border-b border-solid border-[#eee] relative">
           <DrawerTitle>
-            <div className=" max-768:w-[90%] flex items-center">
-              <p className="line-clamp-2 text-[15px]  font-medium text-redichi text-center ">
-                {data?.title}
+            <div className=" max-768:w-[90%] flex text-center">
+              <p className="line-clamp-2 text-[16px]  font-bold text-redichi text-center  w-full">
+                {productVariant?.title}
               </p>
             </div>
           </DrawerTitle>
@@ -362,46 +459,131 @@ const QuickView = ({ className, children, data }) => {
         <div className="h-[60vh] overflow-y-auto pb-[12px]">
           <div className=" flex flex-col ">
             <div className="  flex-grow-0 overflow-hidden  pt-3 flex-col ">
-              <Slider className={"border-none"} />
+              <Slider
+                className={"border-none"}
+                images={images}
+                ref={swiperRef}
+                setCurrentIdx={setCurrentIdx}
+                currentIdx={currentIdx}
+              />
             </div>
             <div className=" bg-[#fff] px-3">
-              <div className="product_info">
+              <div className="pt-[15px] border-t border-solid border-t-shop">
                 <div className=" leading-[130%] text-[20px] font-bold my-[5px] text-redichi">
-                  {productDetail.name}
+                  {productVariant?.title}
                 </div>
                 <div className="flex flex-wrap items-center product-origin mb-[15px]">
-                  <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
-                    thương hiệu
-                    <b className="text-[--shop-color-main]"> Hàn Quốc</b>
-                  </div>
+                  {productVariant?.Vendor?.title && (
+                    <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
+                      thương hiệu
+                      <b className="text-[--shop-color-main]">
+                        {productVariant?.Vendor?.title}
+                      </b>
+                    </div>
+                  )}
                   <div className="devide bg-[rgba(0,0,0,.06)] w-[0.8px] mx-[15px] h-[10px]"></div>
                   <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
                     Mã sản phẩm:
-                    <b className="text-[--shop-color-main]"> 2022604763</b>
+                    <b className="text-[--shop-color-main]">
+                      {productVariant?.sku}
+                    </b>
                   </div>
                   <div className="devide bg-[rgba(0,0,0,.06)] w-[0.8px] mx-[15px] h-[10px]"></div>
 
                   <div className="text-[--shop-color-text] text-[13px] font-normal capitalize">
-                    Tình trạng:
-                    <b className="text-[--shop-color-main]"> Còn hàng</b>
+                    Tình trạng:&nbsp;
+                    <b className="text-[--shop-color-main]">
+                      {productVariant?.stock > 0 ? "Còn hàng" : "Hết hàng"}
+                    </b>
                   </div>
                 </div>
                 <div className="h-[60px] w-full bg-[#fafafa]  flex items-center p-8">
                   <span className="text-[--shop-color-text]  font-bold">
                     Giá:
                     <strong className="text-[#ff0000] text-[18px] ml-[40px]">
-                      20.000đ
+                      {formatPrice(productVariant?.price)}
                     </strong>
                   </span>
                   <span className="price-delete ml-[10px] text-[#878c8f] line-through font-light relative text-[13px]">
-                    717.000đ
+                    {formatPrice(productVariant?.price_original)}
                   </span>
                   <span className="sale-percent  w-10 rounded-sm px-[5px] bg-redni text-[#fff] block ml-auto">
                     -5%
                   </span>
                 </div>
-                <div className="variants mt-3"></div>
-                <div className="">
+                <div className="variants mt-3">
+                  {!data?.single &&
+                    data?.attributes &&
+                    Object.keys(data?.attributes).map((attr) => (
+                      <div className=" my-[15px]" key={`attr-${slugify(attr)}`}>
+                        <div className="flex items-center">
+                          <div className="text-blackni font-bold text-[14px] flex-col flex pr-[20px] basis-[30%]">
+                            <span className="font-bold text-[13px]">
+                              {attr} :
+                            </span>
+                            <span className="font-bold text-[13px] text-[#4ea8cd]">
+                              {attribute && attribute[attr]}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-[12px] basis-[70%] flex-wrap">
+                            {data?.attributes[attr].map((value) => {
+                              const obj1 = { ...attribute, [attr]: value };
+                              const isExist = data?.variants.some((product) => {
+                                return _.isEqual(obj1, product.attributes);
+                              });
+                              return isExist ? (
+                                <label
+                                  key={`label-${value}`}
+                                  className="radio-attr py-[7px] px-[10px] border border-solid  bg-[#fff] text-redichi cursor-pointer relative whitespace-nowrap overflow-hidden"
+                                >
+                                  <input
+                                    type="radio"
+                                    name={`attr-value-${slugify(attr)}`}
+                                    value={value ?? ""}
+                                    className={"appearance-none"}
+                                    onChange={(event) =>
+                                      handleAttributeChange(event, attr)
+                                    }
+                                    checked={Boolean(
+                                      attribute &&
+                                        Object.entries(attribute).some(
+                                          ([k, v]) => v === value
+                                        )
+                                    )}
+                                  />
+                                  {value}
+                                </label>
+                              ) : (
+                                <label
+                                  className="radio-attr py-[7px] px-[10px] border border-solid  bg-[#fff] text-redichi cursor-pointer relative sold-out whitespace-nowrap overflow-hidden opacity-50"
+                                  key={`label-${value}`}
+                                  onClick={(event) => {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    return 1;
+                                  }}
+                                >
+                                  <input
+                                    type="radio"
+                                    className={"appearance-none"}
+                                    name={`attr-value-${slugify(attr)}`}
+                                    value={value ?? ""}
+                                    onChange={(event) => {
+                                      event.preventDefault();
+                                      event.stopPropagation();
+                                      return 1;
+                                    }}
+                                  />
+                                  {value}
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+                {/* <div className="">
                   <Accordion
                     type="single"
                     collapsible
@@ -481,9 +663,9 @@ const QuickView = ({ className, children, data }) => {
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
-                </div>
-                <a
-                  href="/"
+                </div> */}
+                <Link
+                  to={data?.url}
                   className="text-blacknitext-[14px]  flex items-center cursor-pointer mt-[15px] hover:text-redni group underline"
                 >
                   Xem chi tiết sản phẩm
@@ -492,7 +674,7 @@ const QuickView = ({ className, children, data }) => {
                     className="stroke-blacknigroup-hover:stroke-redni pt-[2px]"
                     strokeWidth={2}
                   />
-                </a>
+                </Link>
               </div>
             </div>
           </div>

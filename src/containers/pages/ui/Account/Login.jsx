@@ -1,9 +1,38 @@
 import React, { useState, useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate, useNavigation } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { login } from "@/apis/auth";
+import { useDispatch } from "react-redux";
+import { setLogginState } from "@/redux-toolkit/slice/auth.slice";
+import useMessage from "@/hooks/useMessage";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
+  const messageApi = useMessage();
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { mutate, isPending, isError } = useMutation({
+    mutationFn: login,
+    onSuccess: (response) => {
+      dispatch(setLogginState(true));
+      navigate("/");
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: "error",
+        content: "Đăng nhập thất bại!",
+        className: "custom-class",
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      });
+    },
+  });
   const {
     register,
     setError,
@@ -18,16 +47,7 @@ const Login = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
-    // await sleep(2000);
-    // if (data.firstName === "bill") {
-    //   setError("duplicate", {
-    //     type: "custom",
-    //     message: "người dùng đã tồn tại",
-    //   });
-    // } else {
-    //   alert("There is an error");
-    // }
+    mutate(data);
   };
   return (
     <div className="max-w-[1400px] px-[15px] mx-auto">
@@ -123,11 +143,11 @@ const Login = () => {
                         value: 6,
                         message: "Mật khẩu ít nhất 6 kí tự !",
                       },
-                      pattern: {
-                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]+$/,
-                        message:
-                          "Mật khẩu phải có ít nhất 1 ký tự in hoa, chữ số !",
-                      },
+                      // pattern: {
+                      //   value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]+$/,
+                      //   message:
+                      //     "Mật khẩu phải có ít nhất 1 ký tự in hoa, chữ số !",
+                      // },
                     })}
                     id="password"
                     className="peer w-full h-full py-[10px] px-5"
@@ -171,14 +191,26 @@ const Login = () => {
             </p>
 
             <div className="flex items-center mt-[15px]">
-              <button
-                className={`text-[14px] text-[#fff] font-bold px-[20px] py-[10px] bg-redichi ${
-                  Object.keys(errors).length > 0 ? "disabled:opacity-25" : ""
-                }`}
-                type="submit"
-              >
-                Đăng nhập
-              </button>
+              {isPending ? (
+                <Button
+                  disabled
+                  className={
+                    "text-[#fff] text-center px-[20px] py-[10px] text-[14px] font-bold bg-redichi rounded-none"
+                  }
+                >
+                  <Loader2 className="animate-spin" />
+                  <span>Đăng nhập</span>
+                </Button>
+              ) : (
+                <button
+                  className={`text-[14px] text-[#fff] font-bold px-[20px] py-[10px] bg-redichi ${
+                    Object.keys(errors).length > 0 ? "disabled:opacity-25" : ""
+                  }`}
+                  type="submit"
+                >
+                  Đăng nhập
+                </button>
+              )}
               <div className="pl-[30px]">
                 <p className="text-[13px] font-normal">
                   Bạn chưa có tài khoản
@@ -205,6 +237,9 @@ const Login = () => {
           </form>
         </div>
       </div>
+      {isPending && (
+        <div className="fixed  inset-0 z-[999] bg-transparent"></div>
+      )}
     </div>
   );
 };

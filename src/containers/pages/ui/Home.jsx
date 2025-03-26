@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { HoverEffectButton, CouponCard } from "../../components";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
@@ -35,7 +41,9 @@ import HomeSkeleton from "@/containers/components/Skeleton/Home";
 import { useQuery } from "@tanstack/react-query";
 import { getHome } from "@/apis/home";
 import { NotFound } from "../../components";
+
 const Home = () => {
+  const [sofaNewArrival, setSofaNewArrival] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
   React.useEffect(() => {
     document.title = "Siêu thị nội thất & trang trí Baya";
@@ -46,6 +54,17 @@ const Home = () => {
     queryFn: getHome,
     retry: false,
   });
+  const newArrivalProducts = useMemo(() => {
+    if (data) {
+      if (!sofaNewArrival) {
+        return data.data.data.latestCollection?.products || [];
+      } else {
+        return data.data.data.sofaProducts;
+      }
+    } else {
+      return [];
+    }
+  }, [sofaNewArrival, data]);
   if (isPending) {
     return <HomeSkeleton />;
   }
@@ -142,7 +161,7 @@ const Home = () => {
                   thumbnail:
                     "https://theme.hstatic.net/200000796751/1001266995/14/categorybanner_1_img.jpg?v=82",
                   title: "Phòng khách",
-                  url: "/collections/",
+                  url: "/collections/noi-that-phong-khach",
                 }}
               />
             </div>
@@ -153,7 +172,7 @@ const Home = () => {
                   thumbnail:
                     "https://theme.hstatic.net/200000796751/1001266995/14/categorybanner_2_img.jpg?v=82",
                   title: "Phòng ngủ",
-                  url: "/collections/",
+                  url: "/collections/noi-that-phong-ngu",
                 }}
               />
             </div>
@@ -164,7 +183,7 @@ const Home = () => {
                   thumbnail:
                     "https://theme.hstatic.net/200000796751/1001266995/14/categorybanner_3_img.jpg?v=82",
                   title: "Phòng ăn và bếp",
-                  url: "/collections/",
+                  url: "/categories/nha-bep",
                 }}
               />
             </div>
@@ -175,307 +194,301 @@ const Home = () => {
                   thumbnail:
                     "https://theme.hstatic.net/200000796751/1001266995/14/categorybanner_4_img.jpg?v=82",
                   title: "Phòng làm việc",
-                  url: "/collections/",
+                  url: "/categories/noi-that-van-phong",
                 }}
               />
             </div>
           </div>
-          {isPending ? (
-            "loading"
-          ) : (
-            <section className="bg-collectionichi home-collection md:p-[15px] relative">
-              <div className="pr-[100px] flex items-center gap-3 md:pt-0 pt-3 pl-2 md:pl-0">
-                <div className="fade-loading relative w-2 h-2 rounded-full bg-init"></div>
-                <h2 className="collection-title">
-                  <Link to={data.data.data.kitchenCollection.url}>
-                    Đồ bếp nhập khẩu cao cấp
-                  </Link>
-                </h2>
-              </div>
-              <div className="mt-[15px] ">
-                <Carousel
-                  opts={{
-                    align: "start",
-                  }}
-                  className="w-full group "
-                >
-                  <CarouselContent>
-                    {data.data.data.kitchenCollection.products.map(
-                      (product) => (
-                        <CarouselItem key={product.slug} className="card-item">
-                          <div className="md:px-[6px] px-[2px]">
-                            <Card className={"rounded-none"}>
-                              <CardContent className="flex items-center justify-center p-0">
-                                <ProductCard productData={product} />
-                              </CardContent>
-                            </Card>
-                          </div>
-                        </CarouselItem>
-                      )
-                    )}
-                  </CarouselContent>
-                  <div className="absolute top-2 md:top-[12px] right-[20px] flex items-center gap-4">
-                    <CarouselPrevious
-                      className={"bg-[#fff] shadow-carousel text-blackni"}
-                    />
-                    <CarouselNext
-                      className={"bg-[#fff] shadow-carousel text-blackni"}
-                    />
-                  </div>
-                </Carousel>
-              </div>
-              <div className="flex items-center justify-center mt-[15px]">
-                <HoverEffectButton className={"w-[320px] "}>
-                  <CircleChevronRight
-                    size={20}
-                    className="text-inherit inline"
-                    strokeWidth={1}
-                  />
-                </HoverEffectButton>
-              </div>
-            </section>
-          )}
-          <div className=" home-collection flex items-stretch overflow-x-auto no-scrollbar md:ml-[-12px] ">
-            <div className="flex-shrink-0 md:px-[6px] px-3 md:basis-1/2  lg:basis-1/3 xl:basis-1/4 basis-[86%] ">
-              <CouponCard />
-            </div>
-            <div className="flex-shrink-0 md:px-[6px] px-3 md:basis-1/2  lg:basis-1/3 xl:basis-1/4 basis-[86%] ">
-              <CouponCard />
-            </div>
-            <div className="flex-shrink-0 md:px-[6px] px-3 md:basis-1/2  lg:basis-1/3 xl:basis-1/4 basis-[86%] ">
-              <CouponCard />
-            </div>
+        </div>
+        <section className="bg-collectionichi home-collection md:p-[15px] relative">
+          <div className="pr-[100px] flex items-center gap-3 md:pt-0 pt-3 pl-2 md:pl-0">
+            <div className="fade-loading relative w-2 h-2 rounded-full bg-init"></div>
+            <h2 className="collection-title">
+              <Link to={data.data.data.kitchenCollection?.url}>
+                Đồ bếp nhập khẩu cao cấp
+              </Link>
+            </h2>
           </div>
-
-          <div className=" home-collection md:p-[15px] relative md:px-0">
-            <div className="pr-[100px] flex items-center gap-3">
-              <h2 className="collection-title capitalize max-768:pl-[15px]">
-                Back to school - up to 60%
-              </h2>
-            </div>
-            <div className="mt-[15px] ">
-              <Carousel
-                opts={{
-                  align: "start",
-                }}
-                className="w-full group "
-              >
-                <CarouselContent className={""}>
-                  {data.data.data.schoolCollection.products.map((product) => (
-                    <CarouselItem key={product.slug} className="card-item">
-                      <div className="md:px-[6px] px-[2px] h-full">
-                        <Card className={"rounded-none"}>
-                          <CardContent className="flex h-full items-center justify-center p-0">
-                            <ProductCard productData={product} />
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <div className="absolute top-[12px] max-768:top-[-6px] right-[20px] flex items-center gap-4">
-                  <CarouselPrevious
-                    className={"bg-[#fff] shadow-carousel text-blackni"}
-                  />
-                  <CarouselNext
-                    className={"bg-[#fff] shadow-carousel text-blackni"}
-                  />
-                </div>
-              </Carousel>
-            </div>
-            <div className="flex items-center justify-center mt-[15px]">
-              <HoverEffectButton className={"w-[320px] "}>
-                <CircleChevronRight
-                  size={20}
-                  className="text-inherit inline"
-                  strokeWidth={1}
+          <div className="mt-[15px] ">
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full group "
+            >
+              <CarouselContent>
+                {data.data.data.kitchenCollection?.products.map((product) => (
+                  <CarouselItem key={product.slug} className="card-item">
+                    <div className="md:px-[6px] px-[2px]">
+                      <Card className={"rounded-none"}>
+                        <CardContent className="flex items-center justify-center p-0">
+                          <ProductCard productData={product} />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <div className="absolute top-2 md:top-[12px] right-[20px] flex items-center gap-4">
+                <CarouselPrevious
+                  className={"bg-[#fff] shadow-carousel text-blackni"}
                 />
-              </HoverEffectButton>
-            </div>
-          </div>
-          <div className="max-w-[1400px] 2md:px-[15px] home-collection">
-            <div className="py-[15px] 2md:px-5  bg-[url('https://theme.hstatic.net/200000796751/1001266995/14/categorize_img.jpg?v=82')] bg-no-repeat bg-cover relative flex items-stretch">
-              <div className="absolute   bg-[#000] opacity-35 inset-0"></div>
-              <div className="2md:basis-2/12 basis-1/2 md:basis-1/3 md:px-[15px] flex flex-col relative justify-center px-[6px]">
-                <h3 className="text-[18px] font-semibold mb-[8px] text-catecolor text-left   md:text-[20px]">
-                  Xu hướng tìm kiếm
-                </h3>
-                <a
-                  href="/collections/all"
-                  className="px-[15px] py-[5px] uppercase text-[13px] text-catecolor bg-ichi font-medium block mr-auto rounded-full max-768:rounded-none "
-                >
-                  Xem ngay
-                </a>
+                <CarouselNext
+                  className={"bg-[#fff] shadow-carousel text-blackni"}
+                />
               </div>
-              <div className="2md:basis-10/12 md:basis-2/3 basis-1/2 px-[6px]">
-                <div className=" flex flex-row  md:px-[15px]  flex-nowrap overflow-x-auto flex-shrink-0 no-scrollbar">
-                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
-                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
-                      <div className="relative w-full pb-[100%]">
-                        <div className="absolute inset-0">
-                          <a
-                            href="/collections/sofa"
-                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
-                          >
-                            <LazyLoadImage
-                              effect="opacity"
-                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_1_img.jpg?v=82"
-                              className="w-full h-full "
-                            />
-                          </a>
-                        </div>
-                      </div>
-                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
-                        Sofa
-                      </span>
+            </Carousel>
+          </div>
+          <div className="flex items-center justify-center mt-[15px]">
+            <HoverEffectButton className={"w-[320px] "}>
+              <CircleChevronRight
+                size={20}
+                className="text-inherit inline"
+                strokeWidth={1}
+              />
+            </HoverEffectButton>
+          </div>
+        </section>
+
+        <div className=" home-collection flex items-stretch overflow-x-auto no-scrollbar md:ml-[-12px] ">
+          {data.data.data.coupons.map((item) => (
+            <div
+              className="flex-shrink-0 md:px-[6px] px-3 md:basis-1/2  lg:basis-1/3 xl:basis-1/4 basis-[86%] "
+              key={item.id}
+            >
+              <CouponCard data={item} />
+            </div>
+          ))}
+        </div>
+
+        <div className=" home-collection md:p-[15px] relative md:px-0">
+          <div className="pr-[100px] flex items-center gap-3">
+            <h2 className="collection-title capitalize max-768:pl-[15px]">
+              Back to school - up to 60%
+            </h2>
+          </div>
+          <div className="mt-[15px] ">
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full group "
+            >
+              <CarouselContent className={""}>
+                {data.data.data.schoolCollection?.products.map((product) => (
+                  <CarouselItem key={product.slug} className="card-item">
+                    <div className="md:px-[6px] px-[2px] h-full">
+                      <Card className={"rounded-none"}>
+                        <CardContent className="flex h-full items-center justify-center p-0">
+                          <ProductCard productData={product} />
+                        </CardContent>
+                      </Card>
                     </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <div className="absolute top-[12px] max-768:top-[-6px] right-[20px] flex items-center gap-4">
+                <CarouselPrevious
+                  className={"bg-[#fff] shadow-carousel text-blackni"}
+                />
+                <CarouselNext
+                  className={"bg-[#fff] shadow-carousel text-blackni"}
+                />
+              </div>
+            </Carousel>
+          </div>
+          <div className="flex items-center justify-center mt-[15px]">
+            <HoverEffectButton className={"w-[320px] "}>
+              <CircleChevronRight
+                size={20}
+                className="text-inherit inline"
+                strokeWidth={1}
+              />
+            </HoverEffectButton>
+          </div>
+        </div>
+        <div className="max-w-[1400px] 2md:px-[15px] home-collection">
+          <div className="py-[15px] 2md:px-5  bg-[url('https://theme.hstatic.net/200000796751/1001266995/14/categorize_img.jpg?v=82')] bg-no-repeat bg-cover relative flex items-stretch">
+            <div className="absolute   bg-[#000] opacity-35 inset-0"></div>
+            <div className="2md:basis-2/12 basis-1/2 md:basis-1/3 md:px-[15px] flex flex-col relative justify-center px-[6px]">
+              <h3 className="text-[18px] font-semibold mb-[8px] text-catecolor text-left   md:text-[20px]">
+                Xu hướng tìm kiếm
+              </h3>
+              <Link
+                to="/categories/all"
+                className="px-[15px] py-[5px] uppercase text-[13px] text-catecolor bg-ichi font-medium block mr-auto rounded-full max-768:rounded-none "
+              >
+                Xem ngay
+              </Link>
+            </div>
+            <div className="2md:basis-10/12 md:basis-2/3 basis-1/2 px-[6px]">
+              <div className=" flex flex-row  md:px-[15px]  flex-nowrap overflow-x-auto flex-shrink-0 no-scrollbar">
+                <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                  <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                    <div className="relative w-full pb-[100%]">
+                      <div className="absolute inset-0">
+                        <Link
+                          to="/categories/sofa"
+                          className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                        >
+                          <LazyLoadImage
+                            effect="opacity"
+                            src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_1_img.jpg?v=82"
+                            className="w-full h-full "
+                          />
+                        </Link>
+                      </div>
+                    </div>
+                    <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                      Sofa
+                    </span>
                   </div>
-                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
-                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
-                      <div className="relative w-full pb-[100%]">
-                        <div className="absolute inset-0">
-                          <a
-                            href="/collections/sofa"
-                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
-                          >
-                            <LazyLoadImage
-                              effect="opacity"
-                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_2_img.jpg?v=82"
-                              className="w-full h-full "
-                            />
-                          </a>
-                        </div>
+                </div>
+                <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                  <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                    <div className="relative w-full pb-[100%]">
+                      <div className="absolute inset-0">
+                        <Link
+                          to="/categories/ban"
+                          className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                        >
+                          <LazyLoadImage
+                            effect="opacity"
+                            src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_2_img.jpg?v=82"
+                            className="w-full h-full "
+                          />
+                        </Link>
                       </div>
-                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
-                        Bàn
-                      </span>
                     </div>
+                    <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                      Bàn
+                    </span>
                   </div>
-                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
-                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
-                      <div className="relative w-full pb-[100%]">
-                        <div className="absolute inset-0">
-                          <a
-                            href="/collections/sofa"
-                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
-                          >
-                            <LazyLoadImage
-                              effect="opacity"
-                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_3_img.jpg?v=82"
-                              className="w-full h-full "
-                            />
-                          </a>
-                        </div>
+                </div>
+                <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                  <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                    <div className="relative w-full pb-[100%]">
+                      <div className="absolute inset-0">
+                        <Link
+                          to="/categories/ghe"
+                          className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                        >
+                          <LazyLoadImage
+                            effect="opacity"
+                            src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_3_img.jpg?v=82"
+                            className="w-full h-full "
+                          />
+                        </Link>
                       </div>
-                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
-                        Ghế
-                      </span>
                     </div>
+                    <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                      Ghế
+                    </span>
                   </div>
-                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
-                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
-                      <div className="relative w-full pb-[100%]">
-                        <div className="absolute inset-0">
-                          <a
-                            href="/collections/sofa"
-                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
-                          >
-                            <LazyLoadImage
-                              effect="opacity"
-                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_4_img.jpg?v=82"
-                              className="w-full h-full "
-                            />
-                          </a>
-                        </div>
+                </div>
+                <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                  <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                    <div className="relative w-full pb-[100%]">
+                      <div className="absolute inset-0">
+                        <Link
+                          to="/categories/nem"
+                          className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                        >
+                          <LazyLoadImage
+                            effect="opacity"
+                            src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_4_img.jpg?v=82"
+                            className="w-full h-full "
+                          />
+                        </Link>
                       </div>
-                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
-                        Nệm
-                      </span>
                     </div>
+                    <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                      Nệm
+                    </span>
                   </div>
-                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
-                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
-                      <div className="relative w-full pb-[100%]">
-                        <div className="absolute inset-0">
-                          <a
-                            href="/collections/sofa"
-                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
-                          >
-                            <LazyLoadImage
-                              effect="opacity"
-                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_5_img.jpg?v=82"
-                              className="w-full h-full "
-                            />
-                          </a>
-                        </div>
+                </div>
+                <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                  <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                    <div className="relative w-full pb-[100%]">
+                      <div className="absolute inset-0">
+                        <Link
+                          to="/categories/giuong"
+                          className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                        >
+                          <LazyLoadImage
+                            effect="opacity"
+                            src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_5_img.jpg?v=82"
+                            className="w-full h-full "
+                          />
+                        </Link>
                       </div>
-                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
-                        Giường
-                      </span>
                     </div>
+                    <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                      Giường
+                    </span>
                   </div>
-                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
-                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
-                      <div className="relative w-full pb-[100%]">
-                        <div className="absolute inset-0">
-                          <a
-                            href="/collections/sofa"
-                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
-                          >
-                            <LazyLoadImage
-                              effect="opacity"
-                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_6_img.jpg?v=82"
-                              className="w-full h-full "
-                            />
-                          </a>
-                        </div>
+                </div>
+                <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                  <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                    <div className="relative w-full pb-[100%]">
+                      <div className="absolute inset-0">
+                        <Link
+                          to="/categories/den"
+                          className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                        >
+                          <LazyLoadImage
+                            effect="opacity"
+                            src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_6_img.jpg?v=82"
+                            className="w-full h-full "
+                          />
+                        </Link>
                       </div>
-                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
-                        Đèn
-                      </span>
                     </div>
+                    <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                      Đèn
+                    </span>
                   </div>
-                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
-                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
-                      <div className="relative w-full pb-[100%]">
-                        <div className="absolute inset-0">
-                          <a
-                            href="/collections/sofa"
-                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
-                          >
-                            <LazyLoadImage
-                              effect="opacity"
-                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_7_img.jpg?v=82"
-                              className="w-full h-full "
-                            />
-                          </a>
-                        </div>
+                </div>
+                <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                  <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                    <div className="relative w-full pb-[100%]">
+                      <div className="absolute inset-0">
+                        <Link
+                          to="/categories/lo-hoa"
+                          className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                        >
+                          <LazyLoadImage
+                            effect="opacity"
+                            src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_7_img.jpg?v=82"
+                            className="w-full h-full "
+                          />
+                        </Link>
                       </div>
-                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
-                        Lọ Hoa
-                      </span>
                     </div>
+                    <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                      Lọ Hoa
+                    </span>
                   </div>
-                  <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
-                    <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
-                      <div className="relative w-full pb-[100%]">
-                        <div className="absolute inset-0">
-                          <a
-                            href="/collections/sofa"
-                            className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
-                          >
-                            <LazyLoadImage
-                              effect="opacity"
-                              src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_8_img.jpg?v=82"
-                              className="w-full h-full "
-                            />
-                          </a>
-                        </div>
+                </div>
+                <div className="2md:basis-1/8 md:basis-1/3 basis-1/2 px-1 flex-shrink-0">
+                  <div className="relative h-full text-center py-[15px] flex flex-col items-center flex-shrink-0 ">
+                    <div className="relative w-full pb-[100%]">
+                      <div className="absolute inset-0">
+                        <Link
+                          to="/categories/khung-anh"
+                          className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
+                        >
+                          <LazyLoadImage
+                            effect="opacity"
+                            src="https://theme.hstatic.net/200000796751/1001266995/14/categorize_8_img.jpg?v=82"
+                            className="w-full h-full "
+                          />
+                        </Link>
                       </div>
-                      <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
-                        Khung ảnh
-                      </span>
                     </div>
+                    <span className="text-[13px] text-[#fff] text-center mt-[15px] max-990:hidden">
+                      Khung ảnh
+                    </span>
                   </div>
                 </div>
               </div>
@@ -487,11 +500,25 @@ const Home = () => {
             <h2 className="collection-title capitalize">
               <Link to={"/collections/san-pham-moi"}>sản phẩm nổi bật</Link>
             </h2>
-            <div className="">
-              <button className="px-4 py-2 cursor-pointer rounded-full text-[#fff] font-bold border border-solid border-redichi ml-[20px] capitalize bg-redichi max-990:ml-0 max-990:text-[12px] max-990:px-4 ">
+            <div className="text-[14px]">
+              <button
+                className={`px-4 py-2 cursor-pointer rounded-full font-bold border border-solid ${
+                  sofaNewArrival
+                    ? "border-[#eae4e8] text-[#787878]"
+                    : "border-redichi bg-redichi text-[#fff] "
+                } ml-[20px] capitalize  max-990:ml-0 max-990:text-[12px] max-990:px-4 `}
+                onClick={() => setSofaNewArrival(false)}
+              >
                 sản phẩm mới
               </button>
-              <button className="px-4 py-2 cursor-pointer rounded-full text-[#787878] font-bold border border-solid border-[#eae4e8] ml-[20px] capitalize max-990:text-[12px] max-990:px-4 ">
+              <button
+                className={`px-4 py-2 cursor-pointer rounded-full  font-bold border border-solid   ml-[20px] capitalize max-990:text-[12px] max-990:px-4 ${
+                  !sofaNewArrival
+                    ? "border-[#eae4e8] text-[#787878]"
+                    : "border-redichi bg-redichi text-[#fff] "
+                }`}
+                onClick={() => setSofaNewArrival(true)}
+              >
                 sofa new arrival
               </button>
             </div>
@@ -505,7 +532,7 @@ const Home = () => {
               />
             </div>
             <div className="2md:basis-4/5 xl:grid-cols-5 2md:pl-[14px] grid  grid-rows-2 gap-y-[12px] md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 md:flex-auto w-full grid-cols-2">
-              {data.data.data.latestCollection.products.map((product) => (
+              {newArrivalProducts.map((product) => (
                 <div
                   className=" flex-shrink-0 flex-grow-0 md:px-[6px] px-[2px]"
                   key={product.slug}
@@ -516,15 +543,15 @@ const Home = () => {
             </div>
           </div>
           <div className="flex items-center justify-center mt-[15px]">
-            <HoverEffectButton url={"/collections/san-pham-moi-1"}>
+            <HoverEffectButton url={"/collections/san-pham-moi"}>
               <strong className="text-inherit">Sản phẩm mới</strong>
             </HoverEffectButton>
           </div>
         </section>
         <section className="banner flex 2md:-mx-[15px] max-990:gap-y-3 max-990:flex-col home-collection">
           <div className="  2md:basis-1/2 relative px-[15px] ">
-            <a
-              href="/collections/chan-ga-goi"
+            <Link
+              to="/categories/chan-ga-goi"
               className="w-full block banner-hover-effect overflow-hidden rounded"
             >
               <img
@@ -532,11 +559,11 @@ const Home = () => {
                 effect="opacity"
                 className="object-cover"
               />
-            </a>
+            </Link>
           </div>
           <div className="  2md:basis-1/2 relative px-[15px] ">
-            <a
-              href="/collections/nen-thom"
+            <Link
+              to="/categories/nen-thom"
               className="w-full block banner-hover-effect overflow-hidden rounded"
             >
               <img
@@ -544,7 +571,7 @@ const Home = () => {
                 effect="opacity"
                 className="object-cover"
               />
-            </a>
+            </Link>
           </div>
         </section>
         <section className="home-collection ">
@@ -606,8 +633,8 @@ const Home = () => {
               </div>
             </div>
             <div className=" 2md:basis-3/10 flex-shrink-0 bg-categoryni flex-col flex items-center justify-center max-990:px-[15px]">
-              <a
-                href="/collections/nen-thom"
+              <Link
+                to="/categories/nen-thom"
                 className="w-full block banner-hover-effect overflow-hidden "
               >
                 <img
@@ -615,7 +642,7 @@ const Home = () => {
                   alt=""
                   className="w-full h-full object-cover "
                 />
-              </a>
+              </Link>
             </div>
           </div>
         </section>

@@ -40,7 +40,7 @@ const navigationComponents = [
     subNav: [
       { title: "Giường", link: "/categories/giuong" },
       { title: "Nệm", link: "/categories/nem" },
-      { title: "Nệm Yoga", link: "/categories/nem-yoga-1" },
+      { title: "Nệm Yoga", link: "/categories/nem-yoga" },
     ],
   },
   {
@@ -52,7 +52,7 @@ const navigationComponents = [
       { title: "Gối ngủ", link: "/categories/goi-ngu" },
       { title: "Gối tựa", link: "/categories/goi-tua" },
       { title: "Gối ôm", link: "/categories/goi-om" },
-      { title: "Gối tập yoga", link: "/categories/goi-yoga" },
+      { title: "Gối tập yoga", link: "/categories/goi-tap-yoga" },
     ],
   },
   {
@@ -61,7 +61,7 @@ const navigationComponents = [
     subNav: [
       { title: "Kệ sách", link: "/categories/ke-sach" },
       { title: "Tủ quần áo", link: "/categories/tu-quan-ao" },
-      { title: "Tủ kệ Tivi", link: "/categories/tu-tivi" },
+      { title: "Tủ kệ Tivi", link: "/categories/tu-ke-tivi" },
       { title: "Tủ đầu giường", link: "/categories/tu-dau-giuong" },
       { title: "Tủ kệ giày", link: "/categories/tu-ke-giay" },
       { title: "Tủ ngăn kéo", link: "/categories/tu-ngan-keo" },
@@ -72,12 +72,12 @@ const navigationComponents = [
     link: "/categories/noi-that-van-phong",
     subNav: [
       { title: "Ghế văn phòng", link: "/categories/ghe-van-phong" },
-      { title: "Dụng cụ văn phòng", link: "/categories/van-phong-pham" },
+      { title: "Dụng cụ văn phòng", link: "/categories/dung-cu-van-phong" },
     ],
   },
   {
     title: "Trang trí",
-    link: "/categories/trang-tri-nha-cua",
+    link: "/categories/trang-tri",
     subNav: [
       { title: "Lọ hoa - Bình hoa", link: "/categories/lo-hoa" },
       { title: "Gương treo tường", link: "/categories/guong-treo-tuong" },
@@ -92,7 +92,7 @@ const navigationComponents = [
     link: "/categories/nha-bep",
     subNav: [
       { title: "Tô - Chén - Đĩa", link: "/categories/to-chen-dia" },
-      { title: "Cốc & Ly", link: "/categories/coc-ly" },
+      { title: "Cốc & Ly", link: "/categories/coc-and-ly" },
       { title: "Ấm trà - Bộ ấm trà", link: "/categories/am-tra-bo-am-tra" },
       { title: "Dụng cụ nấu nướng", link: "/categories/dung-cu-nau-nuong" },
       {

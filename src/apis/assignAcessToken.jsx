@@ -1,9 +1,9 @@
-import axios from "axios";
+import apiAxios from "@/configs/axios";
 const assignAccessToken = (token) => {
   if (token) {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    apiAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   } else {
-    delete axios.defaults.headers.common["Authorization"];
+    delete apiAxios.defaults.headers.common["Authorization"];
   }
 };
 export default assignAccessToken;
