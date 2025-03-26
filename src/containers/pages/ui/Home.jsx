@@ -71,6 +71,7 @@ const Home = () => {
   if (isError) {
     return <NotFound />;
   }
+  console.log(data.data.data);
   return (
     <>
       <div>
@@ -204,7 +205,7 @@ const Home = () => {
           <div className="pr-[100px] flex items-center gap-3 md:pt-0 pt-3 pl-2 md:pl-0">
             <div className="fade-loading relative w-2 h-2 rounded-full bg-init"></div>
             <h2 className="collection-title">
-              <Link to={data.data.data.kitchenCollection?.url}>
+              <Link to={data.data.data?.kitchenCollection?.url}>
                 Đồ bếp nhập khẩu cao cấp
               </Link>
             </h2>
@@ -217,7 +218,7 @@ const Home = () => {
               className="w-full group "
             >
               <CarouselContent>
-                {data.data.data.kitchenCollection?.products.map((product) => (
+                {data.data.data?.kitchenCollection?.products.map((product) => (
                   <CarouselItem key={product.slug} className="card-item">
                     <div className="md:px-[6px] px-[2px]">
                       <Card className={"rounded-none"}>
@@ -251,7 +252,7 @@ const Home = () => {
         </section>
 
         <div className=" home-collection flex items-stretch overflow-x-auto no-scrollbar md:ml-[-12px] ">
-          {data.data.data.coupons.map((item) => (
+          {data.data.data?.coupons.map((item) => (
             <div
               className="flex-shrink-0 md:px-[6px] px-3 md:basis-1/2  lg:basis-1/3 xl:basis-1/4 basis-[86%] "
               key={item.id}
@@ -275,7 +276,7 @@ const Home = () => {
               className="w-full group "
             >
               <CarouselContent className={""}>
-                {data.data.data.schoolCollection?.products.map((product) => (
+                {data.data.data?.schoolCollection?.products.map((product) => (
                   <CarouselItem key={product.slug} className="card-item">
                     <div className="md:px-[6px] px-[2px] h-full">
                       <Card className={"rounded-none"}>
@@ -591,11 +592,11 @@ const Home = () => {
                     className="w-full group "
                   >
                     <CarouselContent>
-                      {data.data.data.showerProducts
+                      {data.data.data?.showerProducts
                         .reduce((acc, _, i) => {
                           if (i % 3 === 0) {
                             acc.push(
-                              data.data.data.showerProducts.slice(i, i + 3)
+                              data.data.data?.showerProducts.slice(i, i + 3)
                             );
                           }
                           return acc;
@@ -658,7 +659,7 @@ const Home = () => {
               className="w-full group max-990:px-[15px]"
             >
               <CarouselContent className={""}>
-                {data.data.data.blogs.map((blog) => (
+                {data.data.data?.blogs.map((blog) => (
                   <CarouselItem
                     key={blog.slug}
                     className="lg:basis-1/5  2md:basis-1/4 basis-[80%] md:basis-1/3"
