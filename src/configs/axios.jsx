@@ -1,7 +1,6 @@
 import axios from "axios";
 import { apiUrl } from "./apiUrl";
 import { Modal } from "antd";
-import { motion } from "motion/react";
 
 const showSessionExpiredModal = () => {
   Modal.confirm({
