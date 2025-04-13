@@ -66,6 +66,7 @@ const authSlice = createSlice({
         state.isRefreshing = false;
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.account = action.payload;
         state.loading = false;
         state.isRefreshing = true;

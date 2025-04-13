@@ -16,7 +16,6 @@ import {
 } from "@/containers/components/Dropdown/DropdownFullScreen";
 import { LoginBox } from "@/containers/components";
 import { useDispatch, useSelector } from "react-redux";
-import ThreeDotsLoading from "../ThreeDotsLoading";
 import getFullName from "@/helpers/getName";
 import { Link } from "react-router-dom";
 import useMessage from "@/hooks/useMessage";
@@ -40,18 +39,18 @@ export function AccountButton({ className }) {
   const logoutMutate = useMutation({
     mutationFn: logout,
     onSuccess: (response) => {
-      onOpenChange(false);
-      messageApi.open({
-        type: "success",
-        content: "Bạn đã đăng xuất thành công",
-        className: "custom-class",
-        style: {
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        },
-      });
+      // messageApi.open({
+      //   type: "success",
+      //   content: "Bạn đã đăng xuất thành công",
+      //   className: "custom-class",
+      //   style: {
+      //     display: "flex",
+      //     alignItems: "center",
+      //     justifyContent: "center",
+      //   },
+      // });
       dispatch(setLogginState(false));
+      onOpenChange(false);
     },
     onError: (error) => {
       messageApi.open({
@@ -106,7 +105,7 @@ export function AccountButton({ className }) {
             });
           }}
         >
-          <a className="items-center  flex py-[9px]">
+          <div className="items-center  flex py-[9px]">
             <span className="w-6 h-6">
               <UserRound size={30} strokeWidth={1} />
             </span>
@@ -118,7 +117,7 @@ export function AccountButton({ className }) {
                 <ChevronDown className="text-[#fff]" size={16}></ChevronDown>
               </span>
             </span>
-          </a>
+          </div>
         </button>
       );
     } else {
@@ -231,7 +230,7 @@ export function AccountButton({ className }) {
                         Đăng xuất
                       </button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent>
+                    <AlertDialogContent className={"z-[112]"}>
                       <AlertDialogHeader>
                         <AlertDialogTitle className={"hidden"}>
                           Bạn có chắc muốn đăng xuất khỏi website
@@ -341,6 +340,9 @@ export function AccountButton({ className }) {
                       <Link
                         to="/my-account"
                         className="font-normal cursor-pointer text-[14px] px-[4px]"
+                        onClick={() => {
+                          onOpenChange(false);
+                        }}
                       >
                         Tài khoản của tôi
                       </Link>
@@ -349,6 +351,9 @@ export function AccountButton({ className }) {
                       <Link
                         to="/my-account/addresses"
                         className="font-normal cursor-pointer text-[14px] px-[4px]"
+                        onClick={() => {
+                          onOpenChange(false);
+                        }}
                       >
                         Danh sách địa chỉ
                       </Link>
@@ -360,7 +365,7 @@ export function AccountButton({ className }) {
                             Đăng xuất
                           </button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent>
+                        <AlertDialogContent className={"z-[102]"}>
                           <AlertDialogHeader>
                             <AlertDialogTitle className={"hidden"}>
                               Bạn có chắc muốn đăng xuất khỏi website

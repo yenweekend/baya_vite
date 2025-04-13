@@ -12,6 +12,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Modal } from "antd";
 import {
   Dropdown,
   DropdownContent,
@@ -23,7 +24,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { get } from "@/apis/cart";
 import { useSelector } from "react-redux";
 import formatPrice from "@/helpers/formatPrice";
-import ThreeDotsLoading from "../ThreeDotsLoading";
 import CartItem from "../Items/CartItem";
 import useMessage from "@/hooks/useMessage";
 import { useDispatch } from "react-redux";
@@ -58,7 +58,7 @@ export function CartButtonTransition() {
           "text-[#fff] mx-[2px] items-center justify-center flex  text-sm font-medium 2md:px-4 px-1"
         }
         onClick={() => {
-          alert("hãy đăng nhập");
+          alert("Hãy đăng nhập để trải nghiệm tính năng!");
         }}
       >
         <a className="items-center  flex relative">
@@ -89,7 +89,7 @@ export function CartButtonTransition() {
     });
     if (isDesktop) {
       return (
-        <button
+        <div
           className={
             "text-[#fff] mx-[2px] items-center justify-center flex  text-sm font-medium 2md:px-4 px-1"
           }
@@ -105,23 +105,23 @@ export function CartButtonTransition() {
               0
             </span>
           </span>{" "}
-        </button>
+        </div>
       );
     }
     return (
-      <button className="items-center justify-center flex  text-sm font-medium relative 2md:px-4 md:px-3 px-[8px]  text-[#fff]">
+      <div className="items-center justify-center flex  text-sm font-medium relative 2md:px-4 md:px-3 px-[8px]  text-[#fff]">
         <ShoppingCart strokeWidth={1.5} size={20} />
         <span className="badge text-[12px] absolute w-[16px] h-[16px] bg-[#ff0000] rounded-full flex items-center justify-center text-[#fff] top-[-8px] left-[24px]">
           0
         </span>
-      </button>
+      </div>
     );
   }
 
   if (isDesktop) {
     if (isPending) {
       return (
-        <button className="items-center justify-center flex  text-sm font-medium relative 2md:px-4 md:px-3 px-[8px] text-[#fff] ">
+        <div className="items-center justify-center flex  text-sm font-medium relative 2md:px-4 md:px-3 px-[8px] text-[#fff] ">
           <span className="items-center  flex relative">
             <span className="w-6 h-6">
               <ShoppingCart size={24} strokeWidth={1.5} />
@@ -133,7 +133,7 @@ export function CartButtonTransition() {
               0
             </span>
           </span>
-        </button>
+        </div>
       );
     }
     return (
@@ -204,12 +204,12 @@ export function CartButtonTransition() {
   }
   if (isPending) {
     return (
-      <button className="items-center justify-center flex  text-sm font-medium relative 2md:px-4 md:px-3 px-[8px]  text-[#fff]">
+      <div className="items-center justify-center flex  text-sm font-medium relative 2md:px-4 md:px-3 px-[8px]  text-[#fff]">
         <ShoppingCart strokeWidth={1.5} size={20} />
         <span className="badge text-[12px] absolute w-[16px] h-[16px] bg-[#ff0000] rounded-full flex items-center justify-center text-[#fff] top-[-8px] left-[24px]">
           0
         </span>
-      </button>
+      </div>
     );
   }
   return (

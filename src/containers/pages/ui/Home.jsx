@@ -9,16 +9,6 @@ import { HoverEffectButton, CouponCard } from "../../components";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import {
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -40,8 +30,7 @@ import { Carousel as CarouselAntd } from "antd";
 import HomeSkeleton from "@/containers/components/Skeleton/Home";
 import { useQuery } from "@tanstack/react-query";
 import { getHome } from "@/apis/home";
-import { NotFound } from "../../components";
-
+import { NotFound, CartFloating } from "../../components";
 const Home = () => {
   const [sofaNewArrival, setSofaNewArrival] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -71,7 +60,6 @@ const Home = () => {
   if (isError) {
     return <NotFound />;
   }
-  console.log(data.data.data);
   return (
     <>
       <div>
@@ -97,7 +85,11 @@ const Home = () => {
                         media="(max-width:768px)"
                         srcSet="https://theme.hstatic.net/200000796751/1001266995/14/slide_3_mb.jpg?v=83"
                       />
-                      <img src="https://theme.hstatic.net/200000796751/1001266995/14/slide_3_img.jpg?v=82" />
+                      <LazyLoadImage
+                        effect="opacity"
+                        src="https://theme.hstatic.net/200000796751/1001266995/14/slide_3_img.jpg?v=82"
+                        className="w-full h-full "
+                      />
                     </picture>
                   </Link>
                 </div>
@@ -115,7 +107,11 @@ const Home = () => {
                         media="(max-width:768px)"
                         srcSet="https://theme.hstatic.net/200000796751/1001266995/14/slide_1_mb.jpg?v=83"
                       />
-                      <img src="https://theme.hstatic.net/200000796751/1001266995/14/slide_1_img.jpg?v=82" />
+                      <LazyLoadImage
+                        effect="opacity"
+                        src="https://theme.hstatic.net/200000796751/1001266995/14/slide_1_img.jpg?v=82"
+                        className="w-full h-full "
+                      />
                     </picture>
                   </Link>
                 </div>
@@ -133,7 +129,11 @@ const Home = () => {
                         media="(max-width:768px)"
                         srcSet="https://theme.hstatic.net/200000796751/1001266995/14/slide_2_mb.jpg?v=83"
                       />
-                      <img src="https://theme.hstatic.net/200000796751/1001266995/14/slide_2_img.jpg?v=82" />
+                      <LazyLoadImage
+                        effect="opacity"
+                        src="https://theme.hstatic.net/200000796751/1001266995/14/slide_2_img.jpg?v=82"
+                        className="w-full h-full "
+                      />
                     </picture>
                   </Link>
                 </div>
@@ -148,7 +148,11 @@ const Home = () => {
                         media="(max-width:768px)"
                         srcSet="https://theme.hstatic.net/200000796751/1001266995/14/slide_4_mb.jpg?v=83"
                       />
-                      <img src="https://theme.hstatic.net/200000796751/1001266995/14/slide_4_img.jpg?v=82" />
+                      <LazyLoadImage
+                        effect="opacity"
+                        src="https://theme.hstatic.net/200000796751/1001266995/14/slide_4_img.jpg?v=82"
+                        className="w-full h-full "
+                      />
                     </picture>
                   </Link>
                 </div>
@@ -455,7 +459,7 @@ const Home = () => {
                     <div className="relative w-full pb-[100%]">
                       <div className="absolute inset-0">
                         <Link
-                          to="/categories/lo-hoa"
+                          to="/categories/lo-hoa-binh-hoa"
                           className=" block w-full bg-[#fff] hover:shadow-scale transition-all ease-linear duration-150 rounded-full "
                         >
                           <LazyLoadImage
@@ -526,9 +530,9 @@ const Home = () => {
           </div>
           <div className="flex items-center">
             <div className="2md:basis-1/5 bg-collectionni max-990:hidden">
-              <img
+              <LazyLoadImage
+                effect="opacity"
                 src="https://theme.hstatic.net/200000796751/1001266995/14/home_coll_1_banner.jpg?v=82"
-                alt=""
                 className="w-full h-full object-cover"
               />
             </div>
@@ -555,10 +559,10 @@ const Home = () => {
               to="/categories/chan-ga-goi"
               className="w-full block banner-hover-effect overflow-hidden rounded"
             >
-              <img
-                src="https://theme.hstatic.net/200000796751/1001266995/14/homebanner_1_img.jpg?v=82"
+              <LazyLoadImage
                 effect="opacity"
-                className="object-cover"
+                src="https://theme.hstatic.net/200000796751/1001266995/14/homebanner_1_img.jpg?v=82"
+                className="w-full h-full "
               />
             </Link>
           </div>
@@ -567,10 +571,10 @@ const Home = () => {
               to="/categories/nen-thom"
               className="w-full block banner-hover-effect overflow-hidden rounded"
             >
-              <img
-                src="https://theme.hstatic.net/200000796751/1001266995/14/homebanner_2_img.jpg?v=82"
+              <LazyLoadImage
                 effect="opacity"
-                className="object-cover"
+                src="https://theme.hstatic.net/200000796751/1001266995/14/homebanner_2_img.jpg?v=82"
+                className="w-full h-full "
               />
             </Link>
           </div>
@@ -638,10 +642,10 @@ const Home = () => {
                 to="/categories/nen-thom"
                 className="w-full block banner-hover-effect overflow-hidden "
               >
-                <img
+                <LazyLoadImage
+                  effect="opacity"
                   src="https://theme.hstatic.net/200000796751/1001266995/14/home_collection_3_banner.jpg?v=82"
-                  alt=""
-                  className="w-full h-full object-cover "
+                  className="w-full h-full "
                 />
               </Link>
             </div>
@@ -685,98 +689,7 @@ const Home = () => {
             </Carousel>
           </div>
         </section>
-        <div className="fixed bottom-0 right-0 left-0 bg-redni text-[#fff] flex items-center justify-between py-[12px] px-[20px] 2md:hidden z-[99]">
-          <span>7 sản phẩm</span>
-          <span>2,170,000đ</span>
-          <Drawer>
-            <DrawerTrigger
-              asChild
-              className="cursor-pointer text-[#fff] py-2 pl-4"
-            >
-              <span>Xem chi tiết</span>
-            </DrawerTrigger>
-            <DrawerContent>
-              <DrawerHeader className="text-left rounded-t-[10px] bg-redni">
-                <DrawerTitle>
-                  <div className="text-[15px]  font-medium text-[#fff] flex items-center justify-between">
-                    <span className="text-[14px] font-normal basis-1/3">
-                      7 sản phẩm
-                    </span>
-                    <span className="font-bold basis-1/3 text-center">
-                      2,170,000đ
-                    </span>
-                    <DrawerClose className="text-[#fff] basis-1/3 text-right">
-                      <X size={20} className="ml-auto" />
-                    </DrawerClose>
-                  </div>
-                </DrawerTitle>
-                <DrawerDescription className={"hidden"}>
-                  Thông tin giỏ hàng
-                </DrawerDescription>
-              </DrawerHeader>
-              <div className="py-[15px] ">
-                <div className="max-h-[360px] overflow-y-scroll cart-view-scroll">
-                  <ul className=" ">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <li
-                        className="flex px-[12px] border-b border-solid border-shop py-[20px]"
-                        key={index}
-                      >
-                        <div className="w-[75px] h-[75px] overflow-hidden border border-solid cart-item mr-[15px] flex-shrink-0">
-                          <img
-                            src="https://product.hstatic.net/200000796751/product/2002535_5b3eede60829490499619fabe5dbd0a9_small.jpg"
-                            alt=""
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="flex-auto">
-                          <div className="font-semibold text-[14px] pr-[28px] text-[#000] relative">
-                            Bát ăn snack gốm sứ ANNE màu ngẫu nhiên H6.5xD11.5
-                            <div className="absolute right-0 top-0 center-y cursor-pointer">
-                              <X className="text-blackni" size={16} />
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between ">
-                            <div className="flex items-center mt-2">
-                              <button className="bg-[#f9f9f9] border border-solid border-[#f3f4f4] rounded-[3px] text-center h-[28px] w-[28px] flex items-center justify-center cursor-pointer">
-                                <Minus className="text-blackni" size={16} />
-                              </button>
-                              <span className="text-[14px] font-bold text-[#252a2b] border border-solid border-[#f3f4f4] text-center h-[28px] w-[38px] bg-[#fff] flex items-center justify-center">
-                                1
-                              </span>
-                              <button className="bg-[#f9f9f9] border border-solid border-[#f3f4f4] rounded-[3px] text-center h-[28px] w-[28px] flex items-center justify-center cursor-pointer">
-                                <Plus className="text-blackni" size={16} />
-                              </button>
-                            </div>
-                            <span className="text-blacknitext-[14px] font-bold">
-                              29.000đ
-                            </span>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="  mb-[20px] flex justify-between items-center py-[10px] leading-6">
-                  <span className="text-blackni uppercase text-[14px]">
-                    Tổng tiền :
-                  </span>
-                  <span className="text-redni font-bold text-[16px] ">
-                    29.000đ
-                  </span>
-                </div>
-              </div>
-              <DrawerFooter className="pt-2">
-                <DrawerClose
-                  asChild
-                  className="block p-[10px] mt-[5px] w-full bg-redni text-[#fff] text-[13px] font-medium cursor-pointe text-center uppercase"
-                >
-                  <Link to={"/"}>Xem giỏ hàng</Link>
-                </DrawerClose>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
-        </div>
+        <CartFloating />
       </div>
     </>
   );

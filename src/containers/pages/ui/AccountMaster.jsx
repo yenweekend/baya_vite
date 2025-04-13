@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { NavLink, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import useMessage from "antd/es/message/useMessage";
@@ -20,7 +20,7 @@ import {
 import { logout } from "@/apis/auth";
 const AccountMaster = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const logoutMutate = useMutation({
     mutationFn: logout,
     onSuccess: (response) => {
@@ -93,11 +93,11 @@ const AccountMaster = () => {
             <li className="list-disc marker:text-redichi text-[14px] font-medium">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <button className="font-normal cursor-pointer text-[14px] px-[4px] ">
+                  <button className="font-medium cursor-pointer text-[14px] ">
                     Đăng xuất
                   </button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
+                <AlertDialogContent className={"z-[112]"}>
                   <AlertDialogHeader>
                     <AlertDialogTitle className={"hidden"}>
                       Bạn có chắc muốn đăng xuất khỏi website

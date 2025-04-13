@@ -38,7 +38,8 @@ import { CloseButton } from "..";
 import formatPrice from "@/helpers/formatPrice";
 import _ from "lodash";
 import slugify from "@/helpers/slugify";
-
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 const Slider = forwardRef(
   ({ className, images, setCurrentIdx, currentIdx }, ref) => {
     const [thumbsSwiper, setThumbsSwiper] = React.useState(null);
@@ -99,15 +100,53 @@ const Slider = forwardRef(
   }
 );
 export { Slider };
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { add } from "@/apis/cart";
+import toast from "@/containers/components/Toaster";
+import useMessage from "@/hooks/useMessage";
+import { useSelector } from "react-redux";
 const QuickView = ({ className, children, data }) => {
+  const { account, loading } = useSelector((state) => state.auth);
+  const messageApi = useMessage();
   const swiperRef = useRef(null);
   const [currentIdx, setCurrentIdx] = useState(0);
+  const queryClient = useQueryClient();
+  const [quantity, setQuantity] = useState(1);
 
+  const { mutate, isSuccess, ...mutateAddToCart } = useMutation({
+    mutationFn: add,
+    onSuccess: (response) => {
+      setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast({
+        title: "Thêm vào giỏ hàng thành cônng",
+        type: "success",
+        data: {
+          thumbnail: data.thumbnail,
+          price: data.price,
+          title: data.title,
+        },
+      });
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: "error",
+        content:
+          error.response.data.msg || "Thêm sản phẩm vào giỏ hàng thất bại!",
+        className: "custom-class",
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      });
+    },
+  });
   const [open, setOpen] = React.useState(false);
-  const [selectedGift, setSelectedGift] = React.useState(null);
-  const handleGiftChange = (e) => {
-    setSelectedGift(e.target.value);
-  };
+  // const [selectedGift, setSelectedGift] = React.useState(null);
+  // const handleGiftChange = (e) => {
+  //   setSelectedGift(e.target.value);
+  // };
   const [images, setImages] = useState(null);
   const [productVariant, setProductVariant] = useState(null);
   const [attribute, setAttribute] = React.useState({});
@@ -161,7 +200,36 @@ const QuickView = ({ className, children, data }) => {
       }
     }
   }, [data, attribute, images]);
-
+  const handleIncrease = () => {
+    setQuantity((prev) => {
+      const newQuantity = prev + 1;
+      if (productVariant.stock - newQuantity < 0) {
+        alert("Số lượng sản phẩm trong kho không đủ!");
+        return prev;
+      }
+      // debouncedUpdateQuantity(newQuantity);
+      return newQuantity;
+    });
+  };
+  // Decrease quantity (prevent going below 1)
+  const handleDecrease = () => {
+    setQuantity((prev) => {
+      if (prev === 1) {
+        alert("Số lượng phải lớn hơn 0");
+        return prev;
+      }
+      const newQuantity = prev - 1;
+      // debouncedUpdateQuantity(newQuantity);
+      return newQuantity;
+    });
+  };
+  const handleAddToCart = (data) => {
+    if (!account) {
+      alert("Hãy đăng nhập để trải nghiệm tính năng này");
+    } else {
+      mutate(data);
+    }
+  };
   const isDesktop = useMediaQuery("(min-width: 990px)");
   if (isDesktop) {
     return (
@@ -304,93 +372,16 @@ const QuickView = ({ className, children, data }) => {
                       </div>
                     ))}
                 </div>
-                {/* <div className="">
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="w-full border-none"
-                    defaultValue="item-1"
-                  >
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger
-                        className={
-                          " py-[10px]  text-[13px] font-bold text-redichi bg-[#fafafa] px-[6px] border-none"
-                        }
-                      >
-                        Quà tặng
-                      </AccordionTrigger>
-                      <AccordionContent className={"p-[10px] border-none"}>
-                        <div className="flex flex-col max-h-[30vh]">
-                          {[1, 2].map((giftId) => (
-                            <label
-                              key={giftId}
-                              className="flex items-center cursor-pointer overflow-hidden radio py-[6px] border-b border-solid border-[#eee] pl-[4px] hover:bg-[#fafafa] transition-all duration-150 ease-linear"
-                              htmlFor={`gift-${giftId}`}
-                            >
-                              <input
-                                type="radio"
-                                name="gift"
-                                value={giftId}
-                                id={`gift-${giftId}`}
-                                className="p-[6px]"
-                                checked={selectedGift === String(giftId)}
-                                onChange={handleGiftChange}
-                              />
-                              <div className="flex-auto w-[300px] px-[8px] flex items-center ">
-                                <div className="mr-[10px] basis-1/6 border border-solid border-[#eee] p-[4px]">
-                                  <div className="pb-[100%] relative ">
-                                    <div className="absolute inset-0">
-                                      <LazyLoadImage
-                                        src="https://image.hsv-tech.io/400x0/bbx/products/5b1e3778-6e2a-45d6-b437-8ae51ba54d93.webp"
-                                        effect="blur"
-                                        className="w-full h-full object-cover"
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                                <div
-                                  className="flex-shrink-0 basis-5/6 pr-[30px]
-                                 relative"
-                                >
-                                  <a
-                                    href="/"
-                                    className="text-blacknitext-[10px] font-normal flex items-center cursor-pointer absolute right-0 bottom-0 hover:text-redni group underline"
-                                  >
-                                    Xem chi tiết{" "}
-                                    <ChevronsRight
-                                      size={16}
-                                      className="stroke-blacknigroup-hover:stroke-second"
-                                      strokeWidth={0.6}
-                                    />
-                                  </a>
-                                  <span className="font-semibold text-[13px] hover:text-redichi line-clamp-1 ">
-                                    Đệm Trang Trí Vải Cotton Nhiều Màu ROSABELLA{" "}
-                                    {giftId}
-                                  </span>
-                                  <a
-                                    href="/thuong-hieu"
-                                    className="text-vendor hover:text-redichi uppercase text-[13px] "
-                                  >
-                                    <span className="text-[12px] text-vendor normal-case">
-                                      thương hiệu:{" "}
-                                    </span>
-                                    Anna
-                                  </a>
-                                </div>
-                              </div>
-                            </label>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                </div> */}
+
                 <div className="flex items-center mt-[15px]">
                   <span className="text-[--shop-color-text] font-bold text-[14px] mr-[100px]">
                     Số lượng:
                   </span>
                   <div className="flex items-center  w-[120px]  ">
-                    <div className=" flex items-center justify-center  border border-solid border-[#f3f4f4] w-8 h-8 bg-[#f3f4f4] cursor-pointer group">
+                    <div
+                      className=" flex items-center justify-center  border border-solid border-[#f3f4f4] w-8 h-8 bg-[#f3f4f4] cursor-pointer group"
+                      onClick={handleDecrease}
+                    >
                       <Minus
                         size={16}
                         strokeWidth={3}
@@ -400,7 +391,10 @@ const QuickView = ({ className, children, data }) => {
                     <div className="border border-solid border-[#f3f4f4] w-8 h-8 flex items-center justify-center text-[14px] font-bold">
                       1
                     </div>
-                    <div className=" flex items-center justify-center border border-solid border-[#f3f4f4] w-8 h-8 bg-[#f3f4f4] cursor-pointer group">
+                    <div
+                      className=" flex items-center justify-center border border-solid border-[#f3f4f4] w-8 h-8 bg-[#f3f4f4] cursor-pointer group"
+                      onClick={handleIncrease}
+                    >
                       <Plus
                         size={16}
                         strokeWidth={3}
@@ -409,12 +403,34 @@ const QuickView = ({ className, children, data }) => {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center  py-[10px] px-[25px]  gap-3 cursor-pointer flex-auto justify-center bg-[#ff0000] text-[#fff] mt-[15px]">
-                  <span className="w-6 h-6 ">
-                    <ShoppingCart size={24} stroke="#fff" />
-                  </span>
-                  <span className="text-[16px]">Thêm vào giỏ hàng</span>
-                </div>
+                {mutateAddToCart.isPending ? (
+                  <div className="flex items-center    gap-3 cursor-pointer flex-auto justify-center  text-[#fff] mt-[15px]">
+                    <Button disabled className={"rounded flex-auto w-full"}>
+                      <Loader2 className="animate-spin" />
+                      <span className="text-inheirt text-[14px] font-bold uppercase">
+                        Thêm vào giỏ hàng
+                      </span>
+                    </Button>
+                  </div>
+                ) : (
+                  <div
+                    className="flex items-center  py-[10px] px-[25px]  gap-3 cursor-pointer flex-auto justify-center bg-redichi text-[#fff] mt-[15px] h-10"
+                    onClick={() =>
+                      handleAddToCart({
+                        id: data.id,
+                        payload: quantity,
+                      })
+                    }
+                  >
+                    <span className="w-6 h-6 ">
+                      <ShoppingCart size={24} stroke="#fff" />
+                    </span>
+                    <span className="text-[14px] font-bold uppercase">
+                      Thêm vào giỏ hàng
+                    </span>
+                  </div>
+                )}
+
                 <Link
                   to={data?.url}
                   className="text-blacknitext-[14px]  flex items-center cursor-pointer mt-[15px] hover:text-redni group underline"
@@ -583,7 +599,67 @@ const QuickView = ({ className, children, data }) => {
                       </div>
                     ))}
                 </div>
-                {/* <div className="">
+
+                <Link
+                  to={data?.url}
+                  className="text-blacknitext-[14px]  flex items-center cursor-pointer mt-[15px] hover:text-redni group underline"
+                >
+                  Xem chi tiết sản phẩm
+                  <ChevronsRight
+                    size={16}
+                    className="stroke-blacknigroup-hover:stroke-redni pt-[2px]"
+                    strokeWidth={2}
+                  />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+        <DrawerFooter className="pt-2 flex items-center flex-row border-t z-[9999]">
+          <div className="flex justify-center">
+            <div className="flex items-center mx-auto">
+              <div
+                className=" flex items-center justify-center  border border-solid border-[#f3f4f4] w-10 h-10 bg-[#f3f4f4] cursor-pointer group"
+                onClick={handleDecrease}
+              >
+                <Minus
+                  size={16}
+                  strokeWidth={3}
+                  className="stroke-[#a4aaaf] group-hover:stroke-blacknitransition-all ease-linear duration-150"
+                />
+              </div>
+              <div className="border border-solid border-[#f3f4f4] w-10 h-10 flex items-center justify-center text-[14px] font-bold">
+                1
+              </div>
+              <div
+                className=" flex items-center justify-center border border-solid border-[#f3f4f4] w-10 h-10 bg-[#f3f4f4] cursor-pointer group"
+                onClick={handleIncrease}
+              >
+                <Plus
+                  size={16}
+                  strokeWidth={3}
+                  className="stroke-[#a4aaaf] group-hover:stroke-blacknitransition-all ease-linear duration-150"
+                />
+              </div>
+            </div>
+          </div>
+          <DrawerClose
+            className="block p-[10px]  w-full bg-redni text-[#fff] text-[13px] font-medium cursor-pointe text-center uppercase "
+            onClick={() => {
+              alert("Tao chưa được xử lí nè");
+            }}
+          >
+            <span>Thêm vào giỏ</span>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  );
+};
+
+export default QuickView;
+{
+  /* <div className="">
                   <Accordion
                     type="single"
                     collapsible
@@ -663,51 +739,5 @@ const QuickView = ({ className, children, data }) => {
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
-                </div> */}
-                <Link
-                  to={data?.url}
-                  className="text-blacknitext-[14px]  flex items-center cursor-pointer mt-[15px] hover:text-redni group underline"
-                >
-                  Xem chi tiết sản phẩm
-                  <ChevronsRight
-                    size={16}
-                    className="stroke-blacknigroup-hover:stroke-redni pt-[2px]"
-                    strokeWidth={2}
-                  />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-        <DrawerFooter className="pt-2 flex items-center flex-row border-t z-[9999]">
-          <div className="flex justify-center">
-            <div className="flex items-center mx-auto">
-              <div className=" flex items-center justify-center  border border-solid border-[#f3f4f4] w-10 h-10 bg-[#f3f4f4] cursor-pointer group">
-                <Minus
-                  size={16}
-                  strokeWidth={3}
-                  className="stroke-[#a4aaaf] group-hover:stroke-blacknitransition-all ease-linear duration-150"
-                />
-              </div>
-              <div className="border border-solid border-[#f3f4f4] w-10 h-10 flex items-center justify-center text-[14px] font-bold">
-                1
-              </div>
-              <div className=" flex items-center justify-center border border-solid border-[#f3f4f4] w-10 h-10 bg-[#f3f4f4] cursor-pointer group">
-                <Plus
-                  size={16}
-                  strokeWidth={3}
-                  className="stroke-[#a4aaaf] group-hover:stroke-blacknitransition-all ease-linear duration-150"
-                />
-              </div>
-            </div>
-          </div>
-          <DrawerClose className="block p-[10px]  w-full bg-redni text-[#fff] text-[13px] font-medium cursor-pointe text-center uppercase ">
-            <span>Thêm vào giỏ</span>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
-  );
-};
-
-export default QuickView;
+                </div> */
+}

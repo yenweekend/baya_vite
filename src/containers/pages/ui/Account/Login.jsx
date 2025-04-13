@@ -17,8 +17,8 @@ const Login = () => {
   const { mutate, isPending, isError } = useMutation({
     mutationFn: login,
     onSuccess: (response) => {
-      dispatch(setLogginState(true));
       navigate("/");
+      dispatch(setLogginState(true));
     },
     onError: (error) => {
       messageApi.open({

@@ -84,7 +84,7 @@ const DropdownScreenContent = React.forwardRef(
       <div
         ref={ref}
         className={cn(
-          ` main-dropdown absolute z-[999]   bg-[#fff] transition-opacity duration-300  shadow-nd right-0 left-0 w-screen h-[80vh] top-[55%] ${
+          ` main-dropdown absolute z-[99]   bg-[#fff] transition-opacity duration-300  shadow-nd right-0 left-0 w-screen h-[80vh] top-[55%] ${
             open
               ? "opacity-[1] visible scale-100"
               : "opacity-0 invisible scale-[0.9]"

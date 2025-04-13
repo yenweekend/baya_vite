@@ -85,6 +85,8 @@ import useMessage from "@/hooks/useMessage";
 import { Controller, useForm } from "react-hook-form";
 import ImageUploader from "@/containers/components/ImageUploader";
 const ProductDetail = () => {
+  const { account, loading } = useSelector((state) => state.auth);
+
   const {
     setError,
     clearErrors,
@@ -146,7 +148,7 @@ const ProductDetail = () => {
     });
   }, []);
   const queryClient = useQueryClient();
-  const { mutate, isSuccess, ...mutateElement } = useMutation({
+  const { mutate, isSuccess, ...mutateAddToCart } = useMutation({
     mutationFn: add,
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
@@ -392,7 +394,11 @@ const ProductDetail = () => {
     });
   }
   const handleAddToCart = (data) => {
-    mutate(data);
+    if (!account) {
+      alert("Hãy đăng nhập để trải nghiệm tính năng này");
+    } else {
+      mutate(data);
+    }
   };
   const onSubmit = (fData) => {
     const formData = new FormData();
@@ -591,10 +597,10 @@ const ProductDetail = () => {
               </button>
             </div>
           </div>
-          <div className="w-full bg-[#fff] py-5 px-3 mt-[15px]">
-            <div className="flex flex-col">
-              {data.data.feedback.length > 0 &&
-                data.data.feedback.map((fb) => (
+          {data.data.feedback.length > 0 && (
+            <div className="w-full bg-[#fff] py-5 px-3 mt-[15px]">
+              <div className="flex flex-col">
+                {data.data.feedback.map((fb) => (
                   <div
                     key={fb.id}
                     className="border-b border-b-solid border-b-[rgba(0,0,0,0.09)] pb-[12px] pl-2 flex items-start gap-3"
@@ -636,8 +642,9 @@ const ProductDetail = () => {
                     </div>
                   </div>
                 ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="2md:basis-55 w-full">
           <div className=" bg-[#fff]   p-[15px]">
@@ -871,30 +878,33 @@ const ProductDetail = () => {
             </div>
 
             <div className="flex items-center justify-center mt-[15px] gap-[30px]">
-              <div
-                className="basis-1/2 2md:block hidden"
-                onClick={() =>
-                  handleAddToCart({
-                    id: data.data.productDetail.id,
-                    payload: quantity,
-                  })
-                }
-              >
-                {mutateElement.isPending ? (
+              {mutateAddToCart.isPending ? (
+                <div className="basis-1/2 2md:block hidden">
                   <Button disabled className={"rounded flex-auto w-full"}>
                     <Loader2 className="animate-spin" />
                     <span className="text-inheirt text-[14px] font-bold uppercase">
                       Thêm vào giỏ
                     </span>
                   </Button>
-                ) : (
+                </div>
+              ) : (
+                <div
+                  className="basis-1/2 2md:block hidden"
+                  onClick={() =>
+                    handleAddToCart({
+                      id: data.data.productDetail.id,
+                      payload: quantity,
+                    })
+                  }
+                >
                   <HoverEffectBox className={"w-full rounded"}>
                     <span className="text-inheirt text-[14px] font-bold uppercase">
                       Thêm vào giỏ
                     </span>
                   </HoverEffectBox>
-                )}
-              </div>
+                </div>
+              )}
+
               <div className="basis-1/2 ">
                 {mutatePurchaseNowMethods.isPending ? (
                   <Button disabled className={"rounded flex-auto w-full"}>
@@ -1126,7 +1136,13 @@ const ProductDetail = () => {
                       className={"mt-[15px]"}
                       onClick={(e) => {
                         e.preventDefault();
-                        handleSubmit(onSubmit)();
+                        if (!account) {
+                          alert(
+                            "Hãy đăng nhập để gửi feedback cho sản phẩm này"
+                          );
+                        } else {
+                          handleSubmit(onSubmit)();
+                        }
                       }}
                     >
                       Gửi ngay
@@ -1217,6 +1233,7 @@ const ProductDetail = () => {
           </div>
         </div>
       )}
+
       <div className="fixed bottom-0 right-0 left-0  text-[#fff] bg-[#fff] flex items-center justify-between py-[12px] px-[20px] 2md:hidden pt-2  border-t z-[50]">
         <div className="flex items-center w-[720px] mx-auto gap-4">
           <div className="flex justify-center ">
@@ -1250,7 +1267,7 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
-          {!isDesktop && (
+          {!isDesktop && cartData ? (
             <Drawer open={open} onOpenChange={setOpen} modal={true}>
               <DrawerTrigger className="cursor-pointer text-[#fff] py-2 pl-4 flex-auto w-full">
                 <div
@@ -1262,7 +1279,7 @@ const ProductDetail = () => {
                     })
                   }
                 >
-                  <span>Thêm vào giỏ</span>
+                  <span>Thêm vào giỏ </span>
                 </div>
               </DrawerTrigger>
               <DrawerContent>
@@ -1338,6 +1355,17 @@ const ProductDetail = () => {
                 </DrawerFooter>
               </DrawerContent>
             </Drawer>
+          ) : (
+            <div className="cursor-pointer text-[#fff] py-2 pl-4 flex-auto w-full">
+              <div
+                className="block p-[10px] flex-auto bg-redni text-[#fff] text-[13px] font-medium cursor-pointe text-center uppercase rounded cursor-pointer"
+                onClick={() =>
+                  alert("Hãy đăng nhập để trải nghiệm tính năng này")
+                }
+              >
+                <span>Thêm vào giỏ </span>
+              </div>
+            </div>
           )}
         </div>
       </div>

@@ -154,15 +154,15 @@ const ProductCard = ({ tagSale = null, productData }) => {
             <p className=" text-[12px] 2xl:text-[13px] font-bold uppercase flex-auto text-center line-clamp-1">
               Thêm vào giỏ
             </p>
-            <button className=" w-7 h-7 2xl:w-8 2xl:h-8 bg-primary  rounded-full flex items-center justify-center flex-shrink-0">
+            <div className=" w-7 h-7 2xl:w-8 2xl:h-8 bg-primary  rounded-full flex items-center justify-center flex-shrink-0">
               <ShoppingCart size={16} strokeWidth={1.5} stroke="#fff" />
-            </button>
+            </div>
           </div>
         ) : !account ? (
           <div
             className="cursor-pointer flex items-center justify-between gap-2 h-7 2xl:h-8 border border-solid border-transparent hover:border-[--shop-color-main] transition-all ease-linear duration-150 rounded-full 2xl:pl-[15px] pl-2"
             onClick={() => {
-              alert("Hãy đăng nhập");
+              alert("Hãy đăng nhập để trải nghiệm tính năng này");
             }}
           >
             <p className=" text-[12px] 2xl:text-[13px] font-bold uppercase flex-auto text-center line-clamp-1">
@@ -185,9 +185,9 @@ const ProductCard = ({ tagSale = null, productData }) => {
                   )}
                   isRounded={true}
                 />
-                <button className=" w-7 h-7 2xl:w-8 2xl:h-8 bg-primary  rounded-full flex items-center justify-center flex-shrink-0">
+                <div className=" w-7 h-7 2xl:w-8 2xl:h-8 bg-primary  rounded-full flex items-center justify-center flex-shrink-0">
                   <ShoppingCart size={16} strokeWidth={1.5} stroke="#fff" />
-                </button>
+                </div>
               </div>
             ) : (
               <div
@@ -197,9 +197,9 @@ const ProductCard = ({ tagSale = null, productData }) => {
                 <p className=" text-[12px] 2xl:text-[13px] font-bold uppercase flex-auto text-center line-clamp-1">
                   Thêm vào giỏ
                 </p>
-                <button className=" w-7 h-7 2xl:w-8 2xl:h-8 bg-primary  rounded-full flex items-center justify-center flex-shrink-0">
+                <div className=" w-7 h-7 2xl:w-8 2xl:h-8 bg-primary  rounded-full flex items-center justify-center flex-shrink-0">
                   <ShoppingCart size={16} strokeWidth={1.5} stroke="#fff" />
-                </button>
+                </div>
               </div>
             )}
           </>

@@ -1,33 +1,36 @@
-function saveSearchHistory(searchKeyword) {
-  // Get the current search history from localStorage or initialize an empty string
-  let history = localStorage.getItem("history_search") || "";
+const addToHistory = (keyword) => {
+  if (!keyword) return;
 
-  // Split the history into an array of keywords
-  let historyArray = history.split("#").filter(Boolean);
+  let history = getHistory();
+  history = history.filter((item) => item !== keyword); // loại bỏ nếu trùng
+  history.unshift(keyword); // thêm vào đầu
 
-  // Add the new search keyword to the beginning of the array
-  historyArray.unshift(searchKeyword);
+  // Giới hạn tối đa 5 phần tử
+  history = history.slice(0, 5);
 
-  // Limit the history to the last 10 searches (optional)
-  if (historyArray.length > 10) {
-    historyArray = historyArray.slice(0, 10);
-  }
+  localStorage.setItem("bay_history_search", history.join("##"));
+};
+const getHistory = () => {
+  const data = localStorage.getItem("bay_history_search");
+  return data ? data.split("##") : [];
+};
 
-  // Join the array back into a string with '#' as separator
-  let updatedHistory = historyArray.join("#");
+const removeFromHistory = (keyword) => {
+  let history = getHistory();
+  history = history.filter((item) => item !== keyword);
+  localStorage.setItem("bay_history_search", history.join("##"));
+};
 
-  // Save the updated history back to localStorage
-  localStorage.setItem("history_search", updatedHistory);
-}
-function getSearchHistory() {
-  // Get the search history from localStorage
-  let history = localStorage.getItem("history_search") || "";
+const removeManyFromHistory = (keywords) => {
+  let history = getHistory();
+  history = history.filter((item) => !keywords.includes(item));
+  localStorage.setItem("bay_history_search", history.join("##"));
+};
 
-  // Split the history into an array of keywords
-  let historyArray = history.split("#").filter(Boolean);
+const clearHistory = () => {
+  localStorage.removeItem("bay_history_search");
+};
 
-  return historyArray;
-}
 const saveViewedProduct = (productSlug) => {
   const key = "viewed";
 
@@ -113,8 +116,10 @@ export {
   removeMultipleCheckoutItems,
   removeCheckoutItem,
   getCheckoutItems,
-  saveSearchHistory,
-  getSearchHistory,
+  addToHistory,
+  getHistory,
+  removeFromHistory,
+  removeManyFromHistory,
   saveViewedProduct,
   getViewedProductSlugs,
 };

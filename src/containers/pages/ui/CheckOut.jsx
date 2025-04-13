@@ -41,7 +41,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import useMessage from "@/hooks/useMessage";
 import formatPrice from "@/helpers/formatPrice";
-import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getProvince, getDistrict, getWard, getAny } from "@/apis/address";
 import { motion } from "motion/react";
 import { create, getCoupon, getPurchaserInfo } from "@/apis/order";

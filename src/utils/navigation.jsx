@@ -79,7 +79,7 @@ const navigationComponents = [
     title: "Trang trí",
     link: "/categories/trang-tri",
     subNav: [
-      { title: "Lọ hoa - Bình hoa", link: "/categories/lo-hoa" },
+      { title: "Lọ hoa - Bình hoa", link: "/categories/lo-hoa-binh-hoa" },
       { title: "Gương treo tường", link: "/categories/guong-treo-tuong" },
       { title: "Gương đứng", link: "/categories/guong-dung" },
       { title: "Nến thơm", link: "/categories/nen-thom" },

@@ -47,10 +47,13 @@ function App() {
   const { isLoggedIn } = useSelector((state) => state.auth);
   useEffect(() => {
     if (isLoggedIn) {
+      console.log("true");
+
       // check if user has logged in or they change islogged value in localstorage to true
       dispatch(verify());
     } else {
       // when user does not logged in how they change the islogged in key in localstorage; force them to log in to use web
+      console.log("false");
       dispatch(checkAuth());
     }
   }, [isLoggedIn]);
